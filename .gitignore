@@ -5,6 +5,7 @@
 node_modules
 public
 resources
+.next
 
 # Dependencies
 /node_modules
