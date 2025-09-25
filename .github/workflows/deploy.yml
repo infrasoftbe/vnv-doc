@@ -67,12 +67,12 @@ jobs:
             npm install
           fi
 
-      - name: Build production website
+      - name: Build production tinacms
         env:
           TINA_PUBLIC_CLIENT_ID: ${{ secrets.TINA_PUBLIC_CLIENT_ID }}
           TINA_TOKEN: ${{ secrets.TINA_TOKEN }}
         run: |
-          npx tinacms build --baseURL "${{ steps.pages.outputs.base_url }}/"
+          npx tinacms build
 
       - name: Build production website
         env:
@@ -81,7 +81,7 @@ jobs:
           HUGO_ENV: production
           TZ: America/Los_Angeles
         run: |
-          hugo --minify --gc
+          hugo --minify --gc --baseURL "${{ steps.pages.outputs.base_url }}/"
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
