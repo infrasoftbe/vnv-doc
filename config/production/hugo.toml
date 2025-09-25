@@ -1,2 +1,3 @@
 # Overrides for production environment
-baseurl = "/vnv-doc/"
+baseURL = "https://infrasoftbe.github.io/vnv-doc/"
+canonifyURLs = true
