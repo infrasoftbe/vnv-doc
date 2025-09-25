@@ -72,9 +72,7 @@ jobs:
           TINA_PUBLIC_CLIENT_ID: ${{ secrets.TINA_PUBLIC_CLIENT_ID }}
           TINA_TOKEN: ${{ secrets.TINA_TOKEN }}
         run: |
-          npx tinacms build  \
-            -- \
-            --baseURL "${{ steps.pages.outputs.base_url }}/"
+          npx tinacms build --baseURL "${{ steps.pages.outputs.base_url }}/"
 
       - name: Build production website
         env:
