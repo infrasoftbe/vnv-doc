@@ -12,7 +12,7 @@
     "create": "hugo new",
     "dev": "tinacms dev -c \"hugo server --disableFastRender --noHTTPCache\"",
     "format": "prettier **/** -w -c",
-    "build": "hugo --minify --gc",
+    "build": "tinacms build -c tina/config.ts && hugo --minify --gc",
     "preview": "vite preview --outDir public"
   },
   "dependencies": {
