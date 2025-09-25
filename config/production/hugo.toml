@@ -1,3 +1,2 @@
 # Overrides for production environment
-baseURL = "/vnv-doc/"
-canonifyURLs = true
+baseURL = "vnv-doc/"
