@@ -71,14 +71,19 @@ jobs:
         env:
           TINA_PUBLIC_CLIENT_ID: ${{ secrets.TINA_PUBLIC_CLIENT_ID }}
           TINA_TOKEN: ${{ secrets.TINA_TOKEN }}
+        run: |
+          npx tinacms build  \
+            -- \
+            --baseURL "${{ steps.pages.outputs.base_url }}/"
+
+      - name: Build production website
+        env:
           # For maximum backward compatibility with Hugo modules
           HUGO_ENVIRONMENT: production
           HUGO_ENV: production
           TZ: America/Los_Angeles
         run: |
-          npm run build \
-            -- \
-            --baseURL "${{ steps.pages.outputs.base_url }}/"
+          hugo --minify --gc
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
