@@ -182,7 +182,6 @@
       "page-nav",
       "pb-3",
       "position-relative",
-      "posts",
       "privacy",
       "px-0",
       "query-no-results",
@@ -231,7 +230,6 @@
       "buttonColorMode",
       "doks-docs-nav",
       "further-reading",
-      "hello-world",
       "offcanvasNavMain",
       "offcanvasNavMainLabel",
       "offcanvasNavSection",
@@ -244,7 +242,6 @@
       "searchToggleDesktop",
       "searchToggleMobile",
       "socialMenu",
-      "tina-config",
       "toc"
     ]
   }
