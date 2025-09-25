@@ -9,64 +9,36 @@ const branch =
 
 export default defineConfig({
   branch,
-  clientId: process.env.TINA_PUBLIC_CLIENT_ID, // Get this from tina.io
-  token: process.env.TINA_TOKEN, // Get this from tina.io
+
+  // Get this from tina.io
+  clientId: process.env.TINA_PUBLIC_CLIENT_ID,
+  // Get this from tina.io
+  token: process.env.TINA_TOKEN,
+
   build: {
     outputFolder: "admin",
     publicFolder: "public",
+    // basePath: process.env.TINA_ADMIN_BASE_PATH || "/vnv-doc/",
   },
   media: {
     tina: {
-      mediaRoot: "images",
+      mediaRoot: "",
       publicFolder: "public",
     },
   },
+  // See docs on content modeling for more info on how to setup new content models: https://tina.io/docs/schema/
   schema: {
     collections: [
       {
-        name: "guides",
-        label: "Doc - Guides",
-        path: "/content/docs/guides",
-        format: 'md',
-        fields: [
-          {
-            type: "string",
-            name: "title",
-            label: "Title",
-            isTitle: true,
-            required: true,
-          },
-          // {
-          //   type: "datetime",
-          //   name: "posted",
-          //   label: "Date Posted",
-          //   required: true,
-          // },
-          {
-            type: "rich-text",
-            name: "body",
-            label: "Body",
-            isBody: true,
-          },
-        ],
-      },
-      {
-        name: "posts",
+        name: "post",
         label: "Posts",
         path: "content/posts",
-        format: 'md',
         fields: [
           {
             type: "string",
             name: "title",
             label: "Title",
             isTitle: true,
-            required: true,
-          },
-          {
-            type: "datetime",
-            name: "posted",
-            label: "Date Posted",
             required: true,
           },
           {
