@@ -30,6 +30,86 @@ export default defineConfig({
   schema: {
     collections: [
       {
+        name: "introduction",
+        label: "Introduction",
+        path: "content/docs/introduction",
+        fields: [
+          {
+            type: "string",
+            name: "title",
+            label: "Title",
+            isTitle: true,
+            required: true,
+          },
+          {
+            type: "rich-text",
+            name: "body",
+            label: "Body",
+            isBody: true,
+          },
+        ],
+      },
+      {
+        name: "guides",
+        label: "Guides",
+        path: "content/docs/guides",
+        fields: [
+          {
+            type: "string",
+            name: "title",
+            label: "Title",
+            isTitle: true,
+            required: true,
+          },
+          {
+            type: "rich-text",
+            name: "body",
+            label: "Body",
+            isBody: true,
+          },
+        ],
+      },
+      {
+        name: "packages",
+        label: "Packages",
+        path: "content/docs/packages",
+        fields: [
+          {
+            type: "string",
+            name: "title",
+            label: "Title",
+            isTitle: true,
+            required: true,
+          },
+          {
+            type: "rich-text",
+            name: "body",
+            label: "Body",
+            isBody: true,
+          },
+        ],
+      },
+      {
+        name: "rest_api",
+        label: "REST API",
+        path: "content/docs/rest-api",
+        fields: [
+          {
+            type: "string",
+            name: "title",
+            label: "Title",
+            isTitle: true,
+            required: true,
+          },
+          {
+            type: "rich-text",
+            name: "body",
+            label: "Body",
+            isBody: true,
+          },
+        ],
+      },
+      {
         name: "post",
         label: "Posts",
         path: "content/posts",

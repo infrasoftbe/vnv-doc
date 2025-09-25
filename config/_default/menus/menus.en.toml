@@ -38,15 +38,10 @@
   name = "Blog"
   url = "/blog/"
   weight = 30
-  
+
 [[main]]
   name = "Posts"
   url = "/posts/"
-  weight = 30
-
-[[main]]
-  name = "Admin"
-  url = "/admin/"
   weight = 30
 
 # [[social]]
@@ -75,10 +70,20 @@
 #   weight = 40
 
 # [[sidebar_docs]]
-#   name = "Guides"
-#   pageRef = "/docs/guides"
+#   name = "Introduction"
+#   pageRef = "/docs/introduction"
 #   weight = 10
-#
+
+[[sidebar_docs]]
+  name = "Guides"
+  pageRef = "/docs/guides"
+  weight = 10
+
+# [[sidebar_docs]]
+#   name = "Packages"
+#   pageRef = "/docs/packages"
+#   weight = 10
+
 # [[sidebar_docs]]
 #   name = "Reference"
 #   pageRef = "/docs/reference"
@@ -93,6 +98,11 @@
   name = "Privacy Policy"
   url = "/privacy/"
   weight = 10
+
+[[footer]]
+  name = "Admin"
+  url = "/admin/"
+  weight = 30
 
 # [[footer]]
 #   name = "Terms of Service"
