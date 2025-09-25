@@ -18,7 +18,7 @@ export default defineConfig({
   build: {
     outputFolder: "admin",
     publicFolder: "public",
-    basePath: process.env.TINA_ADMIN_BASE_PATH || "/vnv-doc/",
+    ...process.env.TINA_ADMIN_BASE_PATH ? { basePath: process.env.TINA_ADMIN_BASE_PATH } : {},
   },
   media: {
     tina: {
