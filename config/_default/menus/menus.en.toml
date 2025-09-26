@@ -79,10 +79,10 @@
   pageRef = "/docs/guides"
   weight = 10
 
-# [[sidebar_docs]]
-#   name = "Packages"
-#   pageRef = "/docs/packages"
-#   weight = 10
+[[sidebar_docs]]
+  name = "Packages"
+  pageRef = "/docs/packages"
+  weight = 10
 
 # [[sidebar_docs]]
 #   name = "Reference"
@@ -102,6 +102,11 @@
 [[footer]]
   name = "Admin"
   url = "/admin/"
+  weight = 30
+
+[[footer]]
+  name = "Admin API"
+  url = "/admin/#/graphql"
   weight = 30
 
 # [[footer]]

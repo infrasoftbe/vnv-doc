@@ -90,9 +90,51 @@ export default defineConfig({
         ],
       },
       {
+        name: "components",
+        label: "Components",
+        path: "content/docs/components",
+        format: "mdx",
+        fields: [
+          {
+            type: "string",
+            name: "title",
+            label: "Title",
+            isTitle: true,
+            required: true,
+          },
+          {
+            type: "rich-text",
+            name: "body",
+            label: "Body",
+            isBody: true,
+            toolbarOverride : ['heading', 'link', 'image', 'quote', 'ul', 'ol', 'bold', 'italic', 'code', 'codeBlock', 'mermaid', 'table', 'raw', 'embed']
+          },
+        ],
+      },
+      {
         name: "rest_api",
         label: "REST API",
         path: "content/docs/rest-api",
+        fields: [
+          {
+            type: "string",
+            name: "title",
+            label: "Title",
+            isTitle: true,
+            required: true,
+          },
+          {
+            type: "rich-text",
+            name: "body",
+            label: "Body",
+            isBody: true,
+          },
+        ],
+      },
+      {
+        name: "blogs",
+        label: "Blogs",
+        path: "content/blog",
         fields: [
           {
             type: "string",

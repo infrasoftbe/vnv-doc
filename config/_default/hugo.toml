@@ -1,4 +1,4 @@
-title = "My Docs"
+title = "Vnv Documentation"
 baseurl = "http://localhost/"
 disableAliases = true
 disableHugoGeneratorInject = true
