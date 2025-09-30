@@ -37,7 +37,7 @@
 [[main]]
   name = "Blog"
   url = "/blog/"
-  weight = 30
+  weight = 20
 
 [[main]]
   name = "Posts"
@@ -47,10 +47,15 @@
 [[main]]
   name = "Check our SDK"
   url = "/API/vnv-sdk"
-  weight = 30
+  weight = 40
   [main.params]
     target = "_blank"
     rel = "noopener noreferrer"
+
+[[main]]
+  name = "CLI Editor"
+  url = "http://vnv-cli-scf-ui.s3-website.eu-central-1.amazonaws.com/"
+  weight = 50
 
 # [[social]]
 #   name = "Twitter"
