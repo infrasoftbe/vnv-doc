@@ -1,10 +1,11 @@
 ---
-title : Configure vnv-cli guide
+title: Configure vnv-cli guide
 ---
 
 ## Configure
 
 ### help
+
 ```shell
 vnv-cli configure -h
 ```

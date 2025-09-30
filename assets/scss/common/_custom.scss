@@ -3,8 +3,28 @@
   text-align: left;
 }
 
-div.content > div > div,
-div.content > article > div div {
-  // Add your styles here
-  width: 100%;
+// div.content > div > div,
+// div.content > article > div div {
+//   // Add your styles here
+//   width: 100%;
+// }
+
+div.content > div > div:first-child{
+  min-width: 400px;
 }
+
+div.content > div > div:last-child{
+  max-width: none !important;
+}
+
+.list-nested summary {
+  font-weight: normal !important;
+}
+
+.list-nested a:hover{
+  background-color: #f0f0f0;
+}
+
+// .list-nested > li:has(details.open){
+//   background-color: red;
+// }

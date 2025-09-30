@@ -1,12 +1,12 @@
 ---
-sidebar_position: 4
+title: ADM
 ---
 
 # ManagementAPI
 
 ## Client
 
-- <a href = "/vnv-documentation/API/infrasoft-vnv-api-kit/modules/Management.html" target = "_blank" >`Management`</a>
+- <a href = "/API/infrasoft-vnv-api-kit/modules/Management.html" target = "_blank" >`Management`</a>
 
 ## Projects
 
