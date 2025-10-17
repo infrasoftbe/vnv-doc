@@ -53,6 +53,11 @@
     rel = "noopener noreferrer"
 
 [[main]]
+  name = "Data Validator"
+  url = "http://vnv-databuild-helper.s3-website.eu-central-1.amazonaws.com/"
+  weight = 50
+
+[[main]]
   name = "CLI Editor"
   url = "http://vnv-cli-scf-ui.s3-website.eu-central-1.amazonaws.com/"
   weight = 50

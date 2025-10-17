@@ -1,0 +1,219 @@
+{
+  "main": {
+    "id": "7425a5f715eca406",
+    "type": "split",
+    "children": [
+      {
+        "id": "8d48bb3a4fb6e113",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "1eaf351a46bbf9d9",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "blog/posts/Mainframe cloud architecture.md",
+                "mode": "preview",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Mainframe cloud architecture"
+            }
+          },
+          {
+            "id": "56f403a531a2903c",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "blog/posts/x.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "x"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "043b9ab27078da9e",
+    "type": "split",
+    "children": [
+      {
+        "id": "fe2059e6a85ea2d0",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "3a78b134f4ad53de",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Explorateur de fichiers"
+            }
+          },
+          {
+            "id": "ad2fd8e13ee3a4f3",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Rechercher"
+            }
+          },
+          {
+            "id": "d60c12907ff37069",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Signets"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "right": {
+    "id": "a9bd8d53137a24a7",
+    "type": "split",
+    "children": [
+      {
+        "id": "18db3ab2489da384",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "b43111973baf10f8",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "docs/packages/vnv-api-kit/ess/guides/vpi/basics/list-crud.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Rétrolien pour list-crud"
+            }
+          },
+          {
+            "id": "f38d78281e3d2e75",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "blog/posts/Mainframe cloud architecture.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Liens sortants de Mainframe cloud architecture"
+            }
+          },
+          {
+            "id": "b8a933171f2e08ae",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Mots-clés"
+            }
+          },
+          {
+            "id": "a8b4468bd33a0f38",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "docs/packages/vnv-api-kit/ess/guides/vpi/basics/list-crud.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Plan de list-crud"
+            }
+          }
+        ],
+        "currentTab": 1
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Ouvrir le sélecteur rapide": false,
+      "graph:Ouvrir la vue graphique": false,
+      "canvas:Créer une nouvelle toile": false,
+      "daily-notes:Ouvrir la note quotidienne": false,
+      "templates:Insérer le modèle": false,
+      "command-palette:Ouvrir la palette de commandes": false,
+      "bases:Create new base": false
+    }
+  },
+  "active": "1eaf351a46bbf9d9",
+  "lastOpenFiles": [
+    "blog/posts/new.md",
+    "blog/posts/Mainframe cloud architecture.md",
+    "blog/posts/reporting-engine-api.md",
+    "blog/posts/x.md",
+    "docs/packages/vnv-api-kit/database/metadatas.md",
+    "docs/packages/vnv-api-kit/database/lists.md",
+    "docs/packages/vnv-api-kit/database/introduction.md",
+    "docs/packages/vnv-api-kit/ess/guides/vpi/advanced/project-manipulation.md",
+    "docs/packages/vnv-api-kit/ess/guides/vpi/advanced/operations.md",
+    "docs/packages/vnv-api-kit/ess/guides/vpi/basics/list-crud.md",
+    "docs/packages/vnv-api-kit/ess/guides/vpi/basics/node-crud.md",
+    "docs/packages/vnv-api-kit/ess/guides/vpi/basics/relations-crud.md",
+    "docs/packages/vnv-api-kit/ess/guides/vpi/basics/metadata-crud.md",
+    "docs/packages/vnv-api-kit/ess/guides/vpi/advanced/node-manipulation.md",
+    "docs/packages/vnv-api-kit/_index.md",
+    "docs/resources.md",
+    "docs/reference/example.md",
+    "docs/reference/_index.md",
+    "docs/packages/vnv-project/basics/structure-crud.md",
+    "docs/packages/vnv-project/basics/relations-crud.md",
+    "docs/packages/vnv-project/basics/node-crud.md",
+    "docs/packages/vnv-project/basics/metadata-crud.md",
+    "docs/packages/vnv-project/basics/list-crud.md",
+    "docs/packages/vnv-project/advanced/project-manipulation.md",
+    "docs/packages/vnv-project/advanced/operations.md",
+    "docs/packages/vnv-project/advanced/node-manipulation.md",
+    "Sans titre.base",
+    "Sans titre.canvas"
+  ]
+}
