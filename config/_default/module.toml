@@ -9,6 +9,10 @@
 
 ## content
 [[mounts]]
+  source = "vnv-doc-content"
+  target = "content"
+
+[[mounts]]
   source = "content"
   target = "content"
 
