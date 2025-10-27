@@ -2,17 +2,23 @@
 sidebar_position: 1
 ---
 
-# Node CRUD
+# Node CRUD avec Fragments
 
-Ce guide explique comment effectuer des opérations CRUD (Create, Read, Update, Delete) sur les nœuds (Nodes) d'un projet VNV en utilisant le VPI.
+Ce guide explique comment effectuer des opérations CRUD (Create, Read, Update, Delete) sur les **Fragments de Nœuds** d'un projet VNV en utilisant le VPI.
 
-## Fonctionnalités d'un nœud
+## Architecture des Fragments de Nœuds
 
-Un nœud au sein d'un VPI n'est pas simplement un objet, mais une instance de la classe `Node`, ce qui signifie qu'il possède des utilitaires permettant d'interagir en tant que nœud dans le projet.
+Le VPI travaille avec des **Fragments** - des unités atomiques de données. Un nœud au sein d'un VPI n'est pas simplement un objet, mais une instance de la classe `Node` qui possède des utilitaires permettant d'interagir en tant que nœud dans le projet.
 
-## Ajouter un Nœud (Create)
+### Séparation Node/Metadata
 
-Pour ajouter un nœud à un projet, vous pouvez utiliser la méthode `addNode` après avoir initialisé le projet avec `ProjectInstance.init`.
+Le VPI maintient une séparation claire entre :
+- **Node Fragment** : L'entité de base (ID, nom, type, token)
+- **MetaContainer** : Encapsule les metadata avec une référence au node propriétaire
+
+## Ajouter un Nœud (Create) - Processus en 2 étapes
+
+La création d'un nœud se fait en **2 étapes distinctes** : `addNode()` puis `addMetadata()`.
 
 ```typescript
 import * as vnv from '@infrasoftbe/vnv-sdk';
@@ -20,31 +26,46 @@ import * as vnv from '@infrasoftbe/vnv-sdk';
 // Initialisation d'un projet
 let vpi = vnv.VPI.ProjectInstance.init({/* votre projet */});
 
-// Ajout d'un nouveau nœud
+// ÉTAPE 1 : Ajout du fragment de nœud
 let [operation, node] = vpi.addNode({
   type: 'file',
-  name: 'Mon nouveau document',
-  metadata: {
-    description: 'Contenu du document',
-    path: []
-  }
+  name: 'Mon nouveau document'
+});
+
+// ÉTAPE 2 : Ajout des métadonnées via MetaContainer
+let [metaOperation, metadata] = vpi.addMetadata(node.token, {
+  description: 'Contenu du document',
+  path: [],
+  category: 'Documentation',
+  tags: ['important', 'projet']
 });
 ```
 
 ### Explication du Code
 
 - `ProjectInstance.init(...)` : Initialise un projet en retournant un ProxyProjectInstance qui permet un accès simplifié à toutes les couches du projet.
-- `vpi.addNode(...)` : Ajoute un nouveau nœud au projet. Cette méthode retourne un tableau contenant deux éléments :
+- `vpi.addNode(...)` : Crée le **Fragment de Node** de base. Cette méthode retourne un tableau contenant deux éléments :
   - `operation` : L'opération associée à l'ajout du nœud.
-  - `node` : Le nœud qui a été ajouté.
+  - `node` : Le fragment de nœud qui a été ajouté.
+- `vpi.addMetadata(...)` : Crée le **MetaContainer** associé au node avec référence au propriétaire.
+
+### Pourquoi 2 étapes ?
+
+Cette séparation permet :
+- Une validation indépendante du node et de ses metadata
+- Une gestion flexible des MetaContainers
+- Une architecture claire entre entité et propriétés
 
 ## Lire un Nœud (Read)
 
-Pour récupérer un nœud existant, plusieurs méthodes sont disponibles :
+Pour récupérer un nœud existant et ses métadonnées, plusieurs méthodes sont disponibles :
 
 ```typescript
-// Récupérer un nœud par son token
+// Récupérer un fragment de nœud par son token
 const node = vpi.getNodeByToken('node-token');
+
+// Récupérer les métadonnées associées au nœud
+const nodeMetadata = vpi.getMetadataByNodeToken('node-token');
 
 // Vérifier l'existence d'un nœud
 const exists = vpi.hasNode('node-token');
@@ -61,16 +82,19 @@ const foundNode = vpi.findNodeByToken('any-token');
 
 ## Mettre à Jour un Nœud (Update)
 
-Pour mettre à jour un nœud existant, utilisez la méthode `setNode` en passant les modifications souhaitées.
+Pour mettre à jour un fragment de nœud et ses métadonnées, vous pouvez agir sur chaque composant séparément.
 
 ```typescript
-// Mise à jour d'un nœud existant
+// Mise à jour du fragment de nœud lui-même
 let [operation, updatedNode] = vpi.setNode(node.token, {
-  name: 'Nom modifié',
-  metadata: {
-    description: 'Nouveau contenu',
-    path: []
-  }
+  name: 'Nom modifié'
+});
+
+// Mise à jour des métadonnées via le MetaContainer
+let [metaOperation, updatedMetadata] = vpi.setMetadata(metadata.token, {
+  description: 'Nouveau contenu',
+  category: 'Documentation Mise à Jour',
+  tags: ['modifié', 'important']
 });
 
 // Alternative : utiliser la méthode update du nœud directement
@@ -81,7 +105,8 @@ const updateOperation = node.update({
 
 ### Explication du Code
 
-- `vpi.setNode(node.token, updatedProperties)` : Met à jour un nœud existant identifié par `node.token` avec les propriétés spécifiées dans `updatedProperties`. Cette méthode retourne également un tableau contenant l'opération effectuée et le nœud mis à jour.
+- `vpi.setNode(node.token, updatedProperties)` : Met à jour le **Fragment de Node** identifié par `node.token`. Cette méthode retourne l'opération effectuée et le fragment mis à jour.
+- `vpi.setMetadata(metadata.token, updatedProperties)` : Met à jour le **MetaContainer** associé au node.
 - `node.update(...)` : Méthode directe sur l'instance du nœud pour le mettre à jour.
 
 ## Supprimer un Nœud (Delete)

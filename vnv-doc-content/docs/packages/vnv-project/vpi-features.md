@@ -35,15 +35,32 @@ vpi.on('nodeAdded', (event) => {
 vpi.emit('customEvent', { data: 'example' });
 ```
 
-## Gestion des nœuds (Nodes)
+## Gestion des Fragments de Nœuds
 
-### Opérations CRUD sur les nœuds
+### Architecture des Fragments
+
+Le VPI travaille avec des **Fragments** - des unités atomiques de données. Tout est "node" dans le VPI (même si il y a `data.nodes`, `data.structures`, `data.lists`) **SAUF** les children qui sont des nodes virtuels présents dans les `(structure|list).metadata.children` et qui n'ont donc pas de metadata propres.
+
+### Séparation Node/Metadata
+
+Le VPI maintient une séparation claire entre les nœuds et leurs métadonnées :
+- **Node** : L'entité de base avec ID, nom, type, token
+- **MetaContainer** : Encapsule les metadata d'un node avec une référence au node propriétaire
+
+### Processus de création en 2 étapes
 
 ```typescript
-// Ajouter un nouveau nœud
+// 1. Créer le fragment de nœud (addNode)
 const [operation, node] = vpi.addNode({
   type: 'file',
   name: 'Mon document'
+});
+
+// 2. Ajouter les métadonnées (addMetadata)
+const [metaOp, metadata] = vpi.addMetadata(node.token, {
+  description: 'Description du document',
+  category: 'Documentation',
+  tags: ['important', 'projet']
 });
 
 // Mettre à jour un nœud existant
@@ -103,21 +120,30 @@ const outgoingRels = vpi.getRelationFromNodeToken('node-token');
 const incomingRels = vpi.getRelationToToken('node-token');
 ```
 
-## Gestion des métadonnées
+## Gestion des MetaContainers
+
+### Distinction Metadata vs MetaContainer
+
+Le VPI encapsule les metadata d'un node dans un **MetaContainer** qui possède une référence au node propriétaire. Cette séparation permet :
+- Une gestion indépendante des métadonnées
+- Une référence claire vers le node propriétaire
+- Une validation séparée des données
 
 ### Opérations CRUD sur les métadonnées
 
 ```typescript
-// Ajouter des métadonnées
-const [metaOp, metadata] = vpi.addMetadata({
-  target: 'node-token',
-  type: 'description',
-  value: 'Description du nœud'
+// Ajouter des métadonnées via MetaContainer
+const [metaOp, metadata] = vpi.addMetadata(nodeToken, {
+  description: 'Description du nœud',
+  category: 'Documentation',
+  tags: ['important'],
+  author: 'John Doe'
 });
 
 // Mettre à jour des métadonnées
 const [updateMetaOp, updatedMeta] = vpi.setMetadata(metadata.token, {
-  value: 'Nouvelle description'
+  description: 'Nouvelle description',
+  modifiedBy: 'Jane Smith'
 });
 
 // Vérifier l'existence de métadonnées
@@ -131,17 +157,33 @@ const retrievedMeta = vpi.getMetadataByToken('metadata-token');
 
 // Rechercher dans toutes les métadonnées
 const metaResults = vpi.queryMetadataAll({ type: 'description' });
+
+// Récupérer les métadonnées d'un node spécifique
+const nodeMetadata = vpi.getMetadataByNodeToken('node-token');
 ```
 
-## Gestion des structures
+## Gestion des Fragments de Structures
+
+### Structures avec Children Virtuels
+
+Les structures sont des vrais nodes dans le VPI, mais leurs **children** sont des références virtuelles stockées dans `structure.metadata.children`. Ces children :
+- N'ont **pas** de metadata propres
+- Sont des pointeurs vers d'autres nodes réels
+- Permettent l'organisation hiérarchique
 
 ### Opérations CRUD sur les structures
 
 ```typescript
-// Ajouter une nouvelle structure
+// 1. Créer le fragment de structure
 const [structOp, structure] = vpi.addStructure({
   type: 'structure',
   name: 'Mon dossier'
+});
+
+// 2. Ajouter les métadonnées avec children virtuels
+const [metaOp, structMeta] = vpi.addMetadata(structure.token, {
+  description: 'Dossier principal',
+  children: ['node1-token', 'node2-token'] // Références virtuelles
 });
 
 // Mettre à jour une structure existante
@@ -162,15 +204,25 @@ const retrievedStruct = vpi.getStructureByToken('structure-token');
 const structResults = vpi.queryStructureAll({ type: 'structure' });
 ```
 
-## Gestion des listes
+## Gestion des Fragments de Listes
+
+### Listes avec Children Virtuels
+
+Comme les structures, les listes sont des vrais nodes dans le VPI, mais leurs **children** sont des références virtuelles stockées dans `list.metadata.children`. Cette architecture permet une gestion flexible des collections ordonnées.
 
 ### Opérations CRUD sur les listes
 
 ```typescript
-// Ajouter une nouvelle liste
+// 1. Créer le fragment de liste
 const [listOp, list] = vpi.addList({
   type: 'list',
   name: 'Ma liste de tâches'
+});
+
+// 2. Ajouter les métadonnées avec children virtuels ordonnés
+const [metaOp, listMeta] = vpi.addMetadata(list.token, {
+  description: 'Liste des tâches prioritaires',
+  children: ['task1-token', 'task2-token', 'task3-token'] // Ordre important
 });
 
 // Mettre à jour une liste existante

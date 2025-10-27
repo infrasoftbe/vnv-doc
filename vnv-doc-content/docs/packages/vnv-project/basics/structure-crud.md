@@ -2,17 +2,22 @@
 sidebar_position: 4
 ---
 
-# Structures CRUD
+# Structures CRUD avec Fragments
 
-Ce guide explique comment effectuer des opérations CRUD (Create, Read, Update, Delete) sur les structures dans un projet VNV en utilisant le VPI.
+Ce guide explique comment effectuer des opérations CRUD (Create, Read, Update, Delete) sur les **Fragments de Structures** dans un projet VNV en utilisant le VPI.
 
-## Qu'est-ce qu'une Structure ?
+## Qu'est-ce qu'une Structure avec Fragments ?
 
-Une structure au sein d'un VPI est une instance de la classe `Node` qui a été étendue par la classe `Structure`. Cela signifie que la structure possède les mêmes utilitaires que le nœud, en plus des fonctionnalités spécifiques pour gérer des collections organisées de nœuds enfants.
+Une structure au sein d'un VPI est un **Fragment de Node** étendu par la classe `Structure`. Elle possède les mêmes utilitaires que le nœud, plus des fonctionnalités spécifiques pour gérer des collections organisées.
 
-## Ajouter une Structure (Create)
+### Children Virtuels
 
-Pour ajouter une structure à un projet, utilisez la méthode `addStructure` :
+Les structures utilisent des **children virtuels** stockés dans `structure.metadata.children`. Ces children :
+- **N'ont pas** de metadata propres
+- Sont des **références** vers d'autres nodes réels
+- Permettent l'organisation hiérarchique
+
+## Ajouter une Structure (Create) - Processus en 2 étapes
 
 ```typescript
 import * as vnv from '@infrasoftbe/vnv-sdk';
@@ -20,17 +25,20 @@ import * as vnv from '@infrasoftbe/vnv-sdk';
 // Initialisation d'un projet
 let project = vnv.VPI.ProjectInstance.init({/* votre projet */});
 
-// Ajout d'une nouvelle structure
+// ÉTAPE 1 : Ajout du fragment de structure
 let [operation, structure] = vpi.addStructure({
   type: 'structure', // <-- !REQUIRED!
-  name: 'Mon dossier de documents', // <-- !REQUIRED!
-  metadata: {
-    description: 'Dossier contenant tous les documents du projet',
-    path: [],
-    ref_extern: '',
-    external: null,
-    type : 'file' // <-- !REQUIRED!
-  }
+  name: 'Mon dossier de documents' // <-- !REQUIRED!
+});
+
+// ÉTAPE 2 : Ajout des métadonnées avec children virtuels
+let [metaOperation, metadata] = vpi.addMetadata(structure.token, {
+  description: 'Dossier contenant tous les documents du projet',
+  path: [],
+  ref_extern: '',
+  external: null,
+  type: 'file', // <-- !REQUIRED!
+  children: ['node1-token', 'node2-token'] // Références virtuelles
 });
 ```
 

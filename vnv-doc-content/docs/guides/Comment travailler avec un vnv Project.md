@@ -1,13 +1,21 @@
-# Comment travailler avec un projet VNV
+# Comment travailler avec un projet VNV et ses Fragments
 
 Un **Project DUMP** provient directement de la base de données et contient toutes les données d'un projet VNV au format JSON.
 
-Un **VPI** (Virtual Project Interface) est une interface virtuelle de projet, c'est-à-dire une représentation virtuelle d'un projet permettant d'interagir avec celui-ci de manière simplifiée et structurée.
+Un **VPI** (Virtual Project Interface) est une interface virtuelle de projet qui travaille avec des **Fragments** - des unités atomiques de données permettant d'interagir avec le projet de manière simplifiée et structurée.
 
- ## Project DUMP et VPI : quelles différences ?
+## Project DUMP et VPI : quelles différences ?
 
- - Un **Project DUMP** est un fichier JSON brut, ce qui signifie qu'il faut effectuer des manipulations manuelles dans l'objet pour interagir avec le projet.
- - Un **VPI** se construit à partir d'un DUMP et permet d'interagir avec celui-ci de manière unifiée et globale. Lorsqu'un élément est créé et qu'il implique la création d'un lien, celui-ci est automatiquement géré par le VPI, permettant de réduire les interactions et de les simplifier.
+- Un **Project DUMP** est un fichier JSON brut où les nodes et leurs metadata sont intégrés, sauf dans le cas des DUMP où il y a aussi une séparation.
+- Un **VPI** se construit à partir d'un DUMP et maintient une **séparation stricte** entre les Fragments de Nodes et leurs MetaContainers, permettant une gestion plus fine et structurée.
+
+Le VPI encapsule effectivement les metadata d'un node dans un **MetaContainer** qui possède une référence au node propriétaire.
+
+### Architecture des Fragments
+
+Le VPI travaille exclusivement avec des **Fragments** :
+- **Tout est "node"** dans le VPI (`data.nodes`, `data.structures`, `data.lists`)
+- **SAUF** les children qui sont des **nodes virtuels** présents dans les `(structure|list).metadata.children` et qui n'ont donc **pas de metadata propres**
 
 Le VPI offre également des fonctionnalités de recherche, d'ajout, de mise à jour et de suppression de données. Il utilise un système de calcul de différences (diff) entre les opérations qui s'exécutent dans le VPI, permettant une gestion de l'historique des modifications ainsi qu'un système possible d'annulation/rétablissement (undo/redo).
 
@@ -43,9 +51,9 @@ Le VPI contient les mêmes jeux de données que le JSON DUMP, à ceci près qu'i
 
 Cette optimisation améliore considérablement les performances lors de la manipulation de gros volumes de données.
 
-## Fonctionnalités d'un VPI
+## Fonctionnalités d'un VPI avec Fragments
 
-Un VPI offre de nombreuses fonctionnalités pour gérer un projet VNV :
+Un VPI offre de nombreuses fonctionnalités pour gérer un projet VNV basées sur l'architecture des Fragments :
 
 ### Gestion des tokens
 - **Calcul unifié de token** : Génération automatique d'identifiants uniques
@@ -55,14 +63,17 @@ Un VPI offre de nombreuses fonctionnalités pour gérer un projet VNV :
 - `vpi.emit()` : Émet un événement
 - `vpi.on()` : Écoute un événement
 
-### Gestion des nœuds (Nodes)
-- `vpi.addNode()` : Ajoute un nouveau nœud
-- `vpi.setNode()` : Met à jour un nœud existant
-- `vpi.hasNode()` : Vérifie l'existence d'un nœud
-- `vpi.deleteNode()` : Supprime un nœud
-- `vpi.getNodeByToken()` : Récupère un nœud par son token
-- `vpi.queryNodeAll()` : Recherche dans tous les nœuds
-- `vpi.getNodesByType()` : Récupère les nœuds par type
+### Gestion des Fragments de Nœuds (Processus en 2 étapes)
+- `vpi.addNode()` : Ajoute un **Fragment de Node** (étape 1)
+- `vpi.addMetadata(nodeToken, metadata)` : Ajoute le **MetaContainer** (étape 2)
+- `vpi.setNode()` : Met à jour le Fragment de Node
+- `vpi.setMetadata()` : Met à jour le MetaContainer
+- `vpi.hasNode()` : Vérifie l'existence d'un Fragment de Node
+- `vpi.deleteNode()` : Supprime un Fragment de Node et son MetaContainer
+- `vpi.getNodeByToken()` : Récupère un Fragment de Node par son token
+- `vpi.getMetadataByNodeToken()` : Récupère le MetaContainer d'un node
+- `vpi.queryNodeAll()` : Recherche dans tous les Fragments de Nodes
+- `vpi.getNodesByType()` : Récupère les Fragments de Nodes par type
 
 ### Gestion des relations
 - `vpi.addRelation()` : Ajoute une nouvelle relation
@@ -74,24 +85,26 @@ Un VPI offre de nombreuses fonctionnalités pour gérer un projet VNV :
 - `vpi.getRelationFromNodeToken()` : Récupère les relations depuis un nœud
 - `vpi.getRelationToToken()` : Récupère les relations vers un nœud
 
-### Gestion des métadonnées
-- `vpi.addMetadata()` : Ajoute des métadonnées
-- `vpi.setMetadata()` : Met à jour des métadonnées
-- `vpi.hasMetadata()` : Vérifie l'existence de métadonnées
-- `vpi.deleteMetadata()` : Supprime des métadonnées
-- `vpi.getMetadataByToken()` : Récupère des métadonnées par token
-- `vpi.queryMetadataAll()` : Recherche dans toutes les métadonnées
+### Gestion des MetaContainers
+- `vpi.addMetadata(nodeToken, metadata)` : Ajoute un MetaContainer
+- `vpi.setMetadata()` : Met à jour un MetaContainer
+- `vpi.hasMetadata()` : Vérifie l'existence d'un MetaContainer
+- `vpi.deleteMetadata()` : Supprime un MetaContainer
+- `vpi.getMetadataByToken()` : Récupère un MetaContainer par token
+- `vpi.queryMetadataAll()` : Recherche dans tous les MetaContainers
 
-### Gestion des structures
-- `vpi.addStructure()` : Ajoute une nouvelle structure
+### Gestion des Fragments de Structures (avec children virtuels)
+- `vpi.addStructure()` : Ajoute un Fragment de Structure (étape 1)
+- `vpi.addMetadata(structureToken, {children: [...]})` : Ajoute children virtuels (étape 2)
 - `vpi.setStructure()` : Met à jour une structure existante
 - `vpi.hasStructure()` : Vérifie l'existence d'une structure
 - `vpi.deleteStructure()` : Supprime une structure
 - `vpi.getStructureByToken()` : Récupère une structure par son token
 - `vpi.queryStructureAll()` : Recherche dans toutes les structures
 
-### Gestion des listes
-- `vpi.addList()` : Ajoute une nouvelle liste
+### Gestion des Fragments de Listes (avec children virtuels ordonnés)
+- `vpi.addList()` : Ajoute un Fragment de Liste (étape 1)
+- `vpi.addMetadata(listToken, {children: [...]})` : Ajoute children virtuels ordonnés (étape 2)
 - `vpi.setList()` : Met à jour une liste existante
 - `vpi.hasList()` : Vérifie l'existence d'une liste
 - `vpi.deleteList()` : Supprime une liste

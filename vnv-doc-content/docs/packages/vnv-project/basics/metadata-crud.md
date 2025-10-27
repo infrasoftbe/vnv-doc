@@ -2,13 +2,20 @@
 sidebar_position: 3
 ---
 
-# Métadonnées CRUD
+# MetaContainer CRUD avec Fragments
 
-Ce guide explique comment effectuer des opérations CRUD (Create, Read, Update, Delete) sur les métadonnées des nœuds dans un projet VNV en utilisant le VPI.
+Ce guide explique comment effectuer des opérations CRUD (Create, Read, Update, Delete) sur les **MetaContainers** des nœuds dans un projet VNV en utilisant le VPI.
 
-## Ajouter des Métadonnées (Create)
+## Architecture MetaContainer vs Metadata
 
-Pour ajouter des métadonnées à un nœud dans un projet, utilisez la méthode `addMetadata` après avoir initialisé le projet.
+Le VPI encapsule les metadata d'un node dans un **MetaContainer** qui :
+- Possède une **référence** au node propriétaire
+- Permet une gestion séparée des propriétés du node
+- Encapsule les metadata brutes dans un container structuré
+
+## Ajouter un MetaContainer (Create)
+
+Le processus `addMetadata()` crée un **MetaContainer** associé à un Fragment de Node existant :
 
 ```typescript
 import * as vnv from '@infrasoftbe/vnv-sdk';
@@ -16,16 +23,18 @@ import * as vnv from '@infrasoftbe/vnv-sdk';
 // Initialisation d'un projet
 let vpi = vnv.VPI.ProjectInstance.init({/* votre projet */});
 
-// Ajout de métadonnées à un nœud existant
-let [operation, metadata] = vpi.addMetadata({
-  target: node.token,
-  type: 'description',
-  value: 'Description détaillée du nœud',
-  properties: {
-    language: 'fr',
-    author: 'user-123',
-    createdAt: new Date().toISOString()
-  }
+// Le node doit exister au préalable (voir node-crud.md)
+const nodeToken = 'existing-node-token';
+
+// Ajout du MetaContainer au nœud
+let [operation, metadata] = vpi.addMetadata(nodeToken, {
+  description: 'Description détaillée du nœud',
+  category: 'Documentation',
+  tags: ['important', 'document'],
+  author: 'user-123',
+  priority: 'high',
+  language: 'fr',
+  createdAt: new Date().toISOString()
 });
 ```
 

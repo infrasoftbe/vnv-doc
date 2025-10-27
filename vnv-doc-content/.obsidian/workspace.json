@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "docs/packages/vnv-project/basics/structure-crud.md",
+                "file": "docs/packages/vnv-project/vpi-features.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "structure-crud"
+              "title": "vpi-features"
             }
           }
         ]
@@ -172,17 +172,17 @@
   },
   "active": "baacff993f60d0fc",
   "lastOpenFiles": [
+    "docs/packages/vnv-project/create-project.md",
     "docs/packages/vnv-project/vpi-features.md",
     "docs/packages/vnv-project/vnv-project.md",
-    "docs/packages/vnv-project/create-project.md",
     "docs/packages/vnv-project/basics/structure-crud.md",
     "docs/packages/vnv-project/basics/relations-crud.md",
+    "docs/packages/vnv-project/basics/node-crud.md",
+    "docs/packages/vnv-project/basics/metadata-crud.md",
     "docs/packages/vnv-project/basics/list-crud.md",
     "docs/packages/vnv-project/advanced/node-manipulation.md",
     "docs/packages/vnv-project/advanced/operations.md",
     "docs/packages/vnv-project/advanced/project-manipulation.md",
-    "docs/packages/vnv-project/basics/node-crud.md",
-    "docs/packages/vnv-project/basics/metadata-crud.md",
     "docs/guides/Comment travailler avec un vnv Project.md",
     "docs/packages/vnv-project/vpi-features.mdx",
     "docs/reference/example.md",
