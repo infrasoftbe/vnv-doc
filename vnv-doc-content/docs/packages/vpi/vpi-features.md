@@ -1,104 +1,104 @@
 ---
-title: "Fonctionnalités"
+title: "Features"
 weight: 2303
 ---
-# Fonctionnalités du VPI
+# VPI Features
 
-Un VPI offre de nombreuses fonctionnalités pour gérer un projet VNV de manière efficace et structurée.
+A VPI offers numerous features to manage a VNV project efficiently and in a structured manner.
 
-## Gestion des tokens
+## Token Management
 
-Le VPI fournit des utilitaires pour la gestion des identifiants uniques :
+The VPI provides utilities for managing unique identifiers:
 
-- **Calcul unifié de token** : Génération automatique d'identifiants uniques
-- **Validation d'un token** : Vérification de la validité des identifiants
+- **Unified token calculation**: Automatic generation of unique identifiers
+- **Token validation**: Verification of identifier validity
 
 ```typescript
-// Créer un token disponible
+// Create an available token
 const newToken = vpi.createAvailableToken();
 
-// Vérifier la disponibilité d'un token
-const isAvailable = vpi.isAvailableToken('mon-token');
+// Check token availability
+const isAvailable = vpi.isAvailableToken('my-token');
 ```
 
-## Gestion des événements
+## Event Management
 
-Le VPI supporte un système d'événements pour réagir aux changements :
+The VPI supports an event system to react to changes:
 
 ```typescript
-// Écouter un événement
+// Listen to an event
 vpi.on('nodeAdded', (event) => {
-  console.log('Nouveau nœud ajouté:', event.node);
+  console.log('New node added:', event.node);
 });
 
-// Émettre un événement
+// Emit an event
 vpi.emit('customEvent', { data: 'example' });
 ```
 
-## Gestion des Fragments de Nœuds
+## Node Fragment Management
 
-### Architecture des Fragments
+### Fragment Architecture
 
-Le VPI travaille avec des **Fragments** - des unités atomiques de données. Tout est "node" dans le VPI (même si il y a `data.nodes`, `data.structures`, `data.lists`) **SAUF** les children qui sont des nodes virtuels présents dans les `(structure|list).metadata.children` et qui n'ont donc pas de metadata propres.
+The VPI works with **Fragments** - atomic data units. Everything is a "node" in the VPI (even though there are `data.nodes`, `data.structures`, `data.lists`) **EXCEPT** children which are virtual nodes present in `(structure|list).metadata.children` and therefore do not have their own metadata.
 
-### Séparation Node/Metadata
+### Node/Metadata Separation
 
-Le VPI maintient une séparation claire entre les nœuds et leurs métadonnées :
+The VPI maintains a clear separation between nodes and their metadata:
 
-- **Node** : L'entité de base avec ID, nom, type, token
-- **MetaContainer** : Encapsule les metadata d'un node avec une référence au node propriétaire
+- **Node**: The basic entity with ID, name, type, token
+- **MetaContainer**: Encapsulates a node's metadata with a reference to the owner node
 
-### Processus de création en 2 étapes
+### 2-Step Creation Process
 
 ```typescript
-// 1. Créer le fragment de nœud (addNode)
+// 1. Create the node fragment (addNode)
 const [operation, node] = vpi.addNode({
   type: 'file',
-  name: 'Mon document'
+  name: 'My document'
 });
 
-// 2. Ajouter les métadonnées (addMetadata)
+// 2. Add metadata (addMetadata)
 const metaContainer = {
   id: crypto.randomUUID(),
   token: node.token,
   meta: {
-    description: 'Description du document',
+    description: 'Document description',
     category: 'Documentation',
-    tags: ['important', 'projet']
+    tags: ['important', 'project']
   },
   create_dt: Date.now(),
   update_dt: Date.now()
 };
 const [metaOp, metadata] = vpi.addMetadata(metaContainer);
 
-// Mettre à jour un nœud existant
+// Update an existing node
 const [updateOp, updatedNode] = vpi.dataManager.setNode({
   ...node,
-  name: 'Nom modifié'
+  name: 'Modified name'
 });
 
-// Vérifier l'existence d'un nœud
+// Check node existence
 const exists = vpi.hasNode('node-token');
 
-// Supprimer un nœud
+// Delete a node
 const deleteOp = vpi.deleteNode('node-token');
 
-// Récupérer un nœud par son token
+// Retrieve a node by its token
 const retrievedNode = vpi.getNodeByToken('node-token');
 
-// Rechercher dans tous les nœuds
+// Search all nodes
 const searchResults = vpi.queryNodeAll({ type: 'file' });
 
-// Récupérer les nœuds par type
+// Get nodes by type
 const fileNodes = vpi.getNodesByType('file');
 ```
 
-## Gestion des relations
+## Relationship Management
 
-### Opérations CRUD sur les relations
+### CRUD Operations on Relationships
 
 ```typescript
-// Ajouter une nouvelle relation
+// Add a new relationship
 const [relationOp, relation] = vpi.addRelation({
   f_id: crypto.randomUUID(),
   f_token: 'node1-token',
@@ -109,51 +109,51 @@ const [relationOp, relation] = vpi.addRelation({
   update_dt: Date.now()
 });
 
-// Mettre à jour une relation existante
+// Update an existing relationship
 const [updateRelOp, updatedRel] = vpi.setRelation({
-  ...relation, // Garde toutes les propriétés existantes
+  ...relation, // Keep all existing properties
   r_type: 'HAS_LINK',
   update_dt: Date.now()
 });
 
-// Vérifier l'existence d'une relation
+// Check relationship existence
 const relationExists = vpi.hasRelation('relation-token');
 
-// Supprimer une relation
+// Delete a relationship
 const deleteRelOp = vpi.deleteRelation('relation-token');
 
-// Récupérer une relation par son token
+// Retrieve a relationship by its token
 const retrievedRelation = vpi.getRelationByToken('relation-token');
 
-// Rechercher dans toutes les relations
+// Search all relationships
 const relationResults = vpi.queryRelationAll({ r_type: 'HAS_FILE' });
 
-// Récupérer les relations depuis un nœud
+// Get relationships from a node
 const outgoingRels = vpi.getRelationFromNodeToken('node-token');
 
-// Récupérer les relations vers un nœud
+// Get relationships to a node
 const incomingRels = vpi.getRelationToToken('node-token');
 ```
 
-## Gestion des MetaContainers
+## MetaContainer Management
 
-### Distinction Metadata vs MetaContainer
+### Metadata vs MetaContainer Distinction
 
-Le VPI encapsule les metadata d'un node dans un **MetaContainer** qui possède une référence au node propriétaire. Cette séparation permet :
+The VPI encapsulates a node's metadata in a **MetaContainer** that has a reference to the owner node. This separation allows:
 
-- Une gestion indépendante des métadonnées
-- Une référence claire vers le node propriétaire
-- Une validation séparée des données
+- Independent metadata management
+- Clear reference to the owner node
+- Separate data validation
 
-### Opérations CRUD sur les métadonnées
+### CRUD Operations on Metadata
 
 ```typescript
-// Ajouter des métadonnées via MetaContainer
+// Add metadata via MetaContainer
 const nodeMetaContainer = {
   id: crypto.randomUUID(),
   token: nodeToken,
   meta: {
-    description: 'Description du nœud',
+    description: 'Node description',
     category: 'Documentation',
     tags: ['important'],
     author: 'John Doe'
@@ -163,77 +163,77 @@ const nodeMetaContainer = {
 };
 const [metaOp, metadata] = vpi.addMetadata(nodeMetaContainer);
 
-// Mettre à jour des métadonnées
+// Update metadata
 const updatedMetaContainer = {
   ...metadata,
   meta: {
     ...metadata.meta,
-    description: 'Nouvelle description',
+    description: 'New description',
     modifiedBy: 'Jane Smith'
   },
   update_dt: Date.now()
 };
 const [updateMetaOp, updatedMeta] = vpi.setMetadata(updatedMetaContainer);
 
-// Vérifier l'existence de métadonnées
+// Check metadata existence
 const metaExists = vpi.hasMetadata('metadata-token');
 
-// Supprimer des métadonnées
+// Delete metadata
 const deleteMetaOp = vpi.deleteMetadata('metadata-token');
 
-// Récupérer des métadonnées par token
+// Retrieve metadata by token
 const retrievedMeta = vpi.getMetadataByToken('metadata-token');
 
-// Rechercher dans toutes les métadonnées
+// Search all metadata
 const metaResults = vpi.queryMetadataAll({ type: 'description' });
 
-// Récupérer les métadonnées d'un node spécifique
+// Get metadata for a specific node
 const nodeMetadata = vpi.getMetadataByNodeToken('node-token');
 ```
 
-## Gestion des Fragments de Structures
+## Structure Fragment Management
 
-### Structures avec Children Virtuels
+### Structures with Virtual Children
 
-Les structures sont des vrais nodes dans le VPI, mais leurs **children** sont des références virtuelles stockées dans `structure.metadata.children`. Ces children :
+Structures are real nodes in the VPI, but their **children** are virtual references stored in `structure.metadata.children`. These children:
 
-- N'ont **pas** de metadata propres
-- Sont des pointeurs vers d'autres nodes réels
-- Permettent l'organisation hiérarchique
+- Do **not** have their own metadata
+- Are pointers to other real nodes
+- Allow hierarchical organization
 
-### Opérations CRUD sur les structures
+### CRUD Operations on Structures
 
 ```typescript
-// 1. Créer le fragment de structure
+// 1. Create the structure fragment
 const [structOp, structure] = vpi.addStructure({
   type: 'structure',
-  name: 'Mon dossier'
+  name: 'My folder'
 });
 
-// 2. Ajouter les métadonnées avec children virtuels
+// 2. Add metadata with virtual children
 const structMetaContainer = {
   id: crypto.randomUUID(),
   token: structure.token,
   meta: {
-    description: 'Dossier principal',
+    description: 'Main folder',
     children: [
       {
-        child: '1', // Position hiérarchique
+        child: '1', // Hierarchical position
         id: 'structure-child-1',
         meta: null,
         name: 'Node 1',
         token: 'node1-token',
         type: 'structure_child'
-        // Peut être lié via HAS_LINK à un nœud du type structure.meta.type
+        // Can be linked via HAS_LINK to a node of type structure.meta.type
       },
       {
-        child: '1.1', // Enfant de '1'
+        child: '1.1', // Child of '1'
         id: 'structure-child-2',
         meta: null,
         name: 'Node 2',
         token: 'node2-token',
         type: 'structure_child'
-        // Peut être lié via HAS_LINK à un nœud du type structure.meta.type
+        // Can be linked via HAS_LINK to a node of type structure.meta.type
       }
     ]
   },
@@ -242,72 +242,72 @@ const structMetaContainer = {
 };
 const [metaOp, structMeta] = vpi.addMetadata(structMetaContainer);
 
-// Mettre à jour une structure existante
+// Update an existing structure
 const [updateStructOp, updatedStruct] = vpi.setStructure(structure.token, {
-  name: 'Dossier renommé'
+  name: 'Renamed folder'
 });
 
-// Vérifier l'existence d'une structure
+// Check structure existence
 const structExists = vpi.hasStructure('structure-token');
 
-// Supprimer une structure
+// Delete a structure
 const deleteStructOp = vpi.deleteStructure('structure-token');
 
-// Récupérer une structure par son token
+// Retrieve a structure by its token
 const retrievedStruct = vpi.getStructureByToken('structure-token');
 
-// Rechercher dans toutes les structures
+// Search all structures
 const structResults = vpi.queryStructureAll({ type: 'structure' });
 ```
 
-## Gestion des Fragments de Listes
+## List Fragment Management
 
-### Listes avec Children Virtuels
+### Lists with Virtual Children
 
-Comme les structures, les listes sont des vrais nodes dans le VPI, mais leurs **children** sont des références virtuelles stockées dans `list.metadata.children`. Cette architecture permet une gestion flexible des collections ordonnées.
+Like structures, lists are real nodes in the VPI, but their **children** are virtual references stored in `list.metadata.children`. This architecture allows flexible management of ordered collections.
 
-### Opérations CRUD sur les listes
+### CRUD Operations on Lists
 
 ```typescript
-// 1. Créer le fragment de liste
+// 1. Create the list fragment
 const [listOp, list] = vpi.addList({
   type: 'list',
-  name: 'Ma liste de tâches'
+  name: 'My task list'
 });
 
-// 2. Ajouter les métadonnées avec children virtuels ordonnés
+// 2. Add metadata with ordered virtual children
 const listMetaContainer = {
   id: crypto.randomUUID(),
   token: list.token,
   meta: {
-    description: 'Liste des tâches prioritaires',
+    description: 'Priority task list',
     children: [
       {
-        child: '1', // Position 1 dans la liste
+        child: '1', // Position 1 in the list
         id: 'list-child-1',
         meta: null,
         name: 'Task 1',
         token: 'task1-token',
         type: 'list_child'
-        // Peut être lié via HAS_LINK à un nœud de type list.meta.type
+        // Can be linked via HAS_LINK to a node of type list.meta.type
       },
       {
-        child: '2', // Position 2 dans la liste
+        child: '2', // Position 2 in the list
         id: 'list-child-2',
         meta: null,
         name: 'Task 2',
         token: 'task2-token',
         type: 'list_child'
-        // Peut être lié via HAS_LINK à un nœud de type list.meta.type
+        // Can be linked via HAS_LINK to a node of type list.meta.type
       },
       {
-        child: '3', // Position 3 dans la liste
+        child: '3', // Position 3 in the list
         id: 'list-child-3',
         meta: null,
         name: 'Task 3',
         token: 'task3-token',
         type: 'list_child'
-        // Peut être lié via HAS_LINK à un nœud de type list.meta.type
+        // Can be linked via HAS_LINK to a node of type list.meta.type
       }
     ]
   },
@@ -316,58 +316,58 @@ const listMetaContainer = {
 };
 const [metaOp, listMeta] = vpi.addMetadata(listMetaContainer);
 
-// Mettre à jour une liste existante
+// Update an existing list
 const [updateListOp, updatedList] = vpi.setList(list.token, {
-  name: 'Liste modifiée'
+  name: 'Modified list'
 });
 
-// Vérifier l'existence d'une liste
+// Check list existence
 const listExists = vpi.hasList('list-token');
 
-// Supprimer une liste
+// Delete a list
 const deleteListOp = vpi.deleteList('list-token');
 
-// Récupérer une liste par son token
+// Retrieve a list by its token
 const retrievedList = vpi.getListBytoken('list-token');
 
-// Rechercher dans toutes les listes
+// Search all lists
 const listResults = vpi.queryListAll({ type: 'list' });
 ```
 
-## Propriétés utiles
+## Useful Properties
 
-Le VPI expose plusieurs propriétés pratiques :
+The VPI exposes several practical properties:
 
 ```typescript
-// Types de nœuds possibles dans le projet
+// Possible node types in the project
 const nodeTypes = vpi.nodeTypeList;
 
-// Types de liens possibles dans le projet
+// Possible relationship types in the project
 const relationTypes = vpi.relationTypeList;
 
-// Token du projet
+// Project token
 const projectToken = vpi.projectToken;
 
-// Expression JSON du VPI
+// JSON expression of the VPI
 const jsonRepresentation = vpi.json;
 
-// Rechercher un nœud par token dans toutes les collections
+// Search for a node by token in all collections
 const foundNode = vpi.findNodeByToken('any-token');
 ```
 
-## Utilitaires
+## Utilities
 
-### Gestion des instances et tokens
+### Instance and Token Management
 
 ```typescript
-// Assurer qu'une instance est valide
+// Ensure an instance is valid
 vpi.ensureInstance(someObject);
 
-// Créer un token disponible
+// Create an available token
 const availableToken = vpi.createAvailableToken();
 
-// Vérifier la disponibilité d'un token
+// Check token availability
 const isTokenAvailable = vpi.isAvailableToken('proposed-token');
 ```
 
-Ces fonctionnalités du VPI permettent une gestion complète et efficace des projets VNV, avec un système de traçabilité intégré et des performances optimisées.
+These VPI features enable complete and efficient management of VNV projects, with an integrated traceability system and optimized performance.

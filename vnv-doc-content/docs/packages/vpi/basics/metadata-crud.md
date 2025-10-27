@@ -1,38 +1,38 @@
 ---
-title: "MetaContainer CRUD avec Fragments"
+title: "MetaContainer CRUD with Fragments"
 weight: 2306
 ---
-# MetaContainer CRUD avec Fragments
+# MetaContainer CRUD with Fragments
 
-Ce guide explique comment effectuer des opérations CRUD (Create, Read, Update, Delete) sur les **MetaContainers** des nœuds dans un projet VNV en utilisant le VPI.
+This guide explains how to perform CRUD (Create, Read, Update, Delete) operations on **MetaContainers** for nodes in a VNV project using the VPI.
 
-## Architecture MetaContainer vs Metadata
+## MetaContainer vs Metadata Architecture
 
-Le VPI encapsule les metadata d'un node dans un **MetaContainer** qui :
+The VPI encapsulates a node's metadata in a **MetaContainer** that:
 
-- Possède une **référence** au node propriétaire
-- Permet une gestion séparée des propriétés du node
-- Encapsule les metadata brutes dans un container structuré
+- Has a **reference** to the owner node
+- Allows separate management of node properties
+- Encapsulates raw metadata in a structured container
 
-## Ajouter un MetaContainer (Create)
+## Adding a MetaContainer (Create)
 
-Le processus `addMetadata()` crée un **MetaContainer** associé à un Fragment de Node existant :
+The `addMetadata()` process creates a **MetaContainer** associated with an existing Node Fragment:
 
 ```typescript
 import * as vnv from '@infrasoftbe/vnv-sdk';
 
-// Initialisation d'un projet
-let vpi = vnv.VPI.ProjectInstance.init({/* votre projet */});
+// Project initialization
+let vpi = vnv.VPI.ProjectInstance.init({/* your project */});
 
-// Le node doit exister au préalable (voir node-crud.md)
+// The node must exist beforehand (see node-crud.md)
 const nodeToken = 'existing-node-token';
 
-// Ajout du MetaContainer au nœud
+// Add MetaContainer to the node
 let metaContainer = {
   id: crypto.randomUUID(),
   token: nodeToken,
   meta: {
-    description: 'Description détaillée du nœud',
+    description: 'Detailed node description',
     category: 'Documentation',
     tags: ['important', 'document'],
     author: 'user-123',
@@ -46,75 +46,75 @@ let metaContainer = {
 let [operation, metadata] = vpi.addMetadata(metaContainer);
 ```
 
-### Ajout via l'instance du nœud
+### Adding via node instance
 
-Vous pouvez également ajouter des métadonnées directement via l'instance du nœud :
+You can also add metadata directly via the node instance:
 
 ```typescript
-// Définir des métadonnées directement sur le nœud
+// Set metadata directly on the node
 node.setMetadata({
-  description: 'Description du nœud',
+  description: 'Node description',
   tags: ['important', 'document'],
   category: 'work',
   priority: 'high'
 });
 ```
 
-### Explication du Code
+### Code Explanation
 
-- `ProjectInstance.init(...)` : Initialise un projet en retournant un ProxyProjectInstance qui permet un accès simplifié à toutes les couches du projet.
-- `vpi.addMetadata(metaContainer)` : Ajoute des métadonnées à un nœud via un objet IMetaContainer complet. Cette méthode retourne un tableau contenant deux éléments :
-  - `operation` : L'opération associée à l'ajout des métadonnées.
-  - `metadata` : Les métadonnées qui ont été ajoutées.
+- `ProjectInstance.init(...)`: Initializes a project by returning a ProxyProjectInstance that allows simplified access to all project layers.
+- `vpi.addMetadata(metaContainer)`: Adds metadata to a node via a complete IMetaContainer object. This method returns an array containing two elements:
+  - `operation`: The operation associated with adding the metadata.
+  - `metadata`: The metadata that was added.
 
-## Lire des Métadonnées (Read)
+## Reading Metadata (Read)
 
-Pour lire les métadonnées existantes, plusieurs méthodes sont disponibles :
+To read existing metadata, several methods are available:
 
 ```typescript
-// Récupération de métadonnées par token
+// Retrieve metadata by token
 const metadata = vpi.getMetadataByToken('metadata-token');
 
-// Vérification de l'existence de métadonnées
+// Check metadata existence
 const exists = vpi.hasMetadata('metadata-token');
 
-// Recherche dans toutes les métadonnées avec des critères
+// Search all metadata with criteria
 const searchResults = vpi.queryMetadataAll({
   type: 'description',
   target: 'node-token'
 });
 
-// Récupération des métadonnées via l'instance du nœud
+// Retrieve metadata via node instance
 const nodeMetadata = node.getMetadata();
 ```
 
-### Types de métadonnées courantes
+### Common Metadata Types
 
-Dans le système VNV, plusieurs types de métadonnées sont utilisés :
+In the VNV system, several types of metadata are used:
 
 ```typescript
-// Métadonnées de description
+// Description metadata
 const descriptionMeta = {
   type: 'description',
-  value: 'Description détaillée',
+  value: 'Detailed description',
   properties: { language: 'fr' }
 };
 
-// Métadonnées de catégorisation
+// Categorization metadata
 const categoryMeta = {
   type: 'category',
   value: 'work',
   properties: { subcategory: 'project-management' }
 };
 
-// Métadonnées de tags
+// Tag metadata
 const tagsMeta = {
   type: 'tags',
   value: ['urgent', 'review', 'client'],
   properties: { source: 'user-input' }
 };
 
-// Métadonnées techniques
+// Technical metadata
 const technicalMeta = {
   type: 'technical',
   value: {
@@ -125,17 +125,17 @@ const technicalMeta = {
 };
 ```
 
-## Mettre à Jour des Métadonnées (Update)
+## Updating Metadata (Update)
 
-Pour mettre à jour des métadonnées existantes d'un nœud, utilisez la méthode `setMetadata` en passant les nouvelles valeurs souhaitées.
+To update existing metadata for a node, use the `setMetadata` method by passing the desired new values.
 
 ```typescript
-// Mise à jour des métadonnées par objet IMetaContainer
+// Update metadata via IMetaContainer object
 let updatedMetaContainer = {
-  ...metadata, // récupère l'objet metadata existant
+  ...metadata, // retrieve existing metadata object
   meta: {
-    ...metadata.meta, // garde les métadonnées existantes
-    value: 'Nouvelle description mise à jour',
+    ...metadata.meta, // keep existing metadata
+    value: 'New updated description',
     properties: {
       language: 'en',
       lastModified: new Date().toISOString(),
@@ -146,45 +146,45 @@ let updatedMetaContainer = {
 };
 let [operation, updatedMetadata] = vpi.setMetadata(updatedMetaContainer);
 
-// Mise à jour via l'instance du nœud (écrase les métadonnées existantes)
+// Update via node instance (overwrites existing metadata)
 node.setMetadata({
-  description: 'Nouvelle description',
+  description: 'New description',
   tags: ['updated', 'current'],
   lastUpdate: new Date().toISOString()
 });
 
-// Mise à jour partielle via l'instance du nœud
+// Partial update via node instance
 const currentMeta = node.getMetadata();
 node.setMetadata({
   ...currentMeta,
-  description: 'Description mise à jour',
+  description: 'Updated description',
   tags: [...(currentMeta.tags || []), 'new-tag']
 });
 ```
 
-### Explication du Code
+### Code Explanation
 
-- `vpi.setMetadata(metaContainer)` : Met à jour les métadonnées via un objet IMetaContainer complet. Cette méthode retourne un tableau contenant l'opération effectuée et les métadonnées mises à jour.
-- `node.setMetadata(...)` : Met à jour directement les métadonnées du nœud. Cette méthode remplace toutes les métadonnées existantes.
+- `vpi.setMetadata(metaContainer)`: Updates metadata via a complete IMetaContainer object. This method returns an array containing the operation performed and the updated metadata.
+- `node.setMetadata(...)`: Directly updates the node's metadata. This method replaces all existing metadata.
 
-## Supprimer des Métadonnées (Delete)
+## Deleting Metadata (Delete)
 
-Pour supprimer des métadonnées d'un nœud, utilisez la méthode `deleteMetadata` en spécifiant le token des métadonnées à supprimer.
+To delete metadata from a node, use the `deleteMetadata` method by specifying the token of the metadata to delete.
 
 ```typescript
-// Suppression de métadonnées par token
+// Delete metadata by token
 let operation = vpi.deleteMetadata('metadata-token');
 ```
 
-### Explication du Code
+### Code Explanation
 
-- `vpi.deleteMetadata(metadata.token)` : Supprime les métadonnées identifiées par `metadata.token`. Cette méthode retourne l'opération associée à la suppression.
+- `vpi.deleteMetadata(metadata.token)`: Deletes the metadata identified by `metadata.token`. This method returns the operation associated with the deletion.
 
-## Gestion avancée des métadonnées
+## Advanced Metadata Management
 
-### Métadonnées structurées
+### Structured Metadata
 
-Les métadonnées peuvent contenir des structures complexes :
+Metadata can contain complex structures:
 
 ```typescript
 const complexMetadata = {
@@ -215,29 +215,29 @@ const complexMetadata = {
 };
 ```
 
-### Recherche avancée dans les métadonnées
+### Advanced Metadata Search
 
 ```typescript
-// Rechercher par type de métadonnées
+// Search by metadata type
 const descriptions = vpi.queryMetadataAll({ type: 'description' });
 
-// Rechercher par propriétés spécifiques
+// Search by specific properties
 const frenchDescriptions = vpi.queryMetadataAll({
   type: 'description',
   properties: { language: 'fr' }
 });
 
-// Rechercher par valeur
+// Search by value
 const urgentItems = vpi.queryMetadataAll({
   type: 'tags',
   value: 'urgent'
 });
 ```
 
-### Métadonnées avec validation
+### Metadata with Validation
 
 ```typescript
-// Ajouter des métadonnées avec validation personnalisée
+// Add metadata with custom validation
 const validatedMetadata = {
   type: 'status',
   value: 'approved',
@@ -250,27 +250,27 @@ const validatedMetadata = {
 };
 ```
 
-## Bonnes pratiques
+## Best Practices
 
-### Nommage des types de métadonnées
+### Metadata Type Naming
 
-Utilisez des conventions de nommage cohérentes :
+Use consistent naming conventions:
 
 ```typescript
-// Types de base
-'description'     // Description textuelle
-'tags'           // Étiquettes/mots-clés
-'category'       // Catégorisation
-'status'         // Statut du nœud
+// Base types
+'description'     // Textual description
+'tags'           // Labels/keywords
+'category'       // Categorization
+'status'         // Node status
 
-// Types composés
-'technical-info'  // Informations techniques
-'user-settings'   // Paramètres utilisateur
-'audit-trail'     // Piste d'audit
-'workflow-state'  // État du workflow
+// Compound types
+'technical-info'  // Technical information
+'user-settings'   // User settings
+'audit-trail'     // Audit trail
+'workflow-state'  // Workflow state
 ```
 
-### Gestion des versions
+### Version Management
 
 ```typescript
 const versionedMetadata = {
@@ -285,11 +285,11 @@ const versionedMetadata = {
 };
 ```
 
-## Résumé des Opérations
+## Operations Summary
 
-- **Création (addMetadata, node.setMetadata)** : Ajoute des métadonnées à un nœud et retourne à la fois l'opération et les métadonnées ajoutées.
-- **Lecture (getMetadataByToken, hasMetadata, queryMetadataAll, node.getMetadata)** : Différentes méthodes pour récupérer et rechercher des métadonnées.
-- **Mise à jour (setMetadata, node.setMetadata)** : Modifie les valeurs de métadonnées existantes et retourne l'opération et les métadonnées mises à jour.
-- **Suppression (deleteMetadata)** : Supprime des métadonnées d'un nœud et retourne l'opération associée.
+- **Creation (addMetadata, node.setMetadata)**: Adds metadata to a node and returns both the operation and the added metadata.
+- **Reading (getMetadataByToken, hasMetadata, queryMetadataAll, node.getMetadata)**: Different methods to retrieve and search for metadata.
+- **Update (setMetadata, node.setMetadata)**: Modifies existing metadata values and returns the operation and updated metadata.
+- **Deletion (deleteMetadata)**: Removes metadata from a node and returns the associated operation.
 
-Ces opérations vous permettent de manipuler efficacement les métadonnées des nœuds dans un projet VNV, en utilisant les fonctionnalités exposées par le ProxyProjectInstance pour accéder directement aux différentes couches du projet.
+These operations allow you to efficiently manipulate node metadata in a VNV project, using the functionalities exposed by the ProxyProjectInstance to directly access different project layers.

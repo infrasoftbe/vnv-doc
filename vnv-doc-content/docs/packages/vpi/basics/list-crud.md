@@ -1,57 +1,57 @@
 ---
-title: "Listes CRUD"
+title: "Lists CRUD"
 weight: 2309
 ---
-# Listes CRUD
+# Lists CRUD
 
-Ce guide explique comment effectuer des opérations CRUD (Create, Read, Update, Delete) sur les listes dans un projet VNV en utilisant le VPI.
+This guide explains how to perform CRUD (Create, Read, Update, Delete) operations on lists in a VNV project using the VPI.
 
-## Qu'est-ce qu'une Liste ?
+## What is a List?
 
-Une liste au sein d'un VPI est une instance de la classe `_list` qui hérite de la classe `_structure`. Cela signifie qu'elle possède les mêmes utilitaires que la structure, avec des optimisations spécifiques pour la gestion de collections ordonnées d'éléments.
+A list within a VPI is an instance of the `_list` class that inherits from the `_structure` class. This means it has the same utilities as the structure, with specific optimizations for managing ordered collections of elements.
 
-### Héritage de Structure
+### Structure Inheritance
 
-Les listes héritent de toutes les fonctionnalités des structures :
+Lists inherit all structure functionalities:
 
-**Méthodes héritées de Structure :**
+**Methods inherited from Structure:**
 
-- **Navigation** : `forNodes`, `fromNodes`, `inNodes`, `outNodes`
-- **Relations** : `forRelationships`, `fromRelationships`, `inRelationships`, `outRelationships`
-- **Méthodes de liaison** : `linkFor`, `linkFrom`, `linkTo`
-- **Gestion des enfants** : `deleteNode`, `hasNode`, `getChildByToken`, `queryNodeAll`
-- **Formats de sortie** : `flatv1`, `flatv2`, `nestedv1`, `nestedv2`
-- **Métadonnées** : `getMetadata`, `setMetadata`, `setMetaDataKey`
-- **Autres** : `delete`, `update`, `flat`, `json`, `shema`
+- **Navigation**: `forNodes`, `fromNodes`, `inNodes`, `outNodes`
+- **Relationships**: `forRelationships`, `fromRelationships`, `inRelationships`, `outRelationships`
+- **Link methods**: `linkFor`, `linkFrom`, `linkTo`
+- **Child management**: `deleteNode`, `hasNode`, `getChildByToken`, `queryNodeAll`
+- **Output formats**: `flatv1`, `flatv2`, `nestedv1`, `nestedv2`
+- **Metadata**: `getMetadata`, `setMetadata`, `setMetaDataKey`
+- **Others**: `delete`, `update`, `flat`, `json`, `shema`
 
-**Méthodes spécialisées pour List :**
+**Specialized methods for List:**
 
-- `addNode` : Ajoute un élément de type `IListChild` (override de Structure)
-- `setNode` : Modifie un élément `IListChild` (override de Structure)
-- `constructor` : Utilise `IListInitOptions` au lieu de `IStructureInitOptions`
+- `addNode`: Adds an element of type `IListChild` (override of Structure)
+- `setNode`: Modifies an `IListChild` element (override of Structure)
+- `constructor`: Uses `IListInitOptions` instead of `IStructureInitOptions`
 
-## Ajouter une Liste (Create)
+## Adding a List (Create)
 
-Pour ajouter une liste à un projet, suivez ce processus en 2 étapes :
+To add a list to a project, follow this 2-step process:
 
 ```typescript
 import * as vnv from '@infrasoftbe/vnv-sdk';
 
-// Initialisation d'un projet
-let vpi = vnv.VPI.ProjectInstance.init({/* votre projet */});
+// Project initialization
+let vpi = vnv.VPI.ProjectInstance.init({/* your project */});
 
-// ÉTAPE 1 : Ajout du fragment de liste
+// STEP 1: Add the list fragment
 let [operation, list] = vpi.addList({
   type: 'list', // <-- !REQUIRED!
-  name: 'Ma liste de tâches' // <-- !REQUIRED!
+  name: 'My task list' // <-- !REQUIRED!
 });
 
-// ÉTAPE 2 : Ajout des métadonnées avec children organisationnels
+// STEP 2: Add metadata with organizational children
 let listMetaContainer = {
   id: crypto.randomUUID(),
   token: list.token,
   meta: {
-    description: 'Liste des tâches à accomplir pour le projet',
+    description: 'List of tasks to accomplish for the project',
     path: [],
     ref_extern: '',
     external: null,
@@ -64,179 +64,179 @@ let listMetaContainer = {
 let [metaOperation, metadata] = vpi.addMetadata(listMetaContainer);
 ```
 
-### Explication du Code
+### Code Explanation
 
-- `vpi.addList(...)` : Ajoute une nouvelle liste au projet (Étape 1). Cette méthode retourne un tableau contenant :
-  - `operation` : L'opération associée à l'ajout de la liste.
-  - `list` : La liste qui a été ajoutée.
-- `vpi.addMetadata(...)` : Ajoute les métadonnées à la liste (Étape 2).
+- `vpi.addList(...)`: Adds a new list to the project (Step 1). This method returns an array containing:
+  - `operation`: The operation associated with adding the list.
+  - `list`: The list that was added.
+- `vpi.addMetadata(...)`: Adds metadata to the list (Step 2).
 
-{{< callout context="tip" title="Relations HAS_LINK et Children" icon="outline/rocket" >}}
-**Important :** Le champ `child` dans les `list_child` indique la **position** dans la liste (ex: "1", "2", "3"), **PAS** le token du nœud cible.
+{{< callout context="tip" title="HAS_LINK Relations and Children" icon="outline/rocket" >}}
+**Important:** The `child` field in `list_child` indicates the **position** in the list (e.g., "1", "2", "3"), **NOT** the target node token.
 
-La connexion vers les vrais nœuds se fait via des **relations HAS_LINK** stockées dans `vpi.data.relations` :
+The connection to real nodes is made via **HAS_LINK relationships** stored in `vpi.data.relations`:
 
-- **Source** : le `list_child` (structure_child pour les structures)
-- **Target** : un nœud dont le `type` correspond à `list.meta.type`
-- **Type de relation** : `"HAS_LINK"`
-- **Contrainte** : Les liaisons ne sont possibles qu'entre children et nœuds du bon type
+- **Source**: the `list_child` (structure_child for structures)
+- **Target**: a node whose `type` corresponds to `list.meta.type`
+- **Relationship type**: `"HAS_LINK"`
+- **Constraint**: Links are only possible between children and nodes of the correct type
 
-Exemple :
+Example:
 
 ```typescript
-// Si list.meta.type = 'task'
-// Alors ce list_child ne PEUT être lié qu'à des nœuds de type 'task'
-// Relation possible : FROM: list_child.token -> TO: nœud_task.token (type: "HAS_LINK")
-// Relation impossible : FROM: list_child.token -> TO: nœud_file.token
+// If list.meta.type = 'task'
+// Then this list_child can ONLY be linked to nodes of type 'task'
+// Possible relationship: FROM: list_child.token -> TO: task_node.token (type: "HAS_LINK")
+// Impossible relationship: FROM: list_child.token -> TO: file_node.token
 ```
 {{< /callout >}}
 
-## Lire une Liste (Read)
+## Reading a List (Read)
 
-Pour récupérer une liste existante, plusieurs méthodes sont disponibles :
+To retrieve an existing list, several methods are available:
 
 ```typescript
-// Récupérer une liste par son token
+// Retrieve a list by its token
 const list = vpi.getListBytoken('list-token');
 
-// Vérifier l'existence d'une liste
+// Check list existence
 const exists = vpi.hasList('list-token');
 
-// Rechercher dans toutes les listes avec des critères
+// Search all lists with criteria
 const searchResults = vpi.queryListAll({ type: 'list' });
 
-// Rechercher une liste dans toutes les collections
+// Search for a list in all collections
 const foundList = vpi.findNodeByToken('list-token');
 ```
 
-## Mettre à Jour une Liste (Update)
+## Updating a List (Update)
 
-Pour mettre à jour une liste existante, utilisez la méthode `setList` :
+To update an existing list, use the `setList` method:
 
 ```typescript
-// Mise à jour d'une liste existante
+// Update an existing list
 let [operation, updatedList] = vpi.setList(list.token, {
-  name: 'Liste modifiée',
+  name: 'Modified list',
   metadata: {
-    description: 'Description mise à jour',
+    description: 'Updated description',
     path: [],
     ref_extern: '',
     external: null
   }
 });
 
-// Alternative : utiliser la méthode update de la liste
+// Alternative: use the list's update method
 const updateOperation = list.update({
-  name: 'Nouveau nom via la liste'
+  name: 'New name via list'
 });
 ```
 
-## Supprimer une Liste (Delete)
+## Deleting a List (Delete)
 
-Pour supprimer une liste, utilisez la méthode `deleteList` :
+To delete a list, use the `deleteList` method:
 
 ```typescript
-// Suppression d'une liste
+// Delete a list
 let operation = vpi.deleteList('list-token');
 
-// Alternative : suppression directe via la liste
+// Alternative: direct deletion via list
 const deleteOperation = list.delete();
 ```
 
-## Gestion des Éléments de Liste
+## Managing List Elements
 
-{{< callout context="tip" title="Distinction importante : Vrais nœuds vs List Children" icon="outline/rocket" >}}
-**NE PAS CONFONDRE** :
-- **Vrais nœuds** : Créés avec `vpi.addNode({ type: 'task' })` - ont des metadata complètes
-- **List Children** : Créés avec `list.addNode({ type: 'list_child' })` - références virtuelles SANS metadata
+{{< callout context="tip" title="Important Distinction: Real Nodes vs List Children" icon="outline/rocket" >}}
+**DO NOT CONFUSE**:
+- **Real nodes**: Created with `vpi.addNode({ type: 'task' })` - have complete metadata
+- **List Children**: Created with `list.addNode({ type: 'list_child' })` - virtual references WITHOUT metadata
 
-**Quand utiliser quoi** :
-- `vpi.addNode()` → Pour créer un vrai nœud métier (tâche, fichier, contact...)
-- `list.addNode({ type: 'list_child' })` → Pour référencer/organiser des nœuds existants dans la liste
+**When to use what**:
+- `vpi.addNode()` → To create a real business node (task, file, contact...)
+- `list.addNode({ type: 'list_child' })` → To reference/organize existing nodes in the list
 {{< /callout >}}
 
-Les listes héritent de toutes les méthodes des structures pour gérer leurs éléments (list_child) :
+Lists inherit all structure methods to manage their elements (list_child):
 
-### Ajouter un élément à la liste
+### Adding an element to the list
 
 ```typescript
-// Ajouter un élément à la liste (IListChild)
+// Add an element to the list (IListChild)
 const [itemOp, listItem] = list.addNode({
   type: 'list_child',
-  name: 'Nouvelle tâche',
-  child: '1', // Position dans la liste (1, 2, 3...)
+  name: 'New task',
+  child: '1', // Position in the list (1, 2, 3...)
   meta: null
 });
 ```
 
-{{< callout context="note" title="Architecture des éléments de Liste" icon="outline/info-circle" >}}
-Les éléments d'une liste (`IListChild`) sont des **références virtuelles** ordonnées qui **peuvent être liées** aux vrais nœuds via des relations `HAS_LINK` dans `vpi.data.relations`.
+{{< callout context="note" title="List Element Architecture" icon="outline/info-circle" >}}
+List elements (`IListChild`) are ordered **virtual references** that **can be linked** to real nodes via `HAS_LINK` relationships in `vpi.data.relations`.
 
-- `type: 'list_child'` : Type spécifique aux éléments de liste
-- `child: '1'` : **Position** dans la liste ordonnée (1, 2, 3...)
-- `name` : Nom d'affichage dans la liste
-- `meta: null` : Les éléments de liste n'ont pas de métadonnées propres
-- **Contrainte de liaison** : Si `list.meta.type = "file"`, alors ce `list_child` ne peut être lié (via HAS_LINK) qu'à un nœud de type `"file"`
+- `type: 'list_child'`: Type specific to list elements
+- `child: '1'`: **Position** in the ordered list (1, 2, 3...)
+- `name`: Display name in the list
+- `meta: null`: List elements don't have their own metadata
+- **Link constraint**: If `list.meta.type = "file"`, then this `list_child` can only be linked (via HAS_LINK) to a node of type `"file"`
 {{< /callout >}}
 
-### Mettre à jour un élément de la liste
+### Updating a list element
 
 ```typescript
-// Mettre à jour un élément de la liste (IListChild)
+// Update a list element (IListChild)
 const [updateItemOp, updatedItem] = list.setNode({
   ...listItem,
-  name: 'Tâche modifiée',
-  child: '2' // Nouvelle position dans la liste
+  name: 'Modified task',
+  child: '2' // New position in the list
 });
 ```
 
-### Vérifier l'existence d'un élément
+### Checking element existence
 
 ```typescript
-// Vérifier si un élément est dans la liste
+// Check if an element is in the list
 const hasItem = list.hasNode(listItem.token);
 ```
 
-### Supprimer un élément de la liste
+### Deleting an element from the list
 
 ```typescript
-// Supprimer un élément de la liste
+// Delete an element from the list
 const deleteItemOp = list.deleteNode(listItem.token);
 ```
 
-### Rechercher dans les éléments
+### Searching in elements
 
 ```typescript
-// Rechercher dans tous les éléments de la liste
+// Search all list elements
 const workResults = list.queryNodeAll({ type: 'work' });
 
-// Récupérer un élément par son token
+// Retrieve an element by its token
 const item = list.getChildByToken('item-token');
 
-// Rechercher par propriétés spécifiques
+// Search by specific properties
 const specificWork = list.queryNodeAll({
   type: 'work',
-  name: 'Tâche urgente'
+  name: 'Urgent task'
 });
 ```
 
-## Types de Listes Courantes
+## Common List Types
 
-### Liste de tâches
+### Task list
 
 ```typescript
-// ÉTAPE 1 : Créer le fragment de liste
+// STEP 1: Create the list fragment
 const [workListOp, workList] = vpi.addList({
   type: 'list',
   name: 'Sprint Backlog'
 });
 
-// ÉTAPE 2 : Ajouter les métadonnées
+// STEP 2: Add metadata
 let workListMetaContainer = {
   id: crypto.randomUUID(),
   token: workList.token,
   meta: {
-    description: 'Liste des travaux à effectuer',
+    description: 'List of work to be done',
     path: [],
     ref_extern: '',
     external: null,
@@ -248,31 +248,31 @@ let workListMetaContainer = {
 };
 let [workMetaOp, workMetadata] = vpi.addMetadata(workListMetaContainer);
 
-// Ajouter des références aux travaux (IListChild)
+// Add references to work items (IListChild)
 workList.addNode({
   type: 'list_child',
-  name: 'Implémenter l\'authentification',
-  child: '1', // Position 1 dans la liste
+  name: 'Implement authentication',
+  child: '1', // Position 1 in the list
   meta: null
-  // Peut être lié via HAS_LINK à un nœud de type 'task'
+  // Can be linked via HAS_LINK to a node of type 'task'
 });
 ```
 
-### Liste de fichiers
+### File list
 
 ```typescript
-// ÉTAPE 1 : Créer le fragment de liste
+// STEP 1: Create the list fragment
 const [fileListOp, fileList] = vpi.addList({
   type: 'list',
-  name: 'Documents du Projet'
+  name: 'Project Documents'
 });
 
-// ÉTAPE 2 : Ajouter les métadonnées
+// STEP 2: Add metadata
 let fileListMetaContainer = {
   id: crypto.randomUUID(),
   token: fileList.token,
   meta: {
-    description: 'Liste des fichiers du projet',
+    description: 'List of project files',
     path: [],
     ref_extern: '',
     external: null,
@@ -284,31 +284,31 @@ let fileListMetaContainer = {
 };
 let [fileMetaOp, fileMetadata] = vpi.addMetadata(fileListMetaContainer);
 
-// Ajouter des références aux fichiers (IListChild)
+// Add references to files (IListChild)
 fileList.addNode({
   type: 'list_child',
   name: 'specification.pdf',
-  child: '1', // Position 1 dans la liste
+  child: '1', // Position 1 in the list
   meta: null
-  // Peut être lié via HAS_LINK à un nœud de type 'file'
+  // Can be linked via HAS_LINK to a node of type 'file'
 });
 ```
 
-### Liste de contacts
+### Contact list
 
 ```typescript
-// ÉTAPE 1 : Créer le fragment de liste
+// STEP 1: Create the list fragment
 const [contactListOp, contactList] = vpi.addList({
   type: 'list',
-  name: 'Équipe Projet'
+  name: 'Project Team'
 });
 
-// ÉTAPE 2 : Ajouter les métadonnées
+// STEP 2: Add metadata
 let contactListMetaContainer = {
   id: crypto.randomUUID(),
   token: contactList.token,
   meta: {
-    description: 'Liste des contacts de l\'équipe projet',
+    description: 'List of project team contacts',
     path: [],
     ref_extern: '',
     external: null,
@@ -320,36 +320,36 @@ let contactListMetaContainer = {
 };
 let [contactMetaOp, contactMetadata] = vpi.addMetadata(contactListMetaContainer);
 
-// Ajouter des références aux contacts (IListChild)
+// Add references to contacts (IListChild)
 contactList.addNode({
   type: 'list_child',
-  name: 'Jean Dupont',
-  child: '1', // Position 1 dans la liste
+  name: 'John Doe',
+  child: '1', // Position 1 in the list
   meta: null
-  // Peut être lié via HAS_LINK à un nœud de type 'contact'
+  // Can be linked via HAS_LINK to a node of type 'contact'
 });
 ```
 
-## Fonctionnalités Spécifiques aux Listes
+## List-Specific Features
 
-### Gestion de l'ordre
+### Order management
 
 ```typescript
-// Réorganiser les éléments de la liste
+// Reorder list elements
 const reorderOperation = list.reorderItems([
   'item-1-token',
   'item-3-token',
   'item-2-token'
 ]);
 
-// Déplacer un élément à une position spécifique
+// Move an element to a specific position
 const moveOperation = list.moveItemToPosition('item-token', 2);
 ```
 
-### Tri automatique
+### Automatic sorting
 
 ```typescript
-// Configurer le tri automatique
+// Configure automatic sorting
 list.update({
   properties: {
     ...list.properties,
@@ -359,14 +359,14 @@ list.update({
   }
 });
 
-// Appliquer le tri
+// Apply sorting
 const sortOperation = list.applySort();
 ```
 
-### Filtrage
+### Filtering
 
 ```typescript
-// Configurer des filtres par défaut
+// Configure default filters
 list.update({
   properties: {
     ...list.properties,
@@ -377,46 +377,46 @@ list.update({
   }
 });
 
-// Appliquer des filtres
+// Apply filters
 const filteredItems = list.queryNodeAll({
   status: 'active',
   assignee: 'user-123'
 });
 ```
 
-## Validation des Listes
+## List Validation
 
-Les listes héritent des méthodes de validation des structures :
+Lists inherit structure validation methods:
 
 ```typescript
-// Vérifier la cohérence de la liste
+// Check list consistency
 const isConsistent = list.isConsistant();
 
-// Vérifier si la liste est complète
+// Check if the list is complete
 const isComplete = list.isComplete();
 
-// Vérifier la validité de la liste
+// Check list validity
 const isCorrect = list.isCorrect();
 ```
 
-## Représentations des Listes
+## List Representations
 
-Les listes fournissent les mêmes représentations que les structures :
+Lists provide the same representations as structures:
 
 ```typescript
-// Représentations imbriquées
-const nestedV1 = list.nestedv1(); // Liste - Éléments
-const nestedV2 = list.nestedv2(); // Liste - Éléments - Détails
+// Nested representations
+const nestedV1 = list.nestedv1(); // List - Elements
+const nestedV2 = list.nestedv2(); // List - Elements - Details
 
-// Représentations aplaties
-const flatV1 = list.flatv1(); // Liste aplatie avec éléments
-const flatV2 = list.flatv2(); // Liste aplatie complète
+// Flattened representations
+const flatV1 = list.flatv1(); // Flattened list with elements
+const flatV2 = list.flatv2(); // Complete flattened list
 ```
 
-## Métadonnées de Liste
+## List Metadata
 
 ```typescript
-// Ajouter des métadonnées spécifiques à la liste
+// Add list-specific metadata
 list.setMetadata({
   statistics: {
     totalItems: list.queryNodeAll().length,
@@ -432,15 +432,15 @@ list.setMetadata({
 });
 ```
 
-## Résumé des Opérations
+## Operations Summary
 
-- **Création (addList)** : Ajoute une nouvelle liste au projet
-- **Lecture (getListBytoken, hasList, queryListAll)** : Différentes méthodes pour récupérer et rechercher des listes
-- **Mise à jour (setList, list.update)** : Modifie les propriétés d'une liste existante
-- **Suppression (deleteList, list.delete)** : Supprime une liste du projet
-- **Gestion des éléments** : Toutes les méthodes héritées des structures pour gérer les éléments
-- **Fonctionnalités spécifiques** : Tri, filtrage, réorganisation des éléments
-- **Validation** : Méthodes héritées plus validations spécifiques aux listes
-- **Représentations** : Vues ordonnées et représentations héritées des structures
+- **Creation (addList)**: Adds a new list to the project
+- **Reading (getListBytoken, hasList, queryListAll)**: Different methods to retrieve and search for lists
+- **Update (setList, list.update)**: Modifies properties of an existing list
+- **Deletion (deleteList, list.delete)**: Removes a list from the project
+- **Element management**: All methods inherited from structures to manage elements
+- **Specific features**: Sorting, filtering, element reorganization
+- **Validation**: Inherited methods plus list-specific validations
+- **Representations**: Ordered views and representations inherited from structures
 
-Les listes offrent une gestion avancée des collections ordonnées d'éléments, avec des fonctionnalités spécifiques pour le tri, le filtrage et la validation de l'ordre, tout en héritant de la puissance des structures pour l'organisation hiérarchique.
+Lists offer advanced management of ordered element collections, with specific features for sorting, filtering, and order validation, while inheriting the power of structures for hierarchical organization.

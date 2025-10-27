@@ -4,19 +4,19 @@ weight: 2307
 ---
 # Relations CRUD
 
-Ce guide explique comment effectuer des opérations CRUD (Create, Read, Update, Delete) sur les relations entre nœuds dans un projet VNV en utilisant le VPI.
+This guide explains how to perform CRUD (Create, Read, Update, Delete) operations on relationships between nodes in a VNV project using the VPI.
 
-## Ajouter une Relation (Create)
+## Adding a Relationship (Create)
 
-Pour ajouter une relation entre deux nœuds dans un projet, utilisez la méthode `addRelation` après avoir initialisé le projet.
+To add a relationship between two nodes in a project, use the `addRelation` method after initializing the project.
 
 ```typescript
 import * as vnv from '@infrasoftbe/vnv-sdk';
 
-// Initialisation d'un projet
-let project = vnv.VPI.ProjectInstance.init({/* votre projet */});
+// Project initialization
+let project = vnv.VPI.ProjectInstance.init({/* your project */});
 
-// Ajout d'une nouvelle relation entre deux nœuds
+// Adding a new relationship between two nodes
 let [operation, relation] = vpi.addRelation({
   f_id: crypto.randomUUID(),
   f_token: node1.token,
@@ -28,145 +28,145 @@ let [operation, relation] = vpi.addRelation({
 });
 ```
 
-### Explication du Code
+### Code Explanation
 
-- `ProjectInstance.init(...)` : Initialise un projet en retournant un ProxyProjectInstance qui permet un accès simplifié à toutes les couches du projet.
-- `vpi.addRelation()` : Ajoute une relation entre deux nœuds identifiés par leurs tokens. Cette méthode retourne un tableau contenant deux éléments :
-  - `operation` : L'opération associée à l'ajout de la relation.
-  - `relation` : La relation qui a été ajoutée, comprenant le type de relation et les propriétés associées.
+- `ProjectInstance.init(...)`: Initializes a project by returning a ProxyProjectInstance that allows simplified access to all project layers.
+- `vpi.addRelation()`: Adds a relationship between two nodes identified by their tokens. This method returns an array containing two elements:
+  - `operation`: The operation associated with adding the relationship.
+  - `relation`: The relationship that was added, including the relationship type and associated properties.
 
-### Création de relations via les nœuds
+### Creating relationships via nodes
 
-Les nœuds offrent également des méthodes directes pour créer des relations :
+Nodes also offer direct methods for creating relationships:
 
 ```typescript
-// Créer un lien de type HAS_... vers un autre nœud
+// Create a HAS_... type link to another node
 const linkOperation = node1.linkTo(node2.token);
 
-// Créer un lien de type IS_..._FOR_... vers un autre nœud
+// Create an IS_..._FOR_... type link to another node
 const forLinkOperation = node1.linkFor(node2.token);
 ```
 
-## Lire une Relation (Read)
+## Reading a Relationship (Read)
 
-Pour lire les détails d'une relation existante, plusieurs méthodes sont disponibles :
+To read details of an existing relationship, several methods are available:
 
 ```typescript
-// Récupération d'une relation par son token
+// Retrieve a relationship by its token
 const relation = vpi.getRelationByToken('relation-token');
 
-// Vérification de l'existence d'une relation
+// Check relationship existence
 const exists = vpi.hasRelation('relation-token');
 
-// Récupération des relations depuis un nœud spécifique
+// Retrieve relationships from a specific node
 const outgoingRelations = vpi.getRelationFromNodeToken('node-token');
 
-// Récupération des relations vers un nœud spécifique
+// Retrieve relationships to a specific node
 const incomingRelations = vpi.getRelationToToken('node-token');
 
-// Recherche dans toutes les relations avec des critères
+// Search all relationships with criteria
 const searchResults = vpi.queryRelationAll({ r_type: 'HAS_FILE' });
 ```
 
-### Accès aux relations via les nœuds
+### Accessing relationships via nodes
 
-Les nœuds fournissent un accès direct à leurs relations :
+Nodes provide direct access to their relationships:
 
 ```typescript
-// Relations entrantes vers ce nœud
+// Incoming relationships to this node
 const incomingRels = node.inRelationships;
 
-// Relations sortantes depuis ce nœud
+// Outgoing relationships from this node
 const outgoingRels = node.outRelationships;
 
-// Relations provenant de ce nœud
+// Relationships originating from this node
 const fromRels = node.fromRelationships;
 
-// Relations destinées à ce nœud
+// Relationships destined for this node
 const forRels = node.forRelationships;
 
-// Nœuds connectés en entrée
+// Connected nodes in input
 const incomingNodes = node.inNodes;
 
-// Nœuds connectés en sortie
+// Connected nodes in output
 const outgoingNodes = node.outNodes;
 
-// Nœuds source
+// Source nodes
 const sourceNodes = node.fromNodes;
 
-// Nœuds destination
+// Destination nodes
 const destinationNodes = node.forNodes;
 ```
 
-## Mettre à Jour une Relation (Update)
+## Updating a Relationship (Update)
 
-Pour mettre à jour une relation existante, utilisez la méthode `setRelation` en spécifiant les nouvelles propriétés.
+To update an existing relationship, use the `setRelation` method by specifying the new properties.
 
 ```typescript
-// Mise à jour d'une relation existante
+// Updating an existing relationship
 let [operation, updatedRelation] = vpi.setRelation({
-  ...relation, // Garde toutes les propriétés existantes
+  ...relation, // Keep all existing properties
   r_type: 'HAS_LINK',
   update_dt: Date.now()
 });
 ```
 
-### Explication du Code
+### Code Explanation
 
-- `vpi.setRelation(...)` : Met à jour une relation existante en passant un objet `IRelation` complet avec toutes les propriétés. Cette méthode retourne un tableau contenant l'opération effectuée et la relation mise à jour.
+- `vpi.setRelation(...)`: Updates an existing relationship by passing a complete `IRelation` object with all properties. This method returns an array containing the operation performed and the updated relationship.
 
-## Supprimer une Relation (Delete)
+## Deleting a Relationship (Delete)
 
-Pour supprimer une relation entre deux nœuds, utilisez la méthode `deleteRelation` en spécifiant le token de la relation.
+To delete a relationship between two nodes, use the `deleteRelation` method by specifying the relationship token.
 
 ```typescript
-// Suppression d'une relation
+// Deleting a relationship
 let operation = vpi.deleteRelation('relation-token');
 ```
 
-### Explication du Code
+### Code Explanation
 
-- `vpi.deleteRelation(...)` : Supprime la relation identifiée par son token. Cette méthode retourne l'opération associée à la suppression de la relation.
+- `vpi.deleteRelation(...)`: Deletes the relationship identified by its token. This method returns the operation associated with deleting the relationship.
 
-## Types de relations courantes
+## Common Relationship Types
 
-Dans le système VNV, plusieurs types de relations sont utilisés :
+In the VNV system, several types of relationships are used:
 
-### Relations HAS_...
+### HAS_... Relationships
 
-Ces relations indiquent qu'un nœud "possède" ou "contient" un autre élément :
+These relationships indicate that a node "owns" or "contains" another element:
 
 ```typescript
-// Un dossier qui a un fichier
+// A folder that has a file
 node.linkTo(referenceNode.token);
 
-// Un dossier qui a un fichier
+// A folder that has a file
 folderNode.linkTo(fileNode.token);
 
-// Un projet qui a une structure
+// A project that has a structure
 projectNode.linkTo(structureNode.token);
 ```
 
-### Relations IS_..._FOR_...
+### IS_..._FOR_... Relationships
 
-Ces relations indiquent qu'un nœud "est quelque chose pour" un autre nœud :
+These relationships indicate that a node "is something for" another node:
 
 ```typescript
-// Un fichier qui est un enfant pour un dossier
+// A file that is a child for a folder
 fileNode.linkFor(folderNode.token);
 
-// Une exigence qui est liée à un objet
+// A requirement that is linked to an object
 requirementNode.linkFor(objectNode.token);
 
-// Un test qui est lié à une exigence
+// A test that is linked to a requirement
 testNode.linkFor(requirementNode.token);
 ```
 
-## Gestion avancée des relations
+## Advanced Relationship Management
 
-### Propriétés des relations
+### Relationship Properties
 
-Les relations peuvent porter des propriétés supplémentaires :
+Relationships can carry additional properties:
 
 ```typescript
 const [op, relation] = vpi.addRelation({
@@ -181,24 +181,24 @@ const [op, relation] = vpi.addRelation({
 });
 ```
 
-### Recherche de relations complexes
+### Complex Relationship Search
 
 ```typescript
-// Rechercher les relations d'un type spécifique
+// Search for relationships of a specific type
 const references = vpi.queryRelationAll({ r_type: 'HAS_FILE' });
 
-// Rechercher les relations avec des propriétés spécifiques
+// Search for relationships with specific properties
 const strongLinks = vpi.queryRelationAll({
   r_type: 'HAS_LINK',
-  create_dt: Date.now() - 86400000 // Relations créées dans les dernières 24h
+  create_dt: Date.now() - 86400000 // Relationships created in the last 24h
 });
 ```
 
-## Résumé des Opérations
+## Operations Summary
 
-- **Création (addRelation, node.linkTo, node.linkFor)** : Ajoute une nouvelle relation entre deux nœuds et retourne à la fois l'opération et la relation ajoutée.
-- **Lecture (getRelationByToken, hasRelation, getRelationFromNodeToken, getRelationToToken, queryRelationAll)** : Différentes méthodes pour récupérer et rechercher des relations.
-- **Mise à jour (setRelation)** : Modifie les propriétés d'une relation existante et retourne l'opération et la relation mise à jour.
-- **Suppression (deleteRelation)** : Supprime une relation entre deux nœuds et retourne l'opération associée.
+- **Creation (addRelation, node.linkTo, node.linkFor)**: Adds a new relationship between two nodes and returns both the operation and the added relationship.
+- **Reading (getRelationByToken, hasRelation, getRelationFromNodeToken, getRelationToToken, queryRelationAll)**: Different methods to retrieve and search for relationships.
+- **Update (setRelation)**: Modifies properties of an existing relationship and returns the operation and updated relationship.
+- **Deletion (deleteRelation)**: Deletes a relationship between two nodes and returns the associated operation.
 
-Ces opérations vous permettent de manipuler efficacement les relations entre les nœuds dans un projet VNV, en utilisant les fonctionnalités exposées par le ProxyProjectInstance et les instances de nœuds pour accéder directement aux différentes couches du projet.
+These operations allow you to efficiently manipulate relationships between nodes in a VNV project, using the functionalities exposed by the ProxyProjectInstance and node instances to directly access different project layers.

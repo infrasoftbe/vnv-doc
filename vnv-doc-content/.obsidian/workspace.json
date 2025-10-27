@@ -11,14 +11,10 @@
             "id": "baacff993f60d0fc",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "docs/guides/test.md",
-                "mode": "source",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "test"
+              "title": "Nouvel onglet"
             }
           }
         ]
@@ -172,6 +168,19 @@
   },
   "active": "baacff993f60d0fc",
   "lastOpenFiles": [
+    "docs/packages/vpi/basics/list-crud.en.md",
+    "docs/guides/How to work with a vnv Project.md",
+    "docs/guides/How to work with a vnv Project.en.md",
+    "docs/packages/vpi/vpi-features.en.md",
+    "docs/packages/vpi/vpi-features.md",
+    "docs/packages/vpi/vnv-project.en.md",
+    "docs/packages/vpi/create-project.en.md",
+    "docs/packages/vpi/create-project.md",
+    "docs/guides/test.md",
+    "docs/packages/vpi/basics/metadata-crud.en.md",
+    "docs/packages/vpi/basics/node-crud.en.md",
+    "docs/packages/vpi/basics/structure-crud.en.md",
+    "docs/packages/vpi/basics/relations-crud.en.md",
     "docs/guides/example.md",
     "docs/guides/Comment travailler avec un vnv Project.md",
     "docs/packages/vpi/basics/_index.md",
@@ -187,23 +196,10 @@
     "docs/packages/vpi/basics/node-crud.md",
     "docs/packages/vpi/basics/metadata-crud.md",
     "docs/packages/vpi/basics/_category_.json",
-    "docs/packages/vpi/vpi-features.md",
-    "docs/packages/vpi/vnv-project.md",
-    "docs/packages/vpi/create-project.md",
     "docs/packages/vpi/_category_.json",
     "docs/packages/vpi/basics",
     "docs/packages/vpi/advanced",
     "docs/packages/vpi",
-    "docs/packages/vnv-project/vnv-project.md",
-    "docs/packages/vnv-project/basics/structure-crud.md",
-    "docs/packages/vnv-project/basics/list-crud.md",
-    "docs/packages/vnv-project/basics/metadata-crud.md",
-    "docs/packages/vnv-project/basics/node-crud.md",
-    "docs/packages/vnv-project/basics/relations-crud.md",
-    "docs/packages/vnv-project/create-project.md",
-    "docs/packages/vnv-project/advanced/operations.md",
-    "docs/packages/vnv-project/advanced/project-manipulation.md",
-    "docs/packages/vnv-project/advanced/node-manipulation.md",
     "docs/packages/vnv-project/vpi-features.mdx",
     "Sans titre.base",
     "Sans titre.canvas"

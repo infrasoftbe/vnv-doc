@@ -1,47 +1,47 @@
 ---
-title: "Node CRUD avec Fragments"
+title: "Node CRUD with Fragments"
 weight: 2305
 ---
-# Node CRUD avec Fragments
+# Node CRUD with Fragments
 
-Ce guide explique comment effectuer des opérations CRUD (Create, Read, Update, Delete) sur les **Fragments de Nœuds** d'un projet VNV en utilisant le VPI.
+This guide explains how to perform CRUD (Create, Read, Update, Delete) operations on **Node Fragments** in a VNV project using the VPI.
 
-## Architecture des Fragments de Nœuds
+## Node Fragment Architecture
 
-Le VPI travaille avec des **Fragments** - des unités atomiques de données. Un nœud au sein d'un VPI n'est pas simplement un objet, mais une instance de la classe `Node` qui possède des utilitaires permettant d'interagir en tant que nœud dans le projet.
+The VPI works with **Fragments** - atomic data units. A node within a VPI is not simply an object, but an instance of the `Node` class that has utilities allowing it to interact as a node in the project.
 
-### Séparation Node/Metadata
+### Node/Metadata Separation
 
-Le VPI maintient une séparation claire entre :
+The VPI maintains a clear separation between:
 
-- **Node Fragment** : L'entité de base (ID, nom, type, token)
-- **MetaContainer** : Encapsule les metadata avec une référence au node propriétaire
+- **Node Fragment**: The basic entity (ID, name, type, token)
+- **MetaContainer**: Encapsulates metadata with a reference to the owner node
 
-## Ajouter un Nœud (Create) - Processus en 2 étapes
+## Adding a Node (Create) - 2-Step Process
 
-La création d'un nœud se fait en **2 étapes distinctes** : `addNode()` puis `addMetadata()`.
+Node creation is done in **2 distinct steps**: `addNode()` then `addMetadata()`.
 
 ```typescript
 import * as vnv from '@infrasoftbe/vnv-sdk';
 
-// Initialisation d'un projet
-let vpi = vnv.VPI.ProjectInstance.init({/* votre projet */});
+// Project initialization
+let vpi = vnv.VPI.ProjectInstance.init({/* your project */});
 
-// ÉTAPE 1 : Ajout du fragment de nœud
+// STEP 1: Add the node fragment
 let [operation, node] = vpi.addNode({
   type: 'file',
-  name: 'Mon nouveau document'
+  name: 'My new document'
 });
 
-// ÉTAPE 2 : Ajout des métadonnées via MetaContainer
+// STEP 2: Add metadata via MetaContainer
 let metaContainer = {
   id: crypto.randomUUID(),
   token: node.token,
   meta: {
-    description: 'Contenu du document',
+    description: 'Document content',
     path: [],
     category: 'Documentation',
-    tags: ['important', 'projet']
+    tags: ['important', 'project']
   },
   create_dt: Date.now(),
   update_dt: Date.now()
@@ -49,171 +49,171 @@ let metaContainer = {
 let [metaOperation, metadata] = vpi.addMetadata(metaContainer);
 ```
 
-### Explication du Code
+### Code Explanation
 
-- `ProjectInstance.init(...)` : Initialise un projet en retournant un ProxyProjectInstance qui permet un accès simplifié à toutes les couches du projet.
-- `vpi.addNode(...)` : Crée le **Fragment de Node** de base. Cette méthode retourne un tableau contenant deux éléments :
-  - `operation` : L'opération associée à l'ajout du nœud.
-  - `node` : Le fragment de nœud qui a été ajouté.
-- `vpi.addMetadata(metaContainer)` : Crée le **MetaContainer** associé au node. Prend un objet IMetaContainer complet avec id, token, meta, create_dt, update_dt.
+- `ProjectInstance.init(...)`: Initializes a project by returning a ProxyProjectInstance that allows simplified access to all project layers.
+- `vpi.addNode(...)`: Creates the basic **Node Fragment**. This method returns an array containing two elements:
+  - `operation`: The operation associated with adding the node.
+  - `node`: The node fragment that was added.
+- `vpi.addMetadata(metaContainer)`: Creates the **MetaContainer** associated with the node. Takes a complete IMetaContainer object with id, token, meta, create_dt, update_dt.
 
-### Pourquoi 2 étapes ?
+### Why 2 steps?
 
-Cette séparation permet :
+This separation allows:
 
-- Une validation indépendante du node et de ses metadata
-- Une gestion flexible des MetaContainers
-- Une architecture claire entre entité et propriétés
+- Independent validation of the node and its metadata
+- Flexible MetaContainer management
+- Clear architecture between entity and properties
 
-## Lire un Nœud (Read)
+## Reading a Node (Read)
 
-Pour récupérer un nœud existant et ses métadonnées, plusieurs méthodes sont disponibles :
+To retrieve an existing node and its metadata, several methods are available:
 
 ```typescript
-// Récupérer un fragment de nœud par son token
+// Retrieve a node fragment by its token
 const node = vpi.getNodeByToken('node-token');
 
-// Récupérer les métadonnées associées au nœud
+// Retrieve metadata associated with the node
 const nodeMetadata = vpi.getMetadataByNodeToken('node-token');
 
-// Vérifier l'existence d'un nœud
+// Check node existence
 const exists = vpi.hasNode('node-token');
 
-// Récupérer tous les nœuds d'un type spécifique
+// Retrieve all nodes of a specific type
 const fileNodes = vpi.getNodesByType('file');
 
-// Rechercher dans tous les nœuds avec des critères
+// Search all nodes with criteria
 const searchResults = vpi.queryNodeAll({ type: 'file' });
 
-// Rechercher un nœud dans toutes les collections (nodes, lists, structures, childs)
+// Search for a node in all collections (nodes, lists, structures, childs)
 const foundNode = vpi.findNodeByToken('any-token');
 ```
 
-## Mettre à Jour un Nœud (Update)
+## Updating a Node (Update)
 
-Pour mettre à jour un fragment de nœud et ses métadonnées, vous pouvez agir sur chaque composant séparément.
+To update a node fragment and its metadata, you can act on each component separately.
 
 ```typescript
-// Mise à jour du fragment de nœud lui-même
+// Update the node fragment itself
 let [operation, updatedNode] = vpi.dataManager.setNode({
   ...node,
-  name: 'Nom modifié'
+  name: 'Modified name'
 });
 
-// Mise à jour des métadonnées via le MetaContainer
+// Update metadata via MetaContainer
 let updatedMetaContainer = {
-  ...metadata, // récupère l'objet metadata existant
+  ...metadata, // retrieve existing metadata object
   meta: {
-    ...metadata.meta, // garde les métadonnées existantes
-    description: 'Nouveau contenu',
-    category: 'Documentation Mise à Jour',
-    tags: ['modifié', 'important']
+    ...metadata.meta, // keep existing metadata
+    description: 'New content',
+    category: 'Updated Documentation',
+    tags: ['modified', 'important']
   },
   update_dt: Date.now()
 };
 let [metaOperation, updatedMetadata] = vpi.setMetadata(updatedMetaContainer);
 
-// Alternative : utiliser la méthode update du nœud directement
+// Alternative: use the node's update method directly
 const updateOperation = node.update({
-  name: 'Nom modifié via le nœud'
+  name: 'Modified name via node'
 });
 ```
 
-### Explication du Code
+### Code Explanation
 
-- `vpi.setNode(node.token, updatedProperties)` : Met à jour le **Fragment de Node** identifié par `node.token`. Cette méthode retourne l'opération effectuée et le fragment mis à jour.
-- `vpi.setMetadata(metaContainer)` : Met à jour le **MetaContainer** associé au node. Prend un objet IMetaContainer complet mis à jour.
-- `node.update(...)` : Méthode directe sur l'instance du nœud pour le mettre à jour.
+- `vpi.setNode(node.token, updatedProperties)`: Updates the **Node Fragment** identified by `node.token`. This method returns the operation performed and the updated fragment.
+- `vpi.setMetadata(metaContainer)`: Updates the **MetaContainer** associated with the node. Takes a complete updated IMetaContainer object.
+- `node.update(...)`: Direct method on the node instance to update it.
 
-## Supprimer un Nœud (Delete)
+## Deleting a Node (Delete)
 
-Pour supprimer un nœud, utilisez la méthode `deleteNode` en spécifiant l'identifiant du nœud à supprimer.
+To delete a node, use the `deleteNode` method by specifying the identifier of the node to delete.
 
 ```typescript
-// Suppression d'un nœud via le projet
+// Delete a node via the project
 let operation = vpi.deleteNode(node.token);
 
-// Alternative : suppression directe via le nœud
+// Alternative: direct deletion via the node
 const deleteOperation = node.delete();
 ```
 
-### Explication du Code
+### Code Explanation
 
-- `vpi.deleteNode(node.token)` : Supprime le nœud identifié par `node.token` du projet. Cette méthode retourne l'opération associée à la suppression.
-- `node.delete()` : Méthode directe sur l'instance du nœud pour le supprimer.
+- `vpi.deleteNode(node.token)`: Deletes the node identified by `node.token` from the project. This method returns the operation associated with the deletion.
+- `node.delete()`: Direct method on the node instance to delete it.
 
-## Fonctionnalités avancées des nœuds
+## Advanced Node Features
 
-### Gestion des métadonnées
+### Metadata Management
 
 ```typescript
-// Récupérer les métadonnées du nœud
+// Retrieve node metadata
 const metadata = node.getMetadata();
 
-// Définir les métadonnées du nœud
+// Set node metadata
 node.setMetadata({
-  description: 'Description du nœud',
+  description: 'Node description',
   tags: ['important', 'document']
 });
 ```
 
-### Gestion des relations
+### Relationship Management
 
 ```typescript
-// Relations entrantes vers ce nœud
+// Incoming relationships to this node
 const incomingRelations = node.inRelationships;
 
-// Relations sortantes depuis ce nœud
+// Outgoing relationships from this node
 const outgoingRelations = node.outRelationships;
 
-// Relations provenant de ce nœud
+// Relationships originating from this node
 const fromRelations = node.fromRelationships;
 
-// Relations destinées à ce nœud
+// Relationships destined for this node
 const forRelations = node.forRelationships;
 ```
 
-### Gestion des nœuds liés
+### Linked Node Management
 
 ```typescript
-// Nœuds connectés en entrée
+// Connected nodes in input
 const incomingNodes = node.inNodes;
 
-// Nœuds connectés en sortie
+// Connected nodes in output
 const outgoingNodes = node.outNodes;
 
-// Nœuds source
+// Source nodes
 const sourceNodes = node.fromNodes;
 
-// Nœuds destination
+// Destination nodes
 const destinationNodes = node.forNodes;
 ```
 
-### Création de liens
+### Link Creation
 
 ```typescript
-// Créer un lien vers un autre nœud de type HAS_...
+// Create a link to another node of type HAS_...
 node.linkTo(otherNode.token);
 
-// Créer un lien vers un autre nœud de type IS_..._FOR_...
+// Create a link to another node of type IS_..._FOR_...
 node.linkFor(otherNode.token);
 ```
 
-### Propriétés du nœud
+### Node Properties
 
 ```typescript
-// Représentation aplatie du nœud
+// Flattened representation of the node
 const flatRepresentation = node.flat;
 
-// Schéma du nœud
+// Node schema
 const nodeSchema = node.schema;
 ```
 
-## Résumé des Opérations
+## Operations Summary
 
-- **Création (addNode)** : Ajoute un nouveau nœud au projet et retourne à la fois l'opération et le nœud créé.
-- **Lecture (getNodeByToken, hasNode, getNodesByType, queryNodeAll)** : Différentes méthodes pour récupérer et rechercher des nœuds.
-- **Mise à jour (setNode, node.update)** : Modifie les propriétés d'un nœud existant et retourne l'opération et le nœud mis à jour.
-- **Suppression (deleteNode, node.delete)** : Supprime un nœud du projet et retourne l'opération associée.
+- **Creation (addNode)**: Adds a new node to the project and returns both the operation and the created node.
+- **Reading (getNodeByToken, hasNode, getNodesByType, queryNodeAll)**: Different methods to retrieve and search for nodes.
+- **Update (setNode, node.update)**: Modifies properties of an existing node and returns the operation and updated node.
+- **Deletion (deleteNode, node.delete)**: Removes a node from the project and returns the associated operation.
 
-Ces opérations vous permettent de manipuler efficacement les nœuds dans un projet VNV, en utilisant les fonctionnalités exposées par le ProxyProjectInstance pour accéder directement aux différentes couches du projet.
+These operations allow you to efficiently manipulate nodes in a VNV project, using the functionalities exposed by the ProxyProjectInstance to directly access different project layers.

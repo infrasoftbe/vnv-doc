@@ -1,70 +1,70 @@
 ---
-title: "Structures CRUD avec Fragments"
+title: "Structures CRUD with Fragments"
 weight: 2308
 ---
-# Structures CRUD avec Fragments
+# Structures CRUD with Fragments
 
-Ce guide explique comment effectuer des opérations CRUD (Create, Read, Update, Delete) sur les **Fragments de Structures** dans un projet VNV en utilisant le VPI.
+This guide explains how to perform CRUD (Create, Read, Update, Delete) operations on **Structure Fragments** in a VNV project using the VPI.
 
-## Qu'est-ce qu'une Structure avec Fragments ?
+## What is a Structure with Fragments?
 
-Une structure au sein d'un VPI est un **Fragment de Node** étendu par la classe `Structure`. Elle possède les mêmes utilitaires que le nœud, plus des fonctionnalités spécifiques pour gérer des collections organisées.
+A structure within a VPI is a **Node Fragment** extended by the `Structure` class. It has the same utilities as the node, plus specific functionalities for managing organized collections.
 
-### Children - Nodes organisationnels
+### Children - Organizational Nodes
 
-Les structures utilisent des **Children** (structure_child) qui sont des **références virtuelles** stockées dans `structure.metadata.children`. Ces children :
+Structures use **Children** (structure_child) which are **virtual references** stored in `structure.metadata.children`. These children:
 
-- **N'ont pas** de metadata propres
-- Sont des **pointeurs organisationnels** vers de vrais nœuds
-- Possèdent un champ `child` qui indique la **position hiérarchique** :
-  - **Structures** : `child: "1.2.1"` (position dans la hiérarchie - enfant de "1.2")
-  - **Listes** : `child: "3"` (position dans la liste ordonnée)
-- Sont **liés aux vrais nœuds** via des relations `HAS_LINK` dans `vpi.data.relations`
-- Le vrai nœud lié doit avoir le type correspondant à `structure.meta.type`
+- **Do not have** their own metadata
+- Are **organizational pointers** to real nodes
+- Have a `child` field that indicates the **hierarchical position**:
+  - **Structures**: `child: "1.2.1"` (position in hierarchy - child of "1.2")
+  - **Lists**: `child: "3"` (position in ordered list)
+- Are **linked to real nodes** via `HAS_LINK` relationships in `vpi.data.relations`
+- The linked real node must have the type corresponding to `structure.meta.type`
 
-## Ajouter une Structure (Create) - Processus en 2 étapes
+## Adding a Structure (Create) - 2-Step Process
 
 ```typescript
 import * as vnv from '@infrasoftbe/vnv-sdk';
 
-// Initialisation d'un projet
-let project = vnv.VPI.ProjectInstance.init({/* votre projet */});
+// Project initialization
+let project = vnv.VPI.ProjectInstance.init({/* your project */});
 
-// ÉTAPE 1 : Ajout du fragment de structure
+// STEP 1: Add the structure fragment
 let [operation, structure] = vpi.addStructure({
   type: 'structure', // <-- !REQUIRED!
-  name: 'Mon dossier de documents' // <-- !REQUIRED!
+  name: 'My document folder' // <-- !REQUIRED!
 });
 
-// ÉTAPE 2 : Ajout des métadonnées avec children organisationnels
+// STEP 2: Add metadata with organizational children
 let structureMetaContainer = {
   id: crypto.randomUUID(),
   token: structure.token,
   meta: {
-    description: 'Dossier contenant tous les documents du projet',
+    description: 'Folder containing all project documents',
     path: [],
     ref_extern: '',
     external: null,
     type: 'file', // <-- !REQUIRED!
     children: [
-      // Children nodes avec positionnement hiérarchique
+      // Children nodes with hierarchical positioning
       {
-        child: '1', // Position hiérarchique
+        child: '1', // Hierarchical position
         id: 'structure-child-1',
         meta: null,
         name: 'Document 1',
         token: 'child1-token',
         type: 'structure_child'
-        // Relation HAS_LINK vers un nœud de type 'file' créée automatiquement
+        // HAS_LINK relationship to a 'file' type node created automatically
       },
       {
-        child: '1.1', // Enfant de '1'
+        child: '1.1', // Child of '1'
         id: 'structure-child-2',
         meta: null,
-        name: 'Sous-document 1.1',
+        name: 'Sub-document 1.1',
         token: 'child2-token',
         type: 'structure_child'
-        // Relation HAS_LINK vers un nœud de type 'file' créée automatiquement
+        // HAS_LINK relationship to a 'file' type node created automatically
       }
   ]
   },
@@ -74,204 +74,204 @@ let structureMetaContainer = {
 let [metaOperation, metadata] = vpi.addMetadata(structureMetaContainer);
 ```
 
-### Explication du Code
+### Code Explanation
 
-- `vpi.addStructure(...)` : Ajoute une nouvelle structure au projet. Cette méthode retourne un tableau contenant :
-  - `operation` : L'opération associée à l'ajout de la structure.
-  - `structure` : La structure qui a été ajoutée.
+- `vpi.addStructure(...)`: Adds a new structure to the project. This method returns an array containing:
+  - `operation`: The operation associated with adding the structure.
+  - `structure`: The structure that was added.
 
-## Lire une Structure (Read)
+## Reading a Structure (Read)
 
-Pour récupérer une structure existante, plusieurs méthodes sont disponibles :
+To retrieve an existing structure, several methods are available:
 
 ```typescript
-// Récupérer une structure par son token
+// Retrieve a structure by its token
 const structure = vpi.getStructureByToken('structure-token');
 
-// Vérifier l'existence d'une structure
+// Check structure existence
 const exists = vpi.hasStructure('structure-token');
 
-// Rechercher dans toutes les structures avec des critères
+// Search all structures with criteria
 const searchResults = vpi.queryStructureAll({ type: 'structure' });
 
-// Rechercher une structure dans toutes les collections
+// Search for a structure in all collections
 const foundStructure = vpi.findNodeByToken('structure-token');
 ```
 
-## Mettre à Jour une Structure (Update)
+## Updating a Structure (Update)
 
-Pour mettre à jour une structure existante, utilisez la méthode `setStructure` :
+To update an existing structure, use the `setStructure` method:
 
 ```typescript
-// Mise à jour d'une structure existante
+// Updating an existing structure
 let [operation, updatedStructure] = vpi.setStructure(structure.token, {
-  name: 'Dossier renommé',
+  name: 'Renamed folder',
   metadata: {
-    description: 'Description mise à jour',
+    description: 'Updated description',
     path: [],
     ref_extern: '',
     external: null,
   }
 });
 
-// Alternative : utiliser la méthode update de la structure
+// Alternative: use the structure's update method
 const updateOperation = structure.update({
-  name: 'Nouveau nom via la structure'
+  name: 'New name via structure'
 });
 ```
 
-## Supprimer une Structure (Delete)
+## Deleting a Structure (Delete)
 
-Pour supprimer une structure, utilisez la méthode `deleteStructure` :
+To delete a structure, use the `deleteStructure` method:
 
 ```typescript
-// Suppression d'une structure
+// Deleting a structure
 let operation = vpi.deleteStructure('structure-token');
 
-// Alternative : suppression directe via la structure
+// Alternative: direct deletion via structure
 const deleteOperation = structure.delete();
 ```
 
-## Gestion des Nœuds Enfants
+## Managing Child Nodes
 
-{{< callout context="tip" title="Distinction importante : Vrais nœuds vs Structure Children" icon="outline/rocket" >}}
-**NE PAS CONFONDRE** :
-- **Vrais nœuds** : Créés avec `vpi.addNode({ type: 'file' })` - ont des metadata complètes
-- **Structure Children** : Créés avec `structure.addNode({ type: 'structure_child' })` - références virtuelles SANS metadata
+{{< callout context="tip" title="Important Distinction: Real Nodes vs Structure Children" icon="outline/rocket" >}}
+**DO NOT CONFUSE**:
+- **Real nodes**: Created with `vpi.addNode({ type: 'file' })` - have complete metadata
+- **Structure Children**: Created with `structure.addNode({ type: 'structure_child' })` - virtual references WITHOUT metadata
 
-**Quand utiliser quoi** :
-- `vpi.addNode()` → Pour créer un vrai nœud métier (fichier, tâche, contact...)
-- `structure.addNode({ type: 'structure_child' })` → Pour référencer/organiser des nœuds existants dans la structure
+**When to use what**:
+- `vpi.addNode()` → To create a real business node (file, task, contact...)
+- `structure.addNode({ type: 'structure_child' })` → To reference/organize existing nodes in the structure
 {{< /callout >}}
 
-Les structures offrent des méthodes spécifiques pour gérer leurs nœuds enfants (structure_child) :
+Structures offer specific methods to manage their child nodes (structure_child):
 
-### Ajouter un nœud enfant
+### Adding a child node
 
 ```typescript
-// Ajouter un nœud enfant à la structure
+// Add a child node to the structure
 const [childOp, childNode] = structure.addNode({
   type: 'structure_child',
-  name: 'Document enfant',
-  child: '1', // Position hiérarchique
-  meta: null // Les structure_child n'ont pas de metadata
-  // Peut être lié via HAS_LINK à un nœud de type structure.meta.type
+  name: 'Child document',
+  child: '1', // Hierarchical position
+  meta: null // structure_child don't have metadata
+  // Can be linked via HAS_LINK to a node of type structure.meta.type
 });
 ```
 
-### Mettre à jour un nœud enfant
+### Updating a child node
 
 ```typescript
-// Mettre à jour un nœud enfant (IStructureChild)
+// Update a child node (IStructureChild)
 const [updateChildOp, updatedChild] = structure.setNode({
   ...childNode,
-  name: 'Titre modifié'
+  name: 'Modified title'
 });
 ```
 
-### Vérifier l'existence d'un nœud enfant
+### Checking child node existence
 
 ```typescript
-// Vérifier si un nœud est enfant de la structure
+// Check if a node is a child of the structure
 const hasChild = structure.hasNode(childNode.token);
 ```
 
-### Supprimer un nœud enfant
+### Deleting a child node
 
 ```typescript
-// Supprimer un nœud enfant de la structure
+// Delete a child node from the structure
 const deleteChildOp = structure.deleteNode(childNode.token);
 ```
 
-### Rechercher dans les nœuds enfants
+### Searching child nodes
 
 ```typescript
-// Rechercher dans tous les nœuds enfants
+// Search all child nodes
 const childResults = structure.queryNodeAll({ type: 'file' });
 
-// Récupérer un enfant par son token
+// Retrieve a child by its token
 const child = structure.getChildByToken('child-token');
 ```
 
-## Validation de la Structure
+## Structure Validation
 
-Les structures offrent des méthodes de validation pour vérifier leur intégrité :
+Structures offer validation methods to check their integrity:
 
 ```typescript
-// Vérifier la cohérence de la structure
+// Check structure consistency
 const isConsistent = structure.isConsistant();
 
-// Vérifier si la structure est complète
+// Check if the structure is complete
 const isComplete = structure.isComplete();
 
-// Vérifier la validité de la structure
+// Check structure validity
 const isCorrect = structure.isCorrect();
 
-// Exemple d'utilisation
+// Usage example
 if (!structure.isCorrect()) {
-  console.warn('La structure présente des problèmes de validité');
+  console.warn('The structure has validity issues');
 
   if (!structure.isConsistant()) {
-    console.error('Problème de cohérence détecté');
+    console.error('Consistency problem detected');
   }
 
   if (!structure.isComplete()) {
-    console.warn('La structure est incomplète');
+    console.warn('The structure is incomplete');
   }
 }
 ```
 
-## Représentations de Données
+## Data Representations
 
-Les structures fournissent différentes représentations pour l'affichage et l'export :
+Structures provide different representations for display and export:
 
-### Représentations imbriquées
+### Nested representations
 
 ```typescript
-// Représentation imbriquée (Structure - Childs)
+// Nested representation (Structure - Childs)
 const nestedV1 = structure.nestedv1();
 
-// Représentation imbriquée (Structure - Childs - Nodes)
+// Nested representation (Structure - Childs - Nodes)
 const nestedV2 = structure.nestedv2();
 
-console.log('Structure avec enfants directs:', nestedV1);
-console.log('Structure avec enfants et leurs nœuds:', nestedV2);
+console.log('Structure with direct children:', nestedV1);
+console.log('Structure with children and their nodes:', nestedV2);
 ```
 
-### Représentations aplaties
+### Flattened representations
 
 ```typescript
-// Représentation aplatie (Structure - Childs)
+// Flattened representation (Structure - Childs)
 const flatV1 = structure.flatv1();
 
-// Représentation aplatie (Structure - Childs - Nodes)
+// Flattened representation (Structure - Childs - Nodes)
 const flatV2 = structure.flatv2();
 
-console.log('Structure aplatie avec enfants:', flatV1);
-console.log('Structure aplatie complète:', flatV2);
+console.log('Flattened structure with children:', flatV1);
+console.log('Complete flattened structure:', flatV2);
 ```
 
-## Exemples d'Utilisation Avancée
+## Advanced Usage Examples
 
-### Structure de dossiers hiérarchique
+### Hierarchical folder structure
 
 ```typescript
-// ÉTAPE 1 : Créer une structure de dossiers
+// STEP 1: Create a folder structure
 const [folderOp, rootFolder] = vpi.addStructure({
   type: 'structure',
-  name: 'Projet Documents'
+  name: 'Document Project'
 });
 
-// ÉTAPE 2 : Ajouter les métadonnées
+// STEP 2: Add metadata
 let folderMetaContainer = {
   id: crypto.randomUUID(),
   token: rootFolder.token,
   meta: {
-    description: 'Structure racine du projet',
+    description: 'Project root structure',
     path: [],
     ref_extern: '',
     external: null,
-    type: 'file', // Type des nœuds liés
+    type: 'file', // Type of linked nodes
     children: []
   },
   create_dt: Date.now(),
@@ -279,39 +279,39 @@ let folderMetaContainer = {
 };
 let [folderMetaOp, folderMetadata] = vpi.addMetadata(folderMetaContainer);
 
-// Ajouter des sous-structures (structure_child pointant vers une structure)
+// Add sub-structures (structure_child pointing to a structure)
 const [subStructureOp, subStructure] = rootFolder.addNode({
   type: 'structure_child',
-  name: 'Documentation Technique',
-  child: '1', // Position hiérarchique
-  meta: null // Les structure_child n'ont pas de metadata
-  // Peut être lié via HAS_LINK à une structure existante
+  name: 'Technical Documentation',
+  child: '1', // Hierarchical position
+  meta: null // structure_child don't have metadata
+  // Can be linked via HAS_LINK to an existing structure
 });
 
-// Pour ajouter des documents, il faut récupérer la vraie structure liée
-// puis ajouter des structure_child à cette structure
-// (exemple conceptuel - subStructure est maintenant un structure_child)
+// To add documents, you need to retrieve the real linked structure
+// then add structure_child to that structure
+// (conceptual example - subStructure is now a structure_child)
 ```
 
-### Structure de workflow
+### Workflow structure
 
 ```typescript
-// ÉTAPE 1 : Créer une structure de workflow
+// STEP 1: Create a workflow structure
 const [workflowOp, workflow] = vpi.addStructure({
   type: 'structure',
-  name: 'Processus de Validation'
+  name: 'Validation Process'
 });
 
-// ÉTAPE 2 : Ajouter les métadonnées
+// STEP 2: Add metadata
 let workflowMetaContainer = {
   id: crypto.randomUUID(),
   token: workflow.token,
   meta: {
-    description: 'Structure du processus de validation',
+    description: 'Validation process structure',
     path: [],
     ref_extern: '',
     external: null,
-    type: 'work', // Type des nœuds liés
+    type: 'work', // Type of linked nodes
     children: []
   },
   create_dt: Date.now(),
@@ -319,30 +319,30 @@ let workflowMetaContainer = {
 };
 let [workflowMetaOp, workflowMetadata] = vpi.addMetadata(workflowMetaContainer);
 
-// Ajouter les étapes du workflow
+// Add workflow steps
 workflow.addNode({
   type: 'structure_child',
-  name: 'Brouillon',
-  child: '1', // Première étape
-  meta: null // Les structure_child n'ont pas de metadata
-  // Peut être lié via HAS_LINK à un nœud de type workflow.meta.type
+  name: 'Draft',
+  child: '1', // First step
+  meta: null // structure_child don't have metadata
+  // Can be linked via HAS_LINK to a node of type workflow.meta.type
 });
 
 workflow.addNode({
   type: 'structure_child',
-  name: 'Révision',
-  child: '2', // Deuxième étape
-  meta: null // Les structure_child n'ont pas de metadata
-  // Peut être lié via HAS_LINK à un nœud de type workflow.meta.type
+  name: 'Review',
+  child: '2', // Second step
+  meta: null // structure_child don't have metadata
+  // Can be linked via HAS_LINK to a node of type workflow.meta.type
 });
 ```
 
-## Propriétés Héritées des Nœuds
+## Properties Inherited from Nodes
 
-Les structures héritent de toutes les fonctionnalités des nœuds :
+Structures inherit all node functionalities:
 
 ```typescript
-// Gestion des métadonnées
+// Metadata management
 const metadata = structure.getMetadata();
 structure.setMetadata({
   ...metadata,
@@ -350,27 +350,27 @@ structure.setMetadata({
   lastOrganized: new Date().toISOString()
 });
 
-// Gestion des relations
+// Relationship management
 const incomingRelations = structure.inRelationships;
 const outgoingRelations = structure.outRelationships;
 
-// Création de liens
+// Link creation
 structure.linkTo(otherStructure.token);
 structure.linkFor(parentProject.token);
 
-// Propriétés
+// Properties
 const flatRepresentation = structure.flat;
 const structureSchema = structure.schema;
 ```
 
-## Résumé des Opérations
+## Operations Summary
 
-- **Création (addStructure)** : Ajoute une nouvelle structure au projet
-- **Lecture (getStructureByToken, hasStructure, queryStructureAll)** : Différentes méthodes pour récupérer et rechercher des structures
-- **Mise à jour (setStructure, structure.update)** : Modifie les propriétés d'une structure existante
-- **Suppression (deleteStructure, structure.delete)** : Supprime une structure du projet
-- **Gestion des enfants (addNode, setNode, hasNode, deleteNode, queryNodeAll, getChildByToken)** : Méthodes pour gérer les nœuds enfants
-- **Validation (isConsistant, isComplete, isCorrect)** : Méthodes pour valider l'intégrité de la structure
-- **Représentations (nestedv1, nestedv2, flatv1, flatv2)** : Différentes façons d'obtenir une représentation de la structure
+- **Creation (addStructure)**: Adds a new structure to the project
+- **Reading (getStructureByToken, hasStructure, queryStructureAll)**: Different methods to retrieve and search structures
+- **Update (setStructure, structure.update)**: Modifies properties of an existing structure
+- **Deletion (deleteStructure, structure.delete)**: Removes a structure from the project
+- **Child management (addNode, setNode, hasNode, deleteNode, queryNodeAll, getChildByToken)**: Methods to manage child nodes
+- **Validation (isConsistant, isComplete, isCorrect)**: Methods to validate structure integrity
+- **Representations (nestedv1, nestedv2, flatv1, flatv2)**: Different ways to get a representation of the structure
 
-Ces opérations vous permettent de créer et gérer des structures complexes dans un projet VNV, offrant une organisation hiérarchique des données avec validation et représentations multiples.
+These operations allow you to create and manage complex structures in a VNV project, offering hierarchical data organization with validation and multiple representations.
