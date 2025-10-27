@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "docs/packages/vnv-project/basics/structure-crud.md",
+                "file": "docs/guides/test.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "structure-crud"
+              "title": "test"
             }
           }
         ]
@@ -172,34 +172,40 @@
   },
   "active": "baacff993f60d0fc",
   "lastOpenFiles": [
-    "docs/packages/vnv-project/basics/list-crud.md",
-    "docs/packages/vnv-project/basics/node-crud.md",
-    "docs/packages/vnv-project/basics/relations-crud.md",
+    "docs/guides/example.md",
+    "docs/guides/Comment travailler avec un vnv Project.md",
+    "docs/packages/vpi/basics/_index.md",
+    "docs/packages/vpi/_index.md",
     "docs/packages/vnv-project/vpi-features.md",
+    "docs/packages/vpi/advanced/project-manipulation.md",
+    "docs/packages/vpi/advanced/operations.md",
+    "docs/packages/vpi/advanced/node-manipulation.md",
+    "docs/packages/vpi/advanced/_category_.json",
+    "docs/packages/vpi/basics/structure-crud.md",
+    "docs/packages/vpi/basics/list-crud.md",
+    "docs/packages/vpi/basics/relations-crud.md",
+    "docs/packages/vpi/basics/node-crud.md",
+    "docs/packages/vpi/basics/metadata-crud.md",
+    "docs/packages/vpi/basics/_category_.json",
+    "docs/packages/vpi/vpi-features.md",
+    "docs/packages/vpi/vnv-project.md",
+    "docs/packages/vpi/create-project.md",
+    "docs/packages/vpi/_category_.json",
+    "docs/packages/vpi/basics",
+    "docs/packages/vpi/advanced",
+    "docs/packages/vpi",
     "docs/packages/vnv-project/vnv-project.md",
     "docs/packages/vnv-project/basics/structure-crud.md",
+    "docs/packages/vnv-project/basics/list-crud.md",
     "docs/packages/vnv-project/basics/metadata-crud.md",
+    "docs/packages/vnv-project/basics/node-crud.md",
+    "docs/packages/vnv-project/basics/relations-crud.md",
     "docs/packages/vnv-project/create-project.md",
     "docs/packages/vnv-project/advanced/operations.md",
     "docs/packages/vnv-project/advanced/project-manipulation.md",
     "docs/packages/vnv-project/advanced/node-manipulation.md",
-    "docs/guides/Comment travailler avec un vnv Project.md",
     "docs/packages/vnv-project/vpi-features.mdx",
-    "docs/reference/example.md",
-    "docs/reference/_index.md",
     "Sans titre.base",
-    "Sans titre.canvas",
-    "docs/guides/dump.md",
-    "docs/guides/_index.md",
-    "docs/guides/test.md",
-    "docs/guides/example.md",
-    "blog/posts/x.md",
-    "blog/posts/Mainframe cloud architecture.md",
-    "blog/posts/new.md",
-    "blog/posts/reporting-engine-api.md",
-    "docs/packages/vnv-api-kit/database/metadatas.md",
-    "docs/packages/vnv-api-kit/database/lists.md",
-    "docs/packages/vnv-api-kit/database/introduction.md",
-    "docs/packages/vnv-api-kit/ess/guides/vpi/advanced/project-manipulation.md"
+    "Sans titre.canvas"
   ]
 }

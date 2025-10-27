@@ -4,7 +4,7 @@ sidebar_position: 1
 
 # Introduction
 
-Le module `@infrasoftbe/infrasoft-vnv-api-kit` a été développé pour offrir une interface unifiée permettant d’interagir avec l’ensemble des services d’Infrasoft. 
+Le module `@infrasoftbe/infrasoft-vnv-api-kit` a été développé pour offrir une interface unifiée permettant d’interagir avec l’ensemble des services d’Infrasoft.
 Ce module facilite l’accès aux services nécessaires pour stocker, manipuler, et administrer des données de manière sécurisée et efficiente, en fournissant une API centralisée.
 
 ## Objectif du module
@@ -92,12 +92,12 @@ Le module `@infrasoftbe/infrasoft-vnv-api-kit` regroupe plusieurs services essen
 
 Les services de `@infrasoftbe/infrasoft-vnv-api-kit` sont majoritairement accessibles à condition d’être authentifié, avec l’obtention préalable d’un jeton via le service claim. Selon les besoins de sécurité et de contrôle d’accès, certains services nécessitent des droits administratifs.
 
-Ce module a été conçu pour être extensible et adaptable à diverses situations rencontrées. 
+Ce module a été conçu pour être extensible et adaptable à diverses situations rencontrées.
 Grâce à `@infrasoftbe/infrasoft-vnv-api-kit`, les utilisateurs peuvent ainsi gérer les ressources et projets efficacement, tout en assurant une intégration fluide avec les autres solutions d’Infrasoft.
 
 ## Client
 
-Les clients d’`@infrasoftbe/infrasoft-vnv-api-kit` sont organisés sous forme de couches (layers) modulaires, chaque couche permettant d’interagir avec un service spécifique tout en accédant, si nécessaire, à des sous-couches pour des fonctionnalités étendues. 
+Les clients d’`@infrasoftbe/infrasoft-vnv-api-kit` sont organisés sous forme de couches (layers) modulaires, chaque couche permettant d’interagir avec un service spécifique tout en accédant, si nécessaire, à des sous-couches pour des fonctionnalités étendues.
 Cette organisation en couches assure une concaténation logique des points de terminaison (endpoints) et rend possible la création de contrôleurs réutilisables pour chaque service, dont l’architecture d’URL est générée dynamiquement en fonction de l’agencement des couches.
 
 Chaque couche, définie à l’aide du module API Layer, assume une double fonction :
@@ -107,7 +107,7 @@ Chaque couche, définie à l’aide du module API Layer, assume une double fonct
 
 ### API-Layer
 
-Chaque service, tel que sessions ou buckets, est structuré sous forme de layer avec [api-layer](./api-layer/api-layer.md), avec des sous-couches pour des services ou des opérations supplémentaires. 
+Chaque service, tel que sessions ou buckets, est structuré sous forme de layer avec [api-layer](./api-layer/api-layer.md), avec des sous-couches pour des services ou des opérations supplémentaires.
 Par exemple, en ajoutant un PageClient comme sous-couche d’un BookClient, on peut construire des contrôleurs qui se spécialisent pour des pages tout en conservant la logique des livres.
 
 ```ts
@@ -122,7 +122,7 @@ const BookClient = Layer(new URL("/books"))({
 BookClient.use('Pages', PageClient);
 ```
 
-Dans cet exemple, un layer peut utiliser un autre layer en tant que sous-couche (ex. PageClient dans BookClient), garantissant ainsi une structure de contrôleurs réutilisable et extensible. 
+Dans cet exemple, un layer peut utiliser un autre layer en tant que sous-couche (ex. PageClient dans BookClient), garantissant ainsi une structure de contrôleurs réutilisable et extensible.
 Ce modèle permet d’assurer une modularité optimale pour API-Kit, simplifiant la création d’interactions complexes tout en rendant le code maintenable.
 
 ### Fetch Factory
@@ -131,14 +131,14 @@ Ce modèle permet d’assurer une modularité optimale pour API-Kit, simplifiant
 
 ## Claim ![Generic badge](https://img.shields.io/badge/Feature-Beta-red.svg)
 
-:::danger
-Le fonctionnement des tokens est susceptible d’évoluer pour améliorer la sécurité des systèmes.
+{{< callout context="caution" title="Evolution des tokens" icon="outline/exclamation-triangle" >}}
+Le fonctionnement des tokens est susceptible d'évoluer pour améliorer la sécurité des systèmes.
 
 Actuellement, un token peut être obtenu de deux manières :
 
- - Avec un **username** (l’adresse e-mail), un **tenantId** (l’identifiant du tenant utilisé) et un **userId** (l’identificateur de l’utilisateur).
- - Avec un **username** (l’adresse e-mail) et un **homeAccountId** qui est constitué de la concaténation de tenantId et userId (sous la forme **tenantId**.**userId**).
-:::
+ - Avec un **username** (l'adresse e-mail), un **tenantId** (l'identifiant du tenant utilisé) et un **userId** (l'identificateur de l'utilisateur).
+ - Avec un **username** (l'adresse e-mail) et un **homeAccountId** qui est constitué de la concaténation de tenantId et userId (sous la forme **tenantId**.**userId**).
+{{< /callout >}}
 
 Le processus de claim d’un token nécessite certaines informations, qui peuvent être automatiquement résolues par les systèmes d’authentification de Microsoft. Toute personne connaissant son adresse e-mail et disposant d’informations spécifiques (généralement fournies par un administrateur) peut effectuer cette opération.
 
@@ -148,32 +148,32 @@ Voici un exemple de code pour effectuer un claim de token :
 import { ApiKitClient } from "@infrasoftbe/infrasoft-vnv-api-kit";
 
 // Claim avec username, userId et tenantId
-let { token } = await ApiKitClient.Claim({ 
-  username: "<username>", 
-  userId: "<your-userId>", 
-  tenantId: "<your-tenantId>" 
+let { token } = await ApiKitClient.Claim({
+  username: "<username>",
+  userId: "<your-userId>",
+  tenantId: "<your-tenantId>"
 });
 
 // OU
 
 // Claim avec username et homeAccountId
-let { token } = await ApiKitClient.Claim({ 
-  username: "<username>", 
-  homeAccountId: "<your-home-account-id>" 
+let { token } = await ApiKitClient.Claim({
+  username: "<username>",
+  homeAccountId: "<your-home-account-id>"
 });
 ```
 
 ## Auth
 
-:::warning
+{{< callout context="caution" title="Configuration unique" icon="outline/exclamation-triangle" >}}
 A notter que la configuration est **unique** et **ne peut-être dupliquée**, cella signifie qu'une nouvelle instanciation de `ApiKitClient` avec un nouveau token supprimera le token précédent et tout les nouveaux appels utiliseront le nouveau token.
-:::
+{{< /callout >}}
 
-Voici un exemple pour mettre à jour le token qui sera utilisé pour faire les appels avec le client ( s'authentifier ). 
+Voici un exemple pour mettre à jour le token qui sera utilisé pour faire les appels avec le client ( s'authentifier ).
 
 ```ts
 import { ApiKitClient } from "@infrasoftbe/infrasoft-vnv-api-kit";
 
-// 
+//
 let { SessionAPI , Neo4jAPI , ... } = ApiKitClient({ userToken : '<your-token>' });
 ```

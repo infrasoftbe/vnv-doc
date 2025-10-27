@@ -1,7 +1,7 @@
 ---
-sidebar_position: 3
+title: "MetaContainer CRUD avec Fragments"
+weight: 2306
 ---
-
 # MetaContainer CRUD avec Fragments
 
 Ce guide explique comment effectuer des opérations CRUD (Create, Read, Update, Delete) sur les **MetaContainers** des nœuds dans un projet VNV en utilisant le VPI.
@@ -9,6 +9,7 @@ Ce guide explique comment effectuer des opérations CRUD (Create, Read, Update, 
 ## Architecture MetaContainer vs Metadata
 
 Le VPI encapsule les metadata d'un node dans un **MetaContainer** qui :
+
 - Possède une **référence** au node propriétaire
 - Permet une gestion séparée des propriétés du node
 - Encapsule les metadata brutes dans un container structuré

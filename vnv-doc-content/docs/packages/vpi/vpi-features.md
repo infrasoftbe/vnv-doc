@@ -1,7 +1,7 @@
 ---
-sidebar_position: 3
+title: "Fonctionnalités"
+weight: 2303
 ---
-
 # Fonctionnalités du VPI
 
 Un VPI offre de nombreuses fonctionnalités pour gérer un projet VNV de manière efficace et structurée.
@@ -44,6 +44,7 @@ Le VPI travaille avec des **Fragments** - des unités atomiques de données. Tou
 ### Séparation Node/Metadata
 
 Le VPI maintient une séparation claire entre les nœuds et leurs métadonnées :
+
 - **Node** : L'entité de base avec ID, nom, type, token
 - **MetaContainer** : Encapsule les metadata d'un node avec une référence au node propriétaire
 
@@ -139,6 +140,7 @@ const incomingRels = vpi.getRelationToToken('node-token');
 ### Distinction Metadata vs MetaContainer
 
 Le VPI encapsule les metadata d'un node dans un **MetaContainer** qui possède une référence au node propriétaire. Cette séparation permet :
+
 - Une gestion indépendante des métadonnées
 - Une référence claire vers le node propriétaire
 - Une validation séparée des données
@@ -194,6 +196,7 @@ const nodeMetadata = vpi.getMetadataByNodeToken('node-token');
 ### Structures avec Children Virtuels
 
 Les structures sont des vrais nodes dans le VPI, mais leurs **children** sont des références virtuelles stockées dans `structure.metadata.children`. Ces children :
+
 - N'ont **pas** de metadata propres
 - Sont des pointeurs vers d'autres nodes réels
 - Permettent l'organisation hiérarchique
@@ -221,7 +224,7 @@ const structMetaContainer = {
         name: 'Node 1',
         token: 'node1-token',
         type: 'structure_child'
-        // Relation HAS_LINK vers nœud correspondant créée automatiquement
+        // Peut être lié via HAS_LINK à un nœud du type structure.meta.type
       },
       {
         child: '1.1', // Enfant de '1'
@@ -230,7 +233,7 @@ const structMetaContainer = {
         name: 'Node 2',
         token: 'node2-token',
         type: 'structure_child'
-        // Relation HAS_LINK vers nœud correspondant créée automatiquement
+        // Peut être lié via HAS_LINK à un nœud du type structure.meta.type
       }
     ]
   },
@@ -286,7 +289,7 @@ const listMetaContainer = {
         name: 'Task 1',
         token: 'task1-token',
         type: 'list_child'
-        // Relation HAS_LINK vers nœud de type list.meta.type
+        // Peut être lié via HAS_LINK à un nœud de type list.meta.type
       },
       {
         child: '2', // Position 2 dans la liste
@@ -295,7 +298,7 @@ const listMetaContainer = {
         name: 'Task 2',
         token: 'task2-token',
         type: 'list_child'
-        // Relation HAS_LINK vers nœud de type list.meta.type
+        // Peut être lié via HAS_LINK à un nœud de type list.meta.type
       },
       {
         child: '3', // Position 3 dans la liste
@@ -304,7 +307,7 @@ const listMetaContainer = {
         name: 'Task 3',
         token: 'task3-token',
         type: 'list_child'
-        // Relation HAS_LINK vers nœud de type list.meta.type
+        // Peut être lié via HAS_LINK à un nœud de type list.meta.type
       }
     ]
   },

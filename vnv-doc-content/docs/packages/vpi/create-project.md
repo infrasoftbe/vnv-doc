@@ -1,14 +1,14 @@
 ---
-sidebar_position: 2
+title: "Utilisation d'un VPI"
+weight: 2302
 ---
-
 # Utilisation d'un VPI
 
 Ce guide montre comment créer et utiliser un VPI (Virtual Project Interface) en utilisant le package @infrasoftbe/infrasoft-project.
 
-:::tip
+{{< callout context="tip" title="Note sur l'instanciation" icon="outline/lightbulb" >}}
 Le VPI s'instancie avec le package `VPI` du SDK `@infrasoftbe/vnv-sdk`. Dans les exemples suivants, nous utilisons `@infrasoftbe/infrasoft-project` qui fournit les mêmes fonctionnalités dans un contexte réel avec interaction avec des bases de données.
-:::
+{{< /callout >}}
 
 ## Initialisation d'un VPI
 

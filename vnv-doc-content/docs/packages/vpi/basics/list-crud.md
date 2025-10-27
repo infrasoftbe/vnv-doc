@@ -1,7 +1,7 @@
 ---
-sidebar_position: 5
+title: "Listes CRUD"
+weight: 2309
 ---
-
 # Listes CRUD
 
 Ce guide explique comment effectuer des opérations CRUD (Create, Read, Update, Delete) sur les listes dans un projet VNV en utilisant le VPI.
@@ -15,6 +15,7 @@ Une liste au sein d'un VPI est une instance de la classe `_list` qui hérite de 
 Les listes héritent de toutes les fonctionnalités des structures :
 
 **Méthodes héritées de Structure :**
+
 - **Navigation** : `forNodes`, `fromNodes`, `inNodes`, `outNodes`
 - **Relations** : `forRelationships`, `fromRelationships`, `inRelationships`, `outRelationships`
 - **Méthodes de liaison** : `linkFor`, `linkFrom`, `linkTo`
@@ -24,6 +25,7 @@ Les listes héritent de toutes les fonctionnalités des structures :
 - **Autres** : `delete`, `update`, `flat`, `json`, `shema`
 
 **Méthodes spécialisées pour List :**
+
 - `addNode` : Ajoute un élément de type `IListChild` (override de Structure)
 - `setNode` : Modifie un élément `IListChild` (override de Structure)
 - `constructor` : Utilise `IListInitOptions` au lieu de `IStructureInitOptions`
@@ -69,21 +71,25 @@ let [metaOperation, metadata] = vpi.addMetadata(listMetaContainer);
   - `list` : La liste qui a été ajoutée.
 - `vpi.addMetadata(...)` : Ajoute les métadonnées à la liste (Étape 2).
 
-:::warning Relations HAS_LINK et Children
+{{< callout context="tip" title="Relations HAS_LINK et Children" icon="outline/rocket" >}}
 **Important :** Le champ `child` dans les `list_child` indique la **position** dans la liste (ex: "1", "2", "3"), **PAS** le token du nœud cible.
 
 La connexion vers les vrais nœuds se fait via des **relations HAS_LINK** stockées dans `vpi.data.relations` :
+
 - **Source** : le `list_child` (structure_child pour les structures)
 - **Target** : un nœud dont le `type` correspond à `list.meta.type`
 - **Type de relation** : `"HAS_LINK"`
+- **Contrainte** : Les liaisons ne sont possibles qu'entre children et nœuds du bon type
 
 Exemple :
+
 ```typescript
-// list.meta.type = 'task'
-// Relation créée automatiquement :
-// FROM: list_child.token -> TO: nœud_task.token (type: "HAS_LINK")
+// Si list.meta.type = 'task'
+// Alors ce list_child ne PEUT être lié qu'à des nœuds de type 'task'
+// Relation possible : FROM: list_child.token -> TO: nœud_task.token (type: "HAS_LINK")
+// Relation impossible : FROM: list_child.token -> TO: nœud_file.token
 ```
-:::
+{{< /callout >}}
 
 ## Lire une Liste (Read)
 
@@ -139,7 +145,17 @@ const deleteOperation = list.delete();
 
 ## Gestion des Éléments de Liste
 
-Les listes héritent de toutes les méthodes des structures pour gérer leurs éléments :
+{{< callout context="tip" title="Distinction importante : Vrais nœuds vs List Children" icon="outline/rocket" >}}
+**NE PAS CONFONDRE** :
+- **Vrais nœuds** : Créés avec `vpi.addNode({ type: 'task' })` - ont des metadata complètes
+- **List Children** : Créés avec `list.addNode({ type: 'list_child' })` - références virtuelles SANS metadata
+
+**Quand utiliser quoi** :
+- `vpi.addNode()` → Pour créer un vrai nœud métier (tâche, fichier, contact...)
+- `list.addNode({ type: 'list_child' })` → Pour référencer/organiser des nœuds existants dans la liste
+{{< /callout >}}
+
+Les listes héritent de toutes les méthodes des structures pour gérer leurs éléments (list_child) :
 
 ### Ajouter un élément à la liste
 
@@ -153,15 +169,15 @@ const [itemOp, listItem] = list.addNode({
 });
 ```
 
-:::info Architecture des éléments de Liste
-Les éléments d'une liste (`IListChild`) sont des **références virtuelles** ordonnées qui sont **liées** aux vrais nœuds via des relations `HAS_LINK` dans `vpi.data.relations`.
+{{< callout context="note" title="Architecture des éléments de Liste" icon="outline/info-circle" >}}
+Les éléments d'une liste (`IListChild`) sont des **références virtuelles** ordonnées qui **peuvent être liées** aux vrais nœuds via des relations `HAS_LINK` dans `vpi.data.relations`.
 
 - `type: 'list_child'` : Type spécifique aux éléments de liste
 - `child: '1'` : **Position** dans la liste ordonnée (1, 2, 3...)
 - `name` : Nom d'affichage dans la liste
 - `meta: null` : Les éléments de liste n'ont pas de métadonnées propres
-- **Relation HAS_LINK** : Créée automatiquement vers un nœud dont le type = `list.meta.type`
-:::
+- **Contrainte de liaison** : Si `list.meta.type = "file"`, alors ce `list_child` ne peut être lié (via HAS_LINK) qu'à un nœud de type `"file"`
+{{< /callout >}}
 
 ### Mettre à jour un élément de la liste
 
@@ -238,7 +254,7 @@ workList.addNode({
   name: 'Implémenter l\'authentification',
   child: '1', // Position 1 dans la liste
   meta: null
-  // Relation HAS_LINK créée vers un nœud de type 'task'
+  // Peut être lié via HAS_LINK à un nœud de type 'task'
 });
 ```
 
@@ -274,7 +290,7 @@ fileList.addNode({
   name: 'specification.pdf',
   child: '1', // Position 1 dans la liste
   meta: null
-  // Relation HAS_LINK créée vers un nœud de type 'file'
+  // Peut être lié via HAS_LINK à un nœud de type 'file'
 });
 ```
 
@@ -310,7 +326,7 @@ contactList.addNode({
   name: 'Jean Dupont',
   child: '1', // Position 1 dans la liste
   meta: null
-  // Relation HAS_LINK créée vers un nœud de type 'contact'
+  // Peut être lié via HAS_LINK à un nœud de type 'contact'
 });
 ```
 

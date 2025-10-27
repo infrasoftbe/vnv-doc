@@ -1,11 +1,11 @@
 ---
-title: "vnv-cli"
+title: "vnv-sdk-vpi"
 description: ""
 summary: ""
 date: 2023-09-07T16:12:37+02:00
 lastmod: 2023-09-07T16:12:37+02:00
 draft: false
-weight: 2100
+weight: 2300
 toc: true
 sidebar:
   collapsed: true

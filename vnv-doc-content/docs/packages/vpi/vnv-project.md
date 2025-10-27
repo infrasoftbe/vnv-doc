@@ -1,16 +1,16 @@
 ---
-sidebar_position: 1
+title: "Introduction"
+weight: 2301
 ---
-
 # Introduction au VPI (Virtual Project Interface)
 
 Un **Project DUMP** provient directement de la base de données et contient toutes les données d'un projet VNV au format JSON.
 
 Un **VPI** (Virtual Project Interface) est une interface virtuelle de projet, c'est-à-dire une représentation virtuelle d'un projet permettant d'interagir avec celui-ci de manière simplifiée et structurée.
 
-:::tip
-  Le package [@infrasoftbe/vnv-sdk](https://github.com/infrasoftbe/Infrasoft-vnv-ritual-project/pkgs/npm/vnv-sdk) est hébergé sur GitHub Packages. **Notez qu'il est nécessaire de disposer d'un token d'authentification distribué par l'administrateur pour pouvoir utiliser ce package.** Vous devez également être membre de l'organisation Infrasoft pour y avoir accès.
-:::
+{{< callout context="tip" title="Package GitHub - Authentification requise" icon="outline/key" >}}
+Le package [@infrasoftbe/vnv-sdk](https://github.com/infrasoftbe/Infrasoft-vnv-ritual-project/pkgs/npm/vnv-sdk) est hébergé sur GitHub Packages. **Notez qu'il est nécessaire de disposer d'un token d'authentification distribué par l'administrateur pour pouvoir utiliser ce package.** Vous devez également être membre de l'organisation Infrasoft pour y avoir accès.
+{{< /callout >}}
 
 ## Installation
 
@@ -57,4 +57,3 @@ Cette optimisation améliore considérablement les performances lors de la manip
 3. **Optimisation des performances** : Utilisation de Map au lieu d'arrays pour un accès direct
 4. **Traçabilité** : Système d'opérations pour suivre tous les changements
 5. **Synchronisation** : Calcul de différences pour une synchronisation efficace avec la base de données
-

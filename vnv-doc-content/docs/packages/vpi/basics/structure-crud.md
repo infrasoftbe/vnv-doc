@@ -1,7 +1,7 @@
 ---
-sidebar_position: 4
+title: "Structures CRUD avec Fragments"
+weight: 2308
 ---
-
 # Structures CRUD avec Fragments
 
 Ce guide explique comment effectuer des opérations CRUD (Create, Read, Update, Delete) sur les **Fragments de Structures** dans un projet VNV en utilisant le VPI.
@@ -13,6 +13,7 @@ Une structure au sein d'un VPI est un **Fragment de Node** étendu par la classe
 ### Children - Nodes organisationnels
 
 Les structures utilisent des **Children** (structure_child) qui sont des **références virtuelles** stockées dans `structure.metadata.children`. Ces children :
+
 - **N'ont pas** de metadata propres
 - Sont des **pointeurs organisationnels** vers de vrais nœuds
 - Possèdent un champ `child` qui indique la **position hiérarchique** :
@@ -133,21 +134,28 @@ const deleteOperation = structure.delete();
 
 ## Gestion des Nœuds Enfants
 
-Les structures offrent des méthodes spécifiques pour gérer leurs nœuds enfants :
+{{< callout context="tip" title="Distinction importante : Vrais nœuds vs Structure Children" icon="outline/rocket" >}}
+**NE PAS CONFONDRE** :
+- **Vrais nœuds** : Créés avec `vpi.addNode({ type: 'file' })` - ont des metadata complètes
+- **Structure Children** : Créés avec `structure.addNode({ type: 'structure_child' })` - références virtuelles SANS metadata
+
+**Quand utiliser quoi** :
+- `vpi.addNode()` → Pour créer un vrai nœud métier (fichier, tâche, contact...)
+- `structure.addNode({ type: 'structure_child' })` → Pour référencer/organiser des nœuds existants dans la structure
+{{< /callout >}}
+
+Les structures offrent des méthodes spécifiques pour gérer leurs nœuds enfants (structure_child) :
 
 ### Ajouter un nœud enfant
 
 ```typescript
 // Ajouter un nœud enfant à la structure
 const [childOp, childNode] = structure.addNode({
-  type: 'file',
+  type: 'structure_child',
   name: 'Document enfant',
-  metadata: {
-    description: 'Contenu du document',
-    path: [],
-    ref_extern: '',
-    external: null
-  }
+  child: '1', // Position hiérarchique
+  meta: null // Les structure_child n'ont pas de metadata
+  // Peut être lié via HAS_LINK à un nœud de type structure.meta.type
 });
 ```
 
@@ -248,55 +256,84 @@ console.log('Structure aplatie complète:', flatV2);
 ### Structure de dossiers hiérarchique
 
 ```typescript
-// Créer une structure de dossiers
+// ÉTAPE 1 : Créer une structure de dossiers
 const [folderOp, rootFolder] = vpi.addStructure({
   type: 'structure',
-  name: 'Projet Documents',
-  metadata: {
+  name: 'Projet Documents'
+});
+
+// ÉTAPE 2 : Ajouter les métadonnées
+let folderMetaContainer = {
+  id: crypto.randomUUID(),
+  token: rootFolder.token,
+  meta: {
     description: 'Structure racine du projet',
     path: [],
     ref_extern: '',
-    external: null
-  }
-});
+    external: null,
+    type: 'file', // Type des nœuds liés
+    children: []
+  },
+  create_dt: Date.now(),
+  update_dt: Date.now()
+};
+let [folderMetaOp, folderMetadata] = vpi.addMetadata(folderMetaContainer);
 
-// Ajouter des sous-structures
+// Ajouter des sous-structures (structure_child pointant vers une structure)
 const [subStructureOp, subStructure] = rootFolder.addNode({
-  type: 'structure',
-  name: 'Documentation Technique'
+  type: 'structure_child',
+  name: 'Documentation Technique',
+  child: '1', // Position hiérarchique
+  meta: null // Les structure_child n'ont pas de metadata
+  // Peut être lié via HAS_LINK à une structure existante
 });
 
-// Ajouter des documents dans la sous-structure
-const [docOp, document] = subStructure.addNode({
-  type: 'file',
-  name: 'Guide d\'installation'
-});
+// Pour ajouter des documents, il faut récupérer la vraie structure liée
+// puis ajouter des structure_child à cette structure
+// (exemple conceptuel - subStructure est maintenant un structure_child)
 ```
 
 ### Structure de workflow
 
 ```typescript
-// Créer une structure de workflow
+// ÉTAPE 1 : Créer une structure de workflow
 const [workflowOp, workflow] = vpi.addStructure({
   type: 'structure',
-  name: 'Processus de Validation',
-  metadata: {
+  name: 'Processus de Validation'
+});
+
+// ÉTAPE 2 : Ajouter les métadonnées
+let workflowMetaContainer = {
+  id: crypto.randomUUID(),
+  token: workflow.token,
+  meta: {
     description: 'Structure du processus de validation',
     path: [],
     ref_extern: '',
-    external: null
-  }
-});
+    external: null,
+    type: 'work', // Type des nœuds liés
+    children: []
+  },
+  create_dt: Date.now(),
+  update_dt: Date.now()
+};
+let [workflowMetaOp, workflowMetadata] = vpi.addMetadata(workflowMetaContainer);
 
 // Ajouter les étapes du workflow
 workflow.addNode({
-  type: 'work',
-  name: 'Brouillon'
+  type: 'structure_child',
+  name: 'Brouillon',
+  child: '1', // Première étape
+  meta: null // Les structure_child n'ont pas de metadata
+  // Peut être lié via HAS_LINK à un nœud de type workflow.meta.type
 });
 
 workflow.addNode({
-  type: 'work',
-  name: 'Révision'
+  type: 'structure_child',
+  name: 'Révision',
+  child: '2', // Deuxième étape
+  meta: null // Les structure_child n'ont pas de metadata
+  // Peut être lié via HAS_LINK à un nœud de type workflow.meta.type
 });
 ```
 

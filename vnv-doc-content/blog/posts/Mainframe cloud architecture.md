@@ -1,3 +1,10 @@
+---
+title: Mainframe cloud architecture
+draft: false
+contributors:
+  - Houthoofd Guillaume
+---
+
 ```mermaid
 flowchart TB
 
@@ -21,7 +28,7 @@ flowchart TB
 
           end
 
-    
+
 
           MinIO["MinIO (Docker)"]
 
@@ -47,18 +54,18 @@ flowchart TB
 
     end
 
-  
+
 
     Watchtower -->|"Update services based on dev tag"| InfrasoftServices
 
-  
+
 
     %% --- Flux GitActions / Redis / MinIO ---
 
     i_Devs["Développeurs"] -->|"Execute Action inside"| GitActions
     GitActions -->|"Create or Update app with terraform"| MinIO
 
-  
+
 
     %% --- Exécution externe ---
 

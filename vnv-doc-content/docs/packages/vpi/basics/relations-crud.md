@@ -1,7 +1,7 @@
 ---
-sidebar_position: 2
+title: "Relations CRUD"
+weight: 2307
 ---
-
 # Relations CRUD
 
 Ce guide explique comment effectuer des opérations CRUD (Create, Read, Update, Delete) sur les relations entre nœuds dans un projet VNV en utilisant le VPI.

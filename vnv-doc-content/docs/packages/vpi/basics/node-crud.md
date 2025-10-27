@@ -1,7 +1,7 @@
 ---
-sidebar_position: 1
+title: "Node CRUD avec Fragments"
+weight: 2305
 ---
-
 # Node CRUD avec Fragments
 
 Ce guide explique comment effectuer des opérations CRUD (Create, Read, Update, Delete) sur les **Fragments de Nœuds** d'un projet VNV en utilisant le VPI.
@@ -13,6 +13,7 @@ Le VPI travaille avec des **Fragments** - des unités atomiques de données. Un 
 ### Séparation Node/Metadata
 
 Le VPI maintient une séparation claire entre :
+
 - **Node Fragment** : L'entité de base (ID, nom, type, token)
 - **MetaContainer** : Encapsule les metadata avec une référence au node propriétaire
 
@@ -59,6 +60,7 @@ let [metaOperation, metadata] = vpi.addMetadata(metaContainer);
 ### Pourquoi 2 étapes ?
 
 Cette séparation permet :
+
 - Une validation indépendante du node et de ses metadata
 - Une gestion flexible des MetaContainers
 - Une architecture claire entre entité et propriétés
@@ -215,4 +217,3 @@ const nodeSchema = node.schema;
 - **Suppression (deleteNode, node.delete)** : Supprime un nœud du projet et retourne l'opération associée.
 
 Ces opérations vous permettent de manipuler efficacement les nœuds dans un projet VNV, en utilisant les fonctionnalités exposées par le ProxyProjectInstance pour accéder directement aux différentes couches du projet.
-
