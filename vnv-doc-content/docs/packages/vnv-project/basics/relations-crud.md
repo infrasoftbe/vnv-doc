@@ -41,10 +41,10 @@ Les nœuds offrent également des méthodes directes pour créer des relations :
 
 ```typescript
 // Créer un lien de type HAS_... vers un autre nœud
-const linkOperation = node1.linkTo(node2, 'HAS_FILE');
+const linkOperation = node1.linkTo(node2.token);
 
 // Créer un lien de type IS_..._FOR_... vers un autre nœud
-const forLinkOperation = node1.linkFor(node2, 'IS_REQUIREMENT_FOR_OBJECT');
+const forLinkOperation = node1.linkFor(node2.token);
 ```
 
 ## Lire une Relation (Read)
@@ -140,13 +140,13 @@ Ces relations indiquent qu'un nœud "possède" ou "contient" un autre élément 
 
 ```typescript
 // Un dossier qui a un fichier
-node.linkTo(referenceNode, 'HAS_FILE');
+node.linkTo(referenceNode.token);
 
 // Un dossier qui a un fichier
-folderNode.linkTo(fileNode, 'HAS_FILE');
+folderNode.linkTo(fileNode.token);
 
 // Un projet qui a une structure
-projectNode.linkTo(structureNode, 'HAS_STRUCTURE');
+projectNode.linkTo(structureNode.token);
 ```
 
 ### Relations IS_..._FOR_...
@@ -155,13 +155,13 @@ Ces relations indiquent qu'un nœud "est quelque chose pour" un autre nœud :
 
 ```typescript
 // Un fichier qui est un enfant pour un dossier
-fileNode.linkFor(folderNode, 'IS_FILE_FOR_STRUCTURE');
+fileNode.linkFor(folderNode.token);
 
 // Une exigence qui est liée à un objet
-requirementNode.linkFor(objectNode, 'IS_REQUIREMENT_FOR_OBJECT');
+requirementNode.linkFor(objectNode.token);
 
 // Un test qui est lié à une exigence
-testNode.linkFor(requirementNode, 'IS_TEST_FOR_REQUIREMENT');
+testNode.linkFor(requirementNode.token);
 ```
 
 ## Gestion avancée des relations
@@ -196,7 +196,7 @@ const references = vpi.queryRelationAll({ type: 'HAS_FILE' });
 // Rechercher les relations avec des propriétés spécifiques
 const strongLinks = vpi.queryRelationAll({
   type: 'HAS_LINK',
-  properties: { weight: { $gt: 0.8 } }
+  properties: { weight: 0.8 }
 });
 ```
 

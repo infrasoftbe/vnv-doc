@@ -190,10 +190,10 @@ const destinationNodes = node.forNodes;
 
 ```typescript
 // Créer un lien vers un autre nœud de type HAS_...
-node.linkTo(otherNode, 'HAS_FILE');
+node.linkTo(otherNode.token);
 
 // Créer un lien vers un autre nœud de type IS_..._FOR_...
-node.linkFor(otherNode, 'IS_REQUIREMENT_FOR_FILE');
+node.linkFor(otherNode.token);
 ```
 
 ### Propriétés du nœud

@@ -206,7 +206,24 @@ const structMetaContainer = {
   token: structure.token,
   meta: {
     description: 'Dossier principal',
-    children: ['node1-token', 'node2-token'] // Références virtuelles
+    children: [
+      {
+        child: 'node1-id',
+        id: 'structure-child-1',
+        meta: null,
+        name: 'Node 1',
+        token: 'node1-token',
+        type: 'structure_child'
+      },
+      {
+        child: 'node2-id',
+        id: 'structure-child-2',
+        meta: null,
+        name: 'Node 2',
+        token: 'node2-token',
+        type: 'structure_child'
+      }
+    ]
   },
   create_dt: Date.now(),
   update_dt: Date.now()
@@ -252,7 +269,32 @@ const listMetaContainer = {
   token: list.token,
   meta: {
     description: 'Liste des tâches prioritaires',
-    children: ['task1-token', 'task2-token', 'task3-token'] // Ordre important
+    children: [
+      {
+        child: 'task1-id',
+        id: 'list-child-1',
+        meta: null,
+        name: 'Task 1',
+        token: 'task1-token',
+        type: 'list_child'
+      },
+      {
+        child: 'task2-id',
+        id: 'list-child-2',
+        meta: null,
+        name: 'Task 2',
+        token: 'task2-token',
+        type: 'list_child'
+      },
+      {
+        child: 'task3-id',
+        id: 'list-child-3',
+        meta: null,
+        name: 'Task 3',
+        token: 'task3-token',
+        type: 'list_child'
+      }
+    ]
   },
   create_dt: Date.now(),
   update_dt: Date.now()

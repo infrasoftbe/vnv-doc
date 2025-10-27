@@ -47,17 +47,21 @@ let structureMetaContainer = {
     children: [
       // Children nodes avec positionnement hiérarchique
       {
+        child: 'child1-node-id',
+        id: 'structure-child-1',
+        meta: null,
         name: 'Document 1',
         token: 'child1-token',
-        child: '1.0.0', // Emplacement dans la structure (x.y.z)
         type: 'structure_child'
-    },
-    {
-      name: 'Document 2',
-      token: 'child2-token',
-      child: '2.0.0', // Emplacement dans la structure
-      type: 'structure_child'
-    }
+      },
+      {
+        child: 'child2-node-id',
+        id: 'structure-child-2',
+        meta: null,
+        name: 'Document 2',
+        token: 'child2-token',
+        type: 'structure_child'
+      }
   ]
   },
   create_dt: Date.now(),
@@ -310,8 +314,8 @@ const incomingRelations = structure.inRelationships;
 const outgoingRelations = structure.outRelationships;
 
 // Création de liens
-structure.linkTo(otherStructure, 'HAS_STRUCTURE');
-structure.linkFor(parentProject, 'IS_STRUCTURE_FOR_PROJECT');
+structure.linkTo(otherStructure.token);
+structure.linkFor(parentProject.token);
 
 // Propriétés
 const flatRepresentation = structure.flat;

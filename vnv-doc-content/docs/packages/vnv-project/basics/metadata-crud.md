@@ -229,7 +229,7 @@ const frenchDescriptions = vpi.queryMetadataAll({
 // Rechercher par valeur
 const urgentItems = vpi.queryMetadataAll({
   type: 'tags',
-  value: { $contains: 'urgent' }
+  value: 'urgent'
 });
 ```
 

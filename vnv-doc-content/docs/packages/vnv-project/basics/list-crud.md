@@ -146,7 +146,7 @@ const item = list.getChildByToken('item-token');
 // Rechercher par propriétés spécifiques
 const specificWork = list.queryNodeAll({
   type: 'work',
-  name: { $contains: 'urgent' }
+  name: 'Tâche urgente'
 });
 ```
 
@@ -190,8 +190,7 @@ const [fileListOp, fileList] = vpi.addList({
 // Ajouter des fichiers
 fileList.addNode({
   type: 'file',
-  name: 'specification.pdf'
-});
+  name: 'specification.pdf',
   uploadDate: new Date().toISOString()
 });
 ```
