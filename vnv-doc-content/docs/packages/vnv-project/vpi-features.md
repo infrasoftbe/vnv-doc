@@ -215,20 +215,22 @@ const structMetaContainer = {
     description: 'Dossier principal',
     children: [
       {
-        child: 'node1-id',
+        child: '1', // Position hiérarchique
         id: 'structure-child-1',
         meta: null,
         name: 'Node 1',
         token: 'node1-token',
         type: 'structure_child'
+        // Relation HAS_LINK vers nœud correspondant créée automatiquement
       },
       {
-        child: 'node2-id',
+        child: '1.1', // Enfant de '1'
         id: 'structure-child-2',
         meta: null,
         name: 'Node 2',
         token: 'node2-token',
         type: 'structure_child'
+        // Relation HAS_LINK vers nœud correspondant créée automatiquement
       }
     ]
   },
@@ -278,28 +280,31 @@ const listMetaContainer = {
     description: 'Liste des tâches prioritaires',
     children: [
       {
-        child: 'task1-id',
+        child: '1', // Position 1 dans la liste
         id: 'list-child-1',
         meta: null,
         name: 'Task 1',
         token: 'task1-token',
         type: 'list_child'
+        // Relation HAS_LINK vers nœud de type list.meta.type
       },
       {
-        child: 'task2-id',
+        child: '2', // Position 2 dans la liste
         id: 'list-child-2',
         meta: null,
         name: 'Task 2',
         token: 'task2-token',
         type: 'list_child'
+        // Relation HAS_LINK vers nœud de type list.meta.type
       },
       {
-        child: 'task3-id',
+        child: '3', // Position 3 dans la liste
         id: 'list-child-3',
         meta: null,
         name: 'Task 3',
         token: 'task3-token',
         type: 'list_child'
+        // Relation HAS_LINK vers nœud de type list.meta.type
       }
     ]
   },

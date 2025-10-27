@@ -12,13 +12,14 @@ Une structure au sein d'un VPI est un **Fragment de Node** étendu par la classe
 
 ### Children - Nodes organisationnels
 
-Les structures utilisent des **Children** qui sont de vrais **nodes** stockés dans `structure.metadata.children`. Ces children :
+Les structures utilisent des **Children** (structure_child) qui sont des **références virtuelles** stockées dans `structure.metadata.children`. Ces children :
 - **N'ont pas** de metadata propres
-- Sont des **nodes organisationnels** avec leurs propres propriétés
-- Possèdent un champ `child` pour l'organisation :
-  - **Structures** : `child: "x.y.z"` (emplacement hiérarchique dans la structure)
-  - **Listes** : `child: number` (ordre/position dans la liste)
-- Permettent l'organisation hiérarchique et positionnelle
+- Sont des **pointeurs organisationnels** vers de vrais nœuds
+- Possèdent un champ `child` qui indique la **position hiérarchique** :
+  - **Structures** : `child: "1.2.1"` (position dans la hiérarchie - enfant de "1.2")
+  - **Listes** : `child: "3"` (position dans la liste ordonnée)
+- Sont **liés aux vrais nœuds** via des relations `HAS_LINK` dans `vpi.data.relations`
+- Le vrai nœud lié doit avoir le type correspondant à `structure.meta.type`
 
 ## Ajouter une Structure (Create) - Processus en 2 étapes
 
@@ -47,20 +48,22 @@ let structureMetaContainer = {
     children: [
       // Children nodes avec positionnement hiérarchique
       {
-        child: 'child1-node-id',
+        child: '1', // Position hiérarchique
         id: 'structure-child-1',
         meta: null,
         name: 'Document 1',
         token: 'child1-token',
         type: 'structure_child'
+        // Relation HAS_LINK vers un nœud de type 'file' créée automatiquement
       },
       {
-        child: 'child2-node-id',
+        child: '1.1', // Enfant de '1'
         id: 'structure-child-2',
         meta: null,
-        name: 'Document 2',
+        name: 'Sous-document 1.1',
         token: 'child2-token',
         type: 'structure_child'
+        // Relation HAS_LINK vers un nœud de type 'file' créée automatiquement
       }
   ]
   },

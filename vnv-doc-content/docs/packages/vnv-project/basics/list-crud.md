@@ -69,6 +69,22 @@ let [metaOperation, metadata] = vpi.addMetadata(listMetaContainer);
   - `list` : La liste qui a été ajoutée.
 - `vpi.addMetadata(...)` : Ajoute les métadonnées à la liste (Étape 2).
 
+:::warning Relations HAS_LINK et Children
+**Important :** Le champ `child` dans les `list_child` indique la **position** dans la liste (ex: "1", "2", "3"), **PAS** le token du nœud cible.
+
+La connexion vers les vrais nœuds se fait via des **relations HAS_LINK** stockées dans `vpi.data.relations` :
+- **Source** : le `list_child` (structure_child pour les structures)
+- **Target** : un nœud dont le `type` correspond à `list.meta.type`
+- **Type de relation** : `"HAS_LINK"`
+
+Exemple :
+```typescript
+// list.meta.type = 'task'
+// Relation créée automatiquement :
+// FROM: list_child.token -> TO: nœud_task.token (type: "HAS_LINK")
+```
+:::
+
 ## Lire une Liste (Read)
 
 Pour récupérer une liste existante, plusieurs méthodes sont disponibles :
@@ -132,18 +148,19 @@ Les listes héritent de toutes les méthodes des structures pour gérer leurs é
 const [itemOp, listItem] = list.addNode({
   type: 'list_child',
   name: 'Nouvelle tâche',
-  child: 'work_node_token', // Token du nœud de type 'work' référencé
+  child: '1', // Position dans la liste (1, 2, 3...)
   meta: null
 });
 ```
 
 :::info Architecture des éléments de Liste
-Les éléments d'une liste (`IListChild`) sont des **références virtuelles** qui pointent vers des nœuds réels du projet via la propriété `child`. Ils ne stockent pas directement les données métier, mais servent d'index ordonné vers les vrais nœuds.
+Les éléments d'une liste (`IListChild`) sont des **références virtuelles** ordonnées qui sont **liées** aux vrais nœuds via des relations `HAS_LINK` dans `vpi.data.relations`.
 
 - `type: 'list_child'` : Type spécifique aux éléments de liste
-- `child: 'token'` : Référence vers le nœud réel (work, file, contact, etc.)
-- `name` : Nom d'affichage dans la liste (peut différer du nœud référencé)
+- `child: '1'` : **Position** dans la liste ordonnée (1, 2, 3...)
+- `name` : Nom d'affichage dans la liste
 - `meta: null` : Les éléments de liste n'ont pas de métadonnées propres
+- **Relation HAS_LINK** : Créée automatiquement vers un nœud dont le type = `list.meta.type`
 :::
 
 ### Mettre à jour un élément de la liste
@@ -153,7 +170,7 @@ Les éléments d'une liste (`IListChild`) sont des **références virtuelles** q
 const [updateItemOp, updatedItem] = list.setNode({
   ...listItem,
   name: 'Tâche modifiée',
-  child: 'updated_work_node_token' // Nouveau token si on change la référence
+  child: '2' // Nouvelle position dans la liste
 });
 ```
 
@@ -219,8 +236,9 @@ let [workMetaOp, workMetadata] = vpi.addMetadata(workListMetaContainer);
 workList.addNode({
   type: 'list_child',
   name: 'Implémenter l\'authentification',
-  child: 'work_node_token', // Token du nœud 'work' existant
+  child: '1', // Position 1 dans la liste
   meta: null
+  // Relation HAS_LINK créée vers un nœud de type 'task'
 });
 ```
 
@@ -254,8 +272,9 @@ let [fileMetaOp, fileMetadata] = vpi.addMetadata(fileListMetaContainer);
 fileList.addNode({
   type: 'list_child',
   name: 'specification.pdf',
-  child: 'file_node_token', // Token du nœud 'file' existant
+  child: '1', // Position 1 dans la liste
   meta: null
+  // Relation HAS_LINK créée vers un nœud de type 'file'
 });
 ```
 
@@ -289,8 +308,9 @@ let [contactMetaOp, contactMetadata] = vpi.addMetadata(contactListMetaContainer)
 contactList.addNode({
   type: 'list_child',
   name: 'Jean Dupont',
-  child: 'contact_node_token', // Token du nœud 'contact' existant
+  child: '1', // Position 1 dans la liste
   meta: null
+  // Relation HAS_LINK créée vers un nœud de type 'contact'
 });
 ```
 
