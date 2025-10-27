@@ -266,12 +266,8 @@ Comme les structures, les listes sont des vrais nodes dans le VPI, mais leurs **
 ```typescript
 // 1. Créer le fragment de liste
 const [listOp, list] = vpi.addList({
-  id: crypto.randomUUID(),
-  token: crypto.randomUUID(),
   type: 'list',
-  name: 'Ma liste de tâches',
-  create_dt: Date.now(),
-  update_dt: Date.now()
+  name: 'Ma liste de tâches'
 });
 
 // 2. Ajouter les métadonnées avec children virtuels ordonnés

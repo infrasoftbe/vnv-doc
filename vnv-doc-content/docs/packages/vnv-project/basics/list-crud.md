@@ -30,7 +30,7 @@ Les listes héritent de toutes les fonctionnalités des structures :
 
 ## Ajouter une Liste (Create)
 
-Pour ajouter une liste à un projet, utilisez la méthode `addList` :
+Pour ajouter une liste à un projet, suivez ce processus en 2 étapes :
 
 ```typescript
 import * as vnv from '@infrasoftbe/vnv-sdk';
@@ -38,26 +38,36 @@ import * as vnv from '@infrasoftbe/vnv-sdk';
 // Initialisation d'un projet
 let vpi = vnv.VPI.ProjectInstance.init({/* votre projet */});
 
-// Ajout d'une nouvelle liste
+// ÉTAPE 1 : Ajout du fragment de liste
 let [operation, list] = vpi.addList({
+  type: 'list', // <-- !REQUIRED!
+  name: 'Ma liste de tâches' // <-- !REQUIRED!
+});
+
+// ÉTAPE 2 : Ajout des métadonnées avec children organisationnels
+let listMetaContainer = {
   id: crypto.randomUUID(),
-  token: crypto.randomUUID(),
-  type: 'list',
-  name: 'Ma liste de tâches',
-  create_dt: Date.now(),
-  update_dt: Date.now(),
+  token: list.token,
   meta: {
     description: 'Liste des tâches à accomplir pour le projet',
+    path: [],
+    ref_extern: '',
+    external: null,
+    type: 'work', // <-- !REQUIRED!
     children: []
-  }
-});
+  },
+  create_dt: Date.now(),
+  update_dt: Date.now()
+};
+let [metaOperation, metadata] = vpi.addMetadata(listMetaContainer);
 ```
 
 ### Explication du Code
 
-- `vpi.addList(...)` : Ajoute une nouvelle liste au projet. Cette méthode retourne un tableau contenant :
+- `vpi.addList(...)` : Ajoute une nouvelle liste au projet (Étape 1). Cette méthode retourne un tableau contenant :
   - `operation` : L'opération associée à l'ajout de la liste.
   - `list` : La liste qui a été ajoutée.
+- `vpi.addMetadata(...)` : Ajoute les métadonnées à la liste (Étape 2).
 
 ## Lire une Liste (Read)
 
@@ -182,18 +192,28 @@ const specificWork = list.queryNodeAll({
 ### Liste de tâches
 
 ```typescript
+// ÉTAPE 1 : Créer le fragment de liste
 const [workListOp, workList] = vpi.addList({
-  id: crypto.randomUUID(),
-  token: crypto.randomUUID(),
   type: 'list',
-  name: 'Sprint Backlog',
-  create_dt: Date.now(),
-  update_dt: Date.now(),
+  name: 'Sprint Backlog'
+});
+
+// ÉTAPE 2 : Ajouter les métadonnées
+let workListMetaContainer = {
+  id: crypto.randomUUID(),
+  token: workList.token,
   meta: {
     description: 'Liste des travaux à effectuer',
+    path: [],
+    ref_extern: '',
+    external: null,
+    type: 'task',
     children: []
-  }
-});
+  },
+  create_dt: Date.now(),
+  update_dt: Date.now()
+};
+let [workMetaOp, workMetadata] = vpi.addMetadata(workListMetaContainer);
 
 // Ajouter des références aux travaux (IListChild)
 workList.addNode({
@@ -207,18 +227,28 @@ workList.addNode({
 ### Liste de fichiers
 
 ```typescript
+// ÉTAPE 1 : Créer le fragment de liste
 const [fileListOp, fileList] = vpi.addList({
-  id: crypto.randomUUID(),
-  token: crypto.randomUUID(),
   type: 'list',
-  name: 'Documents du Projet',
-  create_dt: Date.now(),
-  update_dt: Date.now(),
+  name: 'Documents du Projet'
+});
+
+// ÉTAPE 2 : Ajouter les métadonnées
+let fileListMetaContainer = {
+  id: crypto.randomUUID(),
+  token: fileList.token,
   meta: {
     description: 'Liste des fichiers du projet',
+    path: [],
+    ref_extern: '',
+    external: null,
+    type: 'file',
     children: []
-  }
-});
+  },
+  create_dt: Date.now(),
+  update_dt: Date.now()
+};
+let [fileMetaOp, fileMetadata] = vpi.addMetadata(fileListMetaContainer);
 
 // Ajouter des références aux fichiers (IListChild)
 fileList.addNode({
@@ -232,18 +262,28 @@ fileList.addNode({
 ### Liste de contacts
 
 ```typescript
+// ÉTAPE 1 : Créer le fragment de liste
 const [contactListOp, contactList] = vpi.addList({
+  type: 'list',
+  name: 'Équipe Projet'
+});
+
+// ÉTAPE 2 : Ajouter les métadonnées
+let contactListMetaContainer = {
   id: crypto.randomUUID(),
-  token: crypto.randomUUID(),
-  type: 'contact-list',
-  name: 'Équipe Projet',
-  create_dt: Date.now(),
-  update_dt: Date.now(),
+  token: contactList.token,
   meta: {
     description: 'Liste des contacts de l\'équipe projet',
+    path: [],
+    ref_extern: '',
+    external: null,
+    type: 'contact',
     children: []
-  }
-});
+  },
+  create_dt: Date.now(),
+  update_dt: Date.now()
+};
+let [contactMetaOp, contactMetadata] = vpi.addMetadata(contactListMetaContainer);
 
 // Ajouter des références aux contacts (IListChild)
 contactList.addNode({
