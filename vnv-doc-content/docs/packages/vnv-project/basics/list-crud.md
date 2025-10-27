@@ -286,10 +286,6 @@ const isComplete = list.isComplete();
 
 // Vérifier la validité de la liste
 const isCorrect = list.isCorrect();
-
-// Validation spécifique aux listes
-const hasValidOrder = list.validateOrder();
-const isWithinLimits = list.checkItemLimits();
 ```
 
 ## Représentations des Listes
@@ -304,9 +300,6 @@ const nestedV2 = list.nestedv2(); // Liste - Éléments - Détails
 // Représentations aplaties
 const flatV1 = list.flatv1(); // Liste aplatie avec éléments
 const flatV2 = list.flatv2(); // Liste aplatie complète
-
-// Représentation spécifique aux listes (ordonnée)
-const orderedView = list.getOrderedView();
 ```
 
 ## Métadonnées de Liste

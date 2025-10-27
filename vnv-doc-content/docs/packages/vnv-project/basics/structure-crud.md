@@ -10,12 +10,15 @@ Ce guide explique comment effectuer des opérations CRUD (Create, Read, Update, 
 
 Une structure au sein d'un VPI est un **Fragment de Node** étendu par la classe `Structure`. Elle possède les mêmes utilitaires que le nœud, plus des fonctionnalités spécifiques pour gérer des collections organisées.
 
-### Children Virtuels
+### Children - Nodes organisationnels
 
-Les structures utilisent des **children virtuels** stockés dans `structure.metadata.children`. Ces children :
+Les structures utilisent des **Children** qui sont de vrais **nodes** stockés dans `structure.metadata.children`. Ces children :
 - **N'ont pas** de metadata propres
-- Sont des **références** vers d'autres nodes réels
-- Permettent l'organisation hiérarchique
+- Sont des **nodes organisationnels** avec leurs propres propriétés
+- Possèdent un champ `child` pour l'organisation :
+  - **Structures** : `child: "x.y.z"` (emplacement hiérarchique dans la structure)
+  - **Listes** : `child: number` (ordre/position dans la liste)
+- Permettent l'organisation hiérarchique et positionnelle
 
 ## Ajouter une Structure (Create) - Processus en 2 étapes
 
@@ -31,14 +34,28 @@ let [operation, structure] = vpi.addStructure({
   name: 'Mon dossier de documents' // <-- !REQUIRED!
 });
 
-// ÉTAPE 2 : Ajout des métadonnées avec children virtuels
+// ÉTAPE 2 : Ajout des métadonnées avec children organisationnels
 let [metaOperation, metadata] = vpi.addMetadata(structure.token, {
   description: 'Dossier contenant tous les documents du projet',
   path: [],
   ref_extern: '',
   external: null,
   type: 'file', // <-- !REQUIRED!
-  children: ['node1-token', 'node2-token'] // Références virtuelles
+  children: [
+    // Children nodes avec positionnement hiérarchique
+    {
+      name: 'Document 1',
+      token: 'child1-token',
+      child: '1.0.0', // Emplacement dans la structure (x.y.z)
+      type: 'structure_child'
+    },
+    {
+      name: 'Document 2',
+      token: 'child2-token',
+      child: '2.0.0', // Emplacement dans la structure
+      type: 'structure_child'
+    }
+  ]
 });
 ```
 
