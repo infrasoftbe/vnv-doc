@@ -98,14 +98,20 @@ const fileNodes = vpi.getNodesByType('file');
 ```typescript
 // Ajouter une nouvelle relation
 const [relationOp, relation] = vpi.addRelation({
-  from: 'node1-token',
-  to: 'node2-token',
-  type: 'HAS_FILE'
+  f_id: crypto.randomUUID(),
+  f_token: 'node1-token',
+  t_id: crypto.randomUUID(),
+  t_token: 'node2-token',
+  r_type: 'HAS_FILE',
+  create_dt: Date.now(),
+  update_dt: Date.now()
 });
 
 // Mettre à jour une relation existante
-const [updateRelOp, updatedRel] = vpi.setRelation(relation.token, {
-  properties: { weight: 0.8 }
+const [updateRelOp, updatedRel] = vpi.setRelation({
+  ...relation, // Garde toutes les propriétés existantes
+  r_type: 'HAS_LINK',
+  update_dt: Date.now()
 });
 
 // Vérifier l'existence d'une relation
@@ -118,7 +124,7 @@ const deleteRelOp = vpi.deleteRelation('relation-token');
 const retrievedRelation = vpi.getRelationByToken('relation-token');
 
 // Rechercher dans toutes les relations
-const relationResults = vpi.queryRelationAll({ type: 'HAS_FILE' });
+const relationResults = vpi.queryRelationAll({ r_type: 'HAS_FILE' });
 
 // Récupérer les relations depuis un nœud
 const outgoingRels = vpi.getRelationFromNodeToken('node-token');
@@ -259,8 +265,12 @@ Comme les structures, les listes sont des vrais nodes dans le VPI, mais leurs **
 ```typescript
 // 1. Créer le fragment de liste
 const [listOp, list] = vpi.addList({
+  id: crypto.randomUUID(),
+  token: crypto.randomUUID(),
   type: 'list',
-  name: 'Ma liste de tâches'
+  name: 'Ma liste de tâches',
+  create_dt: Date.now(),
+  update_dt: Date.now()
 });
 
 // 2. Ajouter les métadonnées avec children virtuels ordonnés

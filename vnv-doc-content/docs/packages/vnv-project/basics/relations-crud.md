@@ -18,13 +18,13 @@ let project = vnv.VPI.ProjectInstance.init({/* votre projet */});
 
 // Ajout d'une nouvelle relation entre deux nœuds
 let [operation, relation] = vpi.addRelation({
-  from: node1.token,
-  to: node2.token,
-  type: 'HAS_FILE',
-  properties: {
-    weight: 0.8,
-    description: 'Relation de référence'
-  }
+  f_id: crypto.randomUUID(),
+  f_token: node1.token,
+  t_id: crypto.randomUUID(),
+  t_token: node2.token,
+  r_type: 'HAS_FILE',
+  create_dt: Date.now(),
+  update_dt: Date.now()
 });
 ```
 
@@ -65,7 +65,7 @@ const outgoingRelations = vpi.getRelationFromNodeToken('node-token');
 const incomingRelations = vpi.getRelationToToken('node-token');
 
 // Recherche dans toutes les relations avec des critères
-const searchResults = vpi.queryRelationAll({ type: 'HAS_FILE' });
+const searchResults = vpi.queryRelationAll({ r_type: 'HAS_FILE' });
 ```
 
 ### Accès aux relations via les nœuds
@@ -104,18 +104,16 @@ Pour mettre à jour une relation existante, utilisez la méthode `setRelation` e
 
 ```typescript
 // Mise à jour d'une relation existante
-let [operation, updatedRelation] = vpi.setRelation(relation.token, {
-  properties: {
-    weight: 0.9,
-    description: 'Description mise à jour',
-    lastModified: new Date().toISOString()
-  }
+let [operation, updatedRelation] = vpi.setRelation({
+  ...relation, // Garde toutes les propriétés existantes
+  r_type: 'HAS_LINK',
+  update_dt: Date.now()
 });
 ```
 
 ### Explication du Code
 
-- `vpi.setRelation(...)` : Met à jour une relation existante identifiée par son token. Les nouvelles propriétés sont spécifiées dans le second paramètre. Cette méthode retourne un tableau contenant l'opération effectuée et la relation mise à jour.
+- `vpi.setRelation(...)` : Met à jour une relation existante en passant un objet `IRelation` complet avec toutes les propriétés. Cette méthode retourne un tableau contenant l'opération effectuée et la relation mise à jour.
 
 ## Supprimer une Relation (Delete)
 
@@ -172,17 +170,13 @@ Les relations peuvent porter des propriétés supplémentaires :
 
 ```typescript
 const [op, relation] = vpi.addRelation({
-  from: sourceNode.token,
-  to: targetNode.token,
-  type: 'HAS_LINK',
-  properties: {
-    weight: 0.85,
-    confidence: 0.92,
-    createdAt: new Date().toISOString(),
-    metadata: {
-      algorithm: 'similarity',
-      version: '1.2.3'
-    }
+  f_id: crypto.randomUUID(),
+  f_token: sourceNode.token,
+  t_id: crypto.randomUUID(),
+  t_token: targetNode.token,
+  r_type: 'HAS_LINK',
+  create_dt: Date.now(),
+  update_dt: Date.now()
   }
 });
 ```
@@ -190,13 +184,13 @@ const [op, relation] = vpi.addRelation({
 ### Recherche de relations complexes
 
 ```typescript
-// Rechercher toutes les relations d'un type spécifique
-const references = vpi.queryRelationAll({ type: 'HAS_FILE' });
+// Rechercher les relations d'un type spécifique
+const references = vpi.queryRelationAll({ r_type: 'HAS_FILE' });
 
 // Rechercher les relations avec des propriétés spécifiques
 const strongLinks = vpi.queryRelationAll({
-  type: 'HAS_LINK',
-  properties: { weight: 0.8 }
+  r_type: 'HAS_LINK',
+  create_dt: Date.now() - 86400000 // Relations créées dans les dernières 24h
 });
 ```
 

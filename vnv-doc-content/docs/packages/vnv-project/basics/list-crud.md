@@ -22,13 +22,15 @@ let vpi = vnv.VPI.ProjectInstance.init({/* votre projet */});
 
 // Ajout d'une nouvelle liste
 let [operation, list] = vpi.addList({
+  id: crypto.randomUUID(),
+  token: crypto.randomUUID(),
   type: 'list',
   name: 'Ma liste de tâches',
-  metadata: {
+  create_dt: Date.now(),
+  update_dt: Date.now(),
+  meta: {
     description: 'Liste des tâches à accomplir pour le projet',
-    path: [],
-    ref_extern: '',
-    external: null
+    children: []
   }
 });
 ```
@@ -156,13 +158,15 @@ const specificWork = list.queryNodeAll({
 
 ```typescript
 const [workListOp, workList] = vpi.addList({
+  id: crypto.randomUUID(),
+  token: crypto.randomUUID(),
   type: 'list',
   name: 'Sprint Backlog',
-  metadata: {
+  create_dt: Date.now(),
+  update_dt: Date.now(),
+  meta: {
     description: 'Liste des travaux à effectuer',
-    path: [],
-    ref_extern: '',
-    external: null
+    children: []
   }
 });
 
@@ -177,13 +181,15 @@ workList.addNode({
 
 ```typescript
 const [fileListOp, fileList] = vpi.addList({
+  id: crypto.randomUUID(),
+  token: crypto.randomUUID(),
   type: 'list',
   name: 'Documents du Projet',
-  metadata: {
+  create_dt: Date.now(),
+  update_dt: Date.now(),
+  meta: {
     description: 'Liste des fichiers du projet',
-    path: [],
-    ref_extern: '',
-    external: null
+    children: []
   }
 });
 
@@ -199,12 +205,15 @@ fileList.addNode({
 
 ```typescript
 const [contactListOp, contactList] = vpi.addList({
+  id: crypto.randomUUID(),
+  token: crypto.randomUUID(),
   type: 'contact-list',
   name: 'Équipe Projet',
-  properties: {
-    department: 'development',
-    sorted: 'lastName',
-    includeExternal: false
+  create_dt: Date.now(),
+  update_dt: Date.now(),
+  meta: {
+    description: 'Liste des contacts de l\'équipe projet',
+    children: []
   }
 });
 
