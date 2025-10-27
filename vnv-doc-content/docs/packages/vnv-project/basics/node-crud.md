@@ -93,7 +93,8 @@ Pour mettre à jour un fragment de nœud et ses métadonnées, vous pouvez agir 
 
 ```typescript
 // Mise à jour du fragment de nœud lui-même
-let [operation, updatedNode] = vpi.setNode(node.token, {
+let [operation, updatedNode] = vpi.dataManager.setNode({
+  ...node,
   name: 'Nom modifié'
 });
 

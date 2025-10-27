@@ -8,7 +8,25 @@ Ce guide explique comment effectuer des opérations CRUD (Create, Read, Update, 
 
 ## Qu'est-ce qu'une Liste ?
 
-Une liste au sein d'un VPI est une instance de la classe `List` qui hérite de la classe `Structure`. Cela signifie qu'elle possède les mêmes utilitaires que la structure, avec des optimisations spécifiques pour la gestion de collections ordonnées d'éléments.
+Une liste au sein d'un VPI est une instance de la classe `_list` qui hérite de la classe `_structure`. Cela signifie qu'elle possède les mêmes utilitaires que la structure, avec des optimisations spécifiques pour la gestion de collections ordonnées d'éléments.
+
+### Héritage de Structure
+
+Les listes héritent de toutes les fonctionnalités des structures :
+
+**Méthodes héritées de Structure :**
+- **Navigation** : `forNodes`, `fromNodes`, `inNodes`, `outNodes`
+- **Relations** : `forRelationships`, `fromRelationships`, `inRelationships`, `outRelationships`
+- **Méthodes de liaison** : `linkFor`, `linkFrom`, `linkTo`
+- **Gestion des enfants** : `deleteNode`, `hasNode`, `getChildByToken`, `queryNodeAll`
+- **Formats de sortie** : `flatv1`, `flatv2`, `nestedv1`, `nestedv2`
+- **Métadonnées** : `getMetadata`, `setMetadata`, `setMetaDataKey`
+- **Autres** : `delete`, `update`, `flat`, `json`, `shema`
+
+**Méthodes spécialisées pour List :**
+- `addNode` : Ajoute un élément de type `IListChild` (override de Structure)
+- `setNode` : Modifie un élément `IListChild` (override de Structure)
+- `constructor` : Utilise `IListInitOptions` au lieu de `IStructureInitOptions`
 
 ## Ajouter une Liste (Create)
 
@@ -100,25 +118,32 @@ Les listes héritent de toutes les méthodes des structures pour gérer leurs é
 ### Ajouter un élément à la liste
 
 ```typescript
-// Ajouter un élément à la liste
+// Ajouter un élément à la liste (IListChild)
 const [itemOp, listItem] = list.addNode({
-  type: 'work',
+  type: 'list_child',
   name: 'Nouvelle tâche',
-  metadata: {
-    description: 'Description de la tâche',
-    path: [],
-    ref_extern: '',
-    external: null
-  }
+  child: 'work_node_token', // Token du nœud de type 'work' référencé
+  meta: null
 });
 ```
+
+:::info Architecture des éléments de Liste
+Les éléments d'une liste (`IListChild`) sont des **références virtuelles** qui pointent vers des nœuds réels du projet via la propriété `child`. Ils ne stockent pas directement les données métier, mais servent d'index ordonné vers les vrais nœuds.
+
+- `type: 'list_child'` : Type spécifique aux éléments de liste
+- `child: 'token'` : Référence vers le nœud réel (work, file, contact, etc.)
+- `name` : Nom d'affichage dans la liste (peut différer du nœud référencé)
+- `meta: null` : Les éléments de liste n'ont pas de métadonnées propres
+:::
 
 ### Mettre à jour un élément de la liste
 
 ```typescript
-// Mettre à jour un élément de la liste
-const [updateItemOp, updatedItem] = list.setNode(listItem.token, {
-  name: 'Tâche modifiée'
+// Mettre à jour un élément de la liste (IListChild)
+const [updateItemOp, updatedItem] = list.setNode({
+  ...listItem,
+  name: 'Tâche modifiée',
+  child: 'updated_work_node_token' // Nouveau token si on change la référence
 });
 ```
 
@@ -170,10 +195,12 @@ const [workListOp, workList] = vpi.addList({
   }
 });
 
-// Ajouter des travaux
+// Ajouter des références aux travaux (IListChild)
 workList.addNode({
-  type: 'work',
-  name: 'Implémenter l\'authentification'
+  type: 'list_child',
+  name: 'Implémenter l\'authentification',
+  child: 'work_node_token', // Token du nœud 'work' existant
+  meta: null
 });
 ```
 
@@ -193,11 +220,12 @@ const [fileListOp, fileList] = vpi.addList({
   }
 });
 
-// Ajouter des fichiers
+// Ajouter des références aux fichiers (IListChild)
 fileList.addNode({
-  type: 'file',
+  type: 'list_child',
   name: 'specification.pdf',
-  uploadDate: new Date().toISOString()
+  child: 'file_node_token', // Token du nœud 'file' existant
+  meta: null
 });
 ```
 
@@ -217,13 +245,12 @@ const [contactListOp, contactList] = vpi.addList({
   }
 });
 
-// Ajouter des contacts
+// Ajouter des références aux contacts (IListChild)
 contactList.addNode({
-  type: 'contact',
-  firstName: 'Jean',
-  lastName: 'Dupont',
-  email: 'jean.dupont@entreprise.com',
-  role: 'developer'
+  type: 'list_child',
+  name: 'Jean Dupont',
+  child: 'contact_node_token', // Token du nœud 'contact' existant
+  meta: null
 });
 ```
 

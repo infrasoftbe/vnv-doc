@@ -151,9 +151,10 @@ const [childOp, childNode] = structure.addNode({
 ### Mettre à jour un nœud enfant
 
 ```typescript
-// Mettre à jour un nœud enfant
-const [updateChildOp, updatedChild] = structure.setNode(childNode.token, {
-  title: 'Titre modifié'
+// Mettre à jour un nœud enfant (IStructureChild)
+const [updateChildOp, updatedChild] = structure.setNode({
+  ...childNode,
+  name: 'Titre modifié'
 });
 ```
 

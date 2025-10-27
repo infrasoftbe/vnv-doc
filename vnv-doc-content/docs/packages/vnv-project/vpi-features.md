@@ -71,7 +71,8 @@ const metaContainer = {
 const [metaOp, metadata] = vpi.addMetadata(metaContainer);
 
 // Mettre à jour un nœud existant
-const [updateOp, updatedNode] = vpi.setNode(node.token, {
+const [updateOp, updatedNode] = vpi.dataManager.setNode({
+  ...node,
   name: 'Nom modifié'
 });
 
