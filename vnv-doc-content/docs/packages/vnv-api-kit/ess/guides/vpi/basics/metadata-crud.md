@@ -20,13 +20,20 @@ import { ProjectInstance } from '@infrasoftbe/infrasoft-project';
 let project = ProjectInstance.init({...<project>...});
 
 // Ajout de métadonnées à un nœud existant
-let [ operation , metadata ] = project.addMetadata(node.token, {...<metadata>...});
+let metaContainer = {
+  id: crypto.randomUUID(),
+  token: node.token,
+  meta: {...<metadata>...},
+  create_dt: Date.now(),
+  update_dt: Date.now()
+};
+let [ operation , metadata ] = project.addMetadata(metaContainer);
 ```
 
 ## Explication du Code
 
 - ProjectInstance.init(...) : Initialise un projet en retournant un ProxyProjectInstance qui permet un accès simplifié à toutes les couches du projet.
-- project.addMetadata(node.token, metadata) : Ajoute des métadonnées au nœud identifié par node.token. Cette méthode retourne un tableau contenant deux éléments :
+- project.addMetadata(metaContainer) : Ajoute des métadonnées au nœud via un objet IMetaContainer. Cette méthode retourne un tableau contenant deux éléments :
   - operation : L'opération associée à l'ajout des métadonnées.
   - metadata : Les métadonnées qui ont été ajoutées.
 
