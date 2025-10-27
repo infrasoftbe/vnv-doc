@@ -65,9 +65,9 @@ Un VPI offre de nombreuses fonctionnalités pour gérer un projet VNV basées su
 
 ### Gestion des Fragments de Nœuds (Processus en 2 étapes)
 - `vpi.addNode()` : Ajoute un **Fragment de Node** (étape 1)
-- `vpi.addMetadata(nodeToken, metadata)` : Ajoute le **MetaContainer** (étape 2)
+- `vpi.addMetadata(metaContainer)` : Ajoute le **MetaContainer** via objet IMetaContainer (étape 2)
 - `vpi.setNode()` : Met à jour le Fragment de Node
-- `vpi.setMetadata()` : Met à jour le MetaContainer
+- `vpi.setMetadata(metaContainer)` : Met à jour le MetaContainer via objet IMetaContainer
 - `vpi.hasNode()` : Vérifie l'existence d'un Fragment de Node
 - `vpi.deleteNode()` : Supprime un Fragment de Node et son MetaContainer
 - `vpi.getNodeByToken()` : Récupère un Fragment de Node par son token
@@ -86,8 +86,8 @@ Un VPI offre de nombreuses fonctionnalités pour gérer un projet VNV basées su
 - `vpi.getRelationToToken()` : Récupère les relations vers un nœud
 
 ### Gestion des MetaContainers
-- `vpi.addMetadata(nodeToken, metadata)` : Ajoute un MetaContainer
-- `vpi.setMetadata()` : Met à jour un MetaContainer
+- `vpi.addMetadata(metaContainer)` : Ajoute un MetaContainer via objet IMetaContainer
+- `vpi.setMetadata(metaContainer)` : Met à jour un MetaContainer via objet IMetaContainer
 - `vpi.hasMetadata()` : Vérifie l'existence d'un MetaContainer
 - `vpi.deleteMetadata()` : Supprime un MetaContainer
 - `vpi.getMetadataByToken()` : Récupère un MetaContainer par token
@@ -95,7 +95,7 @@ Un VPI offre de nombreuses fonctionnalités pour gérer un projet VNV basées su
 
 ### Gestion des Fragments de Structures (avec children virtuels)
 - `vpi.addStructure()` : Ajoute un Fragment de Structure (étape 1)
-- `vpi.addMetadata(structureToken, {children: [...]})` : Ajoute children virtuels (étape 2)
+- `vpi.addMetadata(metaContainer)` : Ajoute children virtuels via objet IMetaContainer (étape 2)
 - `vpi.setStructure()` : Met à jour une structure existante
 - `vpi.hasStructure()` : Vérifie l'existence d'une structure
 - `vpi.deleteStructure()` : Supprime une structure
@@ -104,7 +104,7 @@ Un VPI offre de nombreuses fonctionnalités pour gérer un projet VNV basées su
 
 ### Gestion des Fragments de Listes (avec children virtuels ordonnés)
 - `vpi.addList()` : Ajoute un Fragment de Liste (étape 1)
-- `vpi.addMetadata(listToken, {children: [...]})` : Ajoute children virtuels ordonnés (étape 2)
+- `vpi.addMetadata(metaContainer)` : Ajoute children virtuels ordonnés via objet IMetaContainer (étape 2)
 - `vpi.setList()` : Met à jour une liste existante
 - `vpi.hasList()` : Vérifie l'existence d'une liste
 - `vpi.deleteList()` : Supprime une liste

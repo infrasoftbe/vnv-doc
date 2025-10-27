@@ -57,11 +57,18 @@ const [operation, node] = vpi.addNode({
 });
 
 // 2. Ajouter les métadonnées (addMetadata)
-const [metaOp, metadata] = vpi.addMetadata(node.token, {
-  description: 'Description du document',
-  category: 'Documentation',
-  tags: ['important', 'projet']
-});
+const metaContainer = {
+  id: crypto.randomUUID(),
+  token: node.token,
+  meta: {
+    description: 'Description du document',
+    category: 'Documentation',
+    tags: ['important', 'projet']
+  },
+  create_dt: Date.now(),
+  update_dt: Date.now()
+};
+const [metaOp, metadata] = vpi.addMetadata(metaContainer);
 
 // Mettre à jour un nœud existant
 const [updateOp, updatedNode] = vpi.setNode(node.token, {
@@ -133,18 +140,31 @@ Le VPI encapsule les metadata d'un node dans un **MetaContainer** qui possède u
 
 ```typescript
 // Ajouter des métadonnées via MetaContainer
-const [metaOp, metadata] = vpi.addMetadata(nodeToken, {
-  description: 'Description du nœud',
-  category: 'Documentation',
-  tags: ['important'],
-  author: 'John Doe'
-});
+const nodeMetaContainer = {
+  id: crypto.randomUUID(),
+  token: nodeToken,
+  meta: {
+    description: 'Description du nœud',
+    category: 'Documentation',
+    tags: ['important'],
+    author: 'John Doe'
+  },
+  create_dt: Date.now(),
+  update_dt: Date.now()
+};
+const [metaOp, metadata] = vpi.addMetadata(nodeMetaContainer);
 
 // Mettre à jour des métadonnées
-const [updateMetaOp, updatedMeta] = vpi.setMetadata(metadata.token, {
-  description: 'Nouvelle description',
-  modifiedBy: 'Jane Smith'
-});
+const updatedMetaContainer = {
+  ...metadata,
+  meta: {
+    ...metadata.meta,
+    description: 'Nouvelle description',
+    modifiedBy: 'Jane Smith'
+  },
+  update_dt: Date.now()
+};
+const [updateMetaOp, updatedMeta] = vpi.setMetadata(updatedMetaContainer);
 
 // Vérifier l'existence de métadonnées
 const metaExists = vpi.hasMetadata('metadata-token');
@@ -181,10 +201,17 @@ const [structOp, structure] = vpi.addStructure({
 });
 
 // 2. Ajouter les métadonnées avec children virtuels
-const [metaOp, structMeta] = vpi.addMetadata(structure.token, {
-  description: 'Dossier principal',
-  children: ['node1-token', 'node2-token'] // Références virtuelles
-});
+const structMetaContainer = {
+  id: crypto.randomUUID(),
+  token: structure.token,
+  meta: {
+    description: 'Dossier principal',
+    children: ['node1-token', 'node2-token'] // Références virtuelles
+  },
+  create_dt: Date.now(),
+  update_dt: Date.now()
+};
+const [metaOp, structMeta] = vpi.addMetadata(structMetaContainer);
 
 // Mettre à jour une structure existante
 const [updateStructOp, updatedStruct] = vpi.setStructure(structure.token, {
@@ -220,10 +247,17 @@ const [listOp, list] = vpi.addList({
 });
 
 // 2. Ajouter les métadonnées avec children virtuels ordonnés
-const [metaOp, listMeta] = vpi.addMetadata(list.token, {
-  description: 'Liste des tâches prioritaires',
-  children: ['task1-token', 'task2-token', 'task3-token'] // Ordre important
-});
+const listMetaContainer = {
+  id: crypto.randomUUID(),
+  token: list.token,
+  meta: {
+    description: 'Liste des tâches prioritaires',
+    children: ['task1-token', 'task2-token', 'task3-token'] // Ordre important
+  },
+  create_dt: Date.now(),
+  update_dt: Date.now()
+};
+const [metaOp, listMeta] = vpi.addMetadata(listMetaContainer);
 
 // Mettre à jour une liste existante
 const [updateListOp, updatedList] = vpi.setList(list.token, {

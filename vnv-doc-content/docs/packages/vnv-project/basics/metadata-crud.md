@@ -27,15 +27,22 @@ let vpi = vnv.VPI.ProjectInstance.init({/* votre projet */});
 const nodeToken = 'existing-node-token';
 
 // Ajout du MetaContainer au nœud
-let [operation, metadata] = vpi.addMetadata(nodeToken, {
-  description: 'Description détaillée du nœud',
-  category: 'Documentation',
-  tags: ['important', 'document'],
-  author: 'user-123',
-  priority: 'high',
-  language: 'fr',
-  createdAt: new Date().toISOString()
-});
+let metaContainer = {
+  id: crypto.randomUUID(),
+  token: nodeToken,
+  meta: {
+    description: 'Description détaillée du nœud',
+    category: 'Documentation',
+    tags: ['important', 'document'],
+    author: 'user-123',
+    priority: 'high',
+    language: 'fr',
+    createdAt: new Date().toISOString()
+  },
+  create_dt: Date.now(),
+  update_dt: Date.now()
+};
+let [operation, metadata] = vpi.addMetadata(metaContainer);
 ```
 
 ### Ajout via l'instance du nœud
@@ -55,7 +62,7 @@ node.setMetadata({
 ### Explication du Code
 
 - `ProjectInstance.init(...)` : Initialise un projet en retournant un ProxyProjectInstance qui permet un accès simplifié à toutes les couches du projet.
-- `vpi.addMetadata(...)` : Ajoute des métadonnées à un nœud identifié par son token. Cette méthode retourne un tableau contenant deux éléments :
+- `vpi.addMetadata(metaContainer)` : Ajoute des métadonnées à un nœud via un objet IMetaContainer complet. Cette méthode retourne un tableau contenant deux éléments :
   - `operation` : L'opération associée à l'ajout des métadonnées.
   - `metadata` : Les métadonnées qui ont été ajoutées.
 
@@ -122,15 +129,21 @@ const technicalMeta = {
 Pour mettre à jour des métadonnées existantes d'un nœud, utilisez la méthode `setMetadata` en passant les nouvelles valeurs souhaitées.
 
 ```typescript
-// Mise à jour des métadonnées par token
-let [operation, updatedMetadata] = vpi.setMetadata(metadata.token, {
-  value: 'Nouvelle description mise à jour',
-  properties: {
-    language: 'en',
-    lastModified: new Date().toISOString(),
-    modifiedBy: 'user-456'
-  }
-});
+// Mise à jour des métadonnées par objet IMetaContainer
+let updatedMetaContainer = {
+  ...metadata, // récupère l'objet metadata existant
+  meta: {
+    ...metadata.meta, // garde les métadonnées existantes
+    value: 'Nouvelle description mise à jour',
+    properties: {
+      language: 'en',
+      lastModified: new Date().toISOString(),
+      modifiedBy: 'user-456'
+    }
+  },
+  update_dt: Date.now()
+};
+let [operation, updatedMetadata] = vpi.setMetadata(updatedMetaContainer);
 
 // Mise à jour via l'instance du nœud (écrase les métadonnées existantes)
 node.setMetadata({
@@ -150,7 +163,7 @@ node.setMetadata({
 
 ### Explication du Code
 
-- `vpi.setMetadata(metadata.token, updatedValues)` : Met à jour les métadonnées identifiées par `metadata.token` avec les valeurs spécifiées dans `updatedValues`. Cette méthode retourne un tableau contenant l'opération effectuée et les métadonnées mises à jour.
+- `vpi.setMetadata(metaContainer)` : Met à jour les métadonnées via un objet IMetaContainer complet. Cette méthode retourne un tableau contenant l'opération effectuée et les métadonnées mises à jour.
 - `node.setMetadata(...)` : Met à jour directement les métadonnées du nœud. Cette méthode remplace toutes les métadonnées existantes.
 
 ## Supprimer des Métadonnées (Delete)

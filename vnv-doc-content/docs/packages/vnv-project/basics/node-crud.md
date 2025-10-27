@@ -33,12 +33,19 @@ let [operation, node] = vpi.addNode({
 });
 
 // ÉTAPE 2 : Ajout des métadonnées via MetaContainer
-let [metaOperation, metadata] = vpi.addMetadata(node.token, {
-  description: 'Contenu du document',
-  path: [],
-  category: 'Documentation',
-  tags: ['important', 'projet']
-});
+let metaContainer = {
+  id: crypto.randomUUID(),
+  token: node.token,
+  meta: {
+    description: 'Contenu du document',
+    path: [],
+    category: 'Documentation',
+    tags: ['important', 'projet']
+  },
+  create_dt: Date.now(),
+  update_dt: Date.now()
+};
+let [metaOperation, metadata] = vpi.addMetadata(metaContainer);
 ```
 
 ### Explication du Code
@@ -47,7 +54,7 @@ let [metaOperation, metadata] = vpi.addMetadata(node.token, {
 - `vpi.addNode(...)` : Crée le **Fragment de Node** de base. Cette méthode retourne un tableau contenant deux éléments :
   - `operation` : L'opération associée à l'ajout du nœud.
   - `node` : Le fragment de nœud qui a été ajouté.
-- `vpi.addMetadata(...)` : Crée le **MetaContainer** associé au node avec référence au propriétaire.
+- `vpi.addMetadata(metaContainer)` : Crée le **MetaContainer** associé au node. Prend un objet IMetaContainer complet avec id, token, meta, create_dt, update_dt.
 
 ### Pourquoi 2 étapes ?
 
@@ -91,11 +98,17 @@ let [operation, updatedNode] = vpi.setNode(node.token, {
 });
 
 // Mise à jour des métadonnées via le MetaContainer
-let [metaOperation, updatedMetadata] = vpi.setMetadata(metadata.token, {
-  description: 'Nouveau contenu',
-  category: 'Documentation Mise à Jour',
-  tags: ['modifié', 'important']
-});
+let updatedMetaContainer = {
+  ...metadata, // récupère l'objet metadata existant
+  meta: {
+    ...metadata.meta, // garde les métadonnées existantes
+    description: 'Nouveau contenu',
+    category: 'Documentation Mise à Jour',
+    tags: ['modifié', 'important']
+  },
+  update_dt: Date.now()
+};
+let [metaOperation, updatedMetadata] = vpi.setMetadata(updatedMetaContainer);
 
 // Alternative : utiliser la méthode update du nœud directement
 const updateOperation = node.update({
@@ -106,7 +119,7 @@ const updateOperation = node.update({
 ### Explication du Code
 
 - `vpi.setNode(node.token, updatedProperties)` : Met à jour le **Fragment de Node** identifié par `node.token`. Cette méthode retourne l'opération effectuée et le fragment mis à jour.
-- `vpi.setMetadata(metadata.token, updatedProperties)` : Met à jour le **MetaContainer** associé au node.
+- `vpi.setMetadata(metaContainer)` : Met à jour le **MetaContainer** associé au node. Prend un objet IMetaContainer complet mis à jour.
 - `node.update(...)` : Méthode directe sur l'instance du nœud pour le mettre à jour.
 
 ## Supprimer un Nœud (Delete)

@@ -35,19 +35,22 @@ let [operation, structure] = vpi.addStructure({
 });
 
 // ÉTAPE 2 : Ajout des métadonnées avec children organisationnels
-let [metaOperation, metadata] = vpi.addMetadata(structure.token, {
-  description: 'Dossier contenant tous les documents du projet',
-  path: [],
-  ref_extern: '',
-  external: null,
-  type: 'file', // <-- !REQUIRED!
-  children: [
-    // Children nodes avec positionnement hiérarchique
-    {
-      name: 'Document 1',
-      token: 'child1-token',
-      child: '1.0.0', // Emplacement dans la structure (x.y.z)
-      type: 'structure_child'
+let structureMetaContainer = {
+  id: crypto.randomUUID(),
+  token: structure.token,
+  meta: {
+    description: 'Dossier contenant tous les documents du projet',
+    path: [],
+    ref_extern: '',
+    external: null,
+    type: 'file', // <-- !REQUIRED!
+    children: [
+      // Children nodes avec positionnement hiérarchique
+      {
+        name: 'Document 1',
+        token: 'child1-token',
+        child: '1.0.0', // Emplacement dans la structure (x.y.z)
+        type: 'structure_child'
     },
     {
       name: 'Document 2',
@@ -56,7 +59,11 @@ let [metaOperation, metadata] = vpi.addMetadata(structure.token, {
       type: 'structure_child'
     }
   ]
-});
+  },
+  create_dt: Date.now(),
+  update_dt: Date.now()
+};
+let [metaOperation, metadata] = vpi.addMetadata(structureMetaContainer);
 ```
 
 ### Explication du Code
