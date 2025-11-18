@@ -8,13 +8,17 @@
         "type": "tabs",
         "children": [
           {
-            "id": "baacff993f60d0fc",
+            "id": "ccb20e39302668b3",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "docs/packages/vpi/others/Metadatas.md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "Nouvel onglet"
+              "title": "Metadatas"
             }
           }
         ]
@@ -109,12 +113,11 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "blog/posts/Mainframe cloud architecture.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Liens sortants de Mainframe cloud architecture"
+              "title": "Liens sortants"
             }
           },
           {
@@ -138,22 +141,21 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "docs/packages/vnv-api-kit/ess/guides/vpi/basics/list-crud.md",
+                "file": "docs/packages/vpi/others/Metadatas.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Plan de list-crud"
+              "title": "Plan de Metadatas"
             }
           }
         ],
-        "currentTab": 1
+        "currentTab": 3
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -166,42 +168,43 @@
       "bases:Create new base": false
     }
   },
-  "active": "baacff993f60d0fc",
+  "active": "ccb20e39302668b3",
   "lastOpenFiles": [
-    "docs/packages/vpi/basics/list-crud.en.md",
+    "docs/packages/vpi/others",
+    "docs/packages/vpi/advanced/node-manipulation.md",
+    "docs/packages/vpi/others/Metadatas.md",
+    "Sans titre 1.base",
+    "docs/packages/vpi/advanced/operations.md",
+    "docs/packages/vpi/advanced/project-manipulation.md",
+    "docs/packages/vpi/vnv-project.md",
+    "docs/packages/vpi/create-project.md",
+    "docs/guides/test.md",
     "docs/guides/How to work with a vnv Project.md",
+    "docs/guides/example.md",
+    "docs/guides/dump.md",
+    "docs/guides/_index.md",
+    "Sans titre.canvas",
+    "docs/packages/vpi/basics/list-crud.md",
+    "docs/packages/vnv-api-kit/guide/api-layer/api-layer.md",
+    "docs/packages/vnv-api-kit/database/project/nodes.md",
+    "docs/packages/vpi/basics/_index.md",
+    "docs/packages/vpi/_index.md",
+    "docs/packages/vpi/basics/node-crud.md",
+    "docs/packages/vpi/basics/relations-crud.md",
+    "docs/packages/vpi/basics/list-crud.en.md",
     "docs/guides/How to work with a vnv Project.en.md",
     "docs/packages/vpi/vpi-features.en.md",
     "docs/packages/vpi/vpi-features.md",
     "docs/packages/vpi/vnv-project.en.md",
     "docs/packages/vpi/create-project.en.md",
-    "docs/packages/vpi/create-project.md",
-    "docs/guides/test.md",
     "docs/packages/vpi/basics/metadata-crud.en.md",
-    "docs/packages/vpi/basics/node-crud.en.md",
-    "docs/packages/vpi/basics/structure-crud.en.md",
-    "docs/packages/vpi/basics/relations-crud.en.md",
-    "docs/guides/example.md",
-    "docs/guides/Comment travailler avec un vnv Project.md",
-    "docs/packages/vpi/basics/_index.md",
-    "docs/packages/vpi/_index.md",
-    "docs/packages/vnv-project/vpi-features.md",
-    "docs/packages/vpi/advanced/project-manipulation.md",
-    "docs/packages/vpi/advanced/operations.md",
-    "docs/packages/vpi/advanced/node-manipulation.md",
     "docs/packages/vpi/advanced/_category_.json",
-    "docs/packages/vpi/basics/structure-crud.md",
-    "docs/packages/vpi/basics/list-crud.md",
-    "docs/packages/vpi/basics/relations-crud.md",
-    "docs/packages/vpi/basics/node-crud.md",
-    "docs/packages/vpi/basics/metadata-crud.md",
     "docs/packages/vpi/basics/_category_.json",
     "docs/packages/vpi/_category_.json",
     "docs/packages/vpi/basics",
     "docs/packages/vpi/advanced",
     "docs/packages/vpi",
     "docs/packages/vnv-project/vpi-features.mdx",
-    "Sans titre.base",
-    "Sans titre.canvas"
+    "Sans titre.base"
   ]
 }

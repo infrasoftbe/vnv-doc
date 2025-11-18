@@ -165,6 +165,7 @@ A node within a VPI is not simply an object, but an instance of the `Node` class
 - `node.delete()`: Deletes the node
 - `node.linkTo()`: Creates a link to another node of type `HAS_...`
 - `node.linkFor()`: Creates a link to another node of type `IS_..._FOR_...`
+- `node.duplicate()`:
 
 #### Properties
 - `node.flat`: Flattened representation of the node
@@ -181,6 +182,8 @@ A structure within a VPI is also an instance of the `Node` class that has been e
 - `structure.deleteNode()`: Deletes a child node
 - `structure.queryNodeAll()`: Searches all child nodes
 - `structure.getChildByToken()`: Retrieves a child by its token
+- `structure.duplicate()`: 
+- `structure.moveItemToPosition()`: 
 
 #### Structure validation
 - `structure.isConsistant()`: Checks structure consistency
@@ -197,6 +200,11 @@ A structure within a VPI is also an instance of the `Node` class that has been e
 
 A list within a VPI is an instance of the `List` class that inherits from the `Structure` class. This means it has the same utilities as the structure, with specific optimizations for managing ordered collections of elements.
 
+#### Child node management
+- `list.reorderItems()`:
+
+### Relation Features
+- `relation.`
 ### CRUD, Transactions, and Operations
 
 All operations are stored in `vpi.operations`. An operation represents a transaction between two data states for a given element, with difference calculation on modified fields. Values are stored as `key: [oldValue, newValue]`, allowing tracking of each modification.
