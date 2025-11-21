@@ -1,3 +1,10 @@
+---
+title: Release
+draft: false
+contributors:
+  - Houthoofd Guillaume
+---
+
 
 ```shell
 git tag v0.1.0
