@@ -14,7 +14,7 @@
               "type": "markdown",
               "state": {
                 "file": "docs/Infrastructure.md",
-                "mode": "source",
+                "mode": "preview",
                 "source": false
               },
               "icon": "lucide-file",
@@ -169,10 +169,10 @@
       "command-palette:Ouvrir la palette de commandes": false
     }
   },
-  "active": "8364aaf6cd3d6b77",
+  "active": "3a78b134f4ad53de",
   "lastOpenFiles": [
-    "docs/reference/example.md",
     "docs/Infrastructure.md",
+    "docs/reference/example.md",
     "docs/Sans titre",
     "privacy.md",
     "Sans titre.base",
