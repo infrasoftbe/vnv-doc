@@ -1,38 +1,42 @@
+---
+weight: 200
+---
+
 # Infrastructure
 
-Voici un descriptif de l'architecture de notre système VNV (Validation & Verification).
+Here is a description of the architecture of our VNV (Validation & Verification) system.
 
 ## Context
 
-Notre infrastructure est composée de plusieurs serveurs interconnectés qui travaillent ensemble pour fournir une plateforme complète de gestion de projets et de documents.
+Our infrastructure consists of several interconnected servers that work together to provide a complete platform for project and document management.
 
 #### Servers
-- **vnv-rest** (port 3000) - Serveur principal contenant les processus métier qui interagissent avec la base de données Neo4j. Il expose une API REST pour toutes les opérations métier.
-- **vnv-proxy** (port 8080) - Serveur proxy central qui gère les Elastic Session Systems (ESS), orchestre la communication entre tous les services et agit comme point d'entrée principal de l'infrastructure.
-- **vnv-pnp** (port 8081) - Serveur dédié à la communication avec les services Microsoft (SharePoint, OneDrive, Teams, etc.).
-- **vnv-event-bridge** (port 8082) - Serveur dédié à la réception et au traitement des signaux et événements externes (webhooks, notifications, etc.).
-- **minio** (port 9000) - Serveur de stockage d'objets (blob storage) compatible avec l'API S3 d'Amazon.
-- **neo4j** (port 7474) - Base de données orientée graphe servant de base de données globale pour toutes les entités métier.
-- **redis** (port 6379) - Base de données en mémoire utilisée pour l'orchestration, la gestion de cache et la synchronisation inter-services.
+- **vnv-rest** (port 3000) - Main server containing business processes that interact with the Neo4j database. It exposes a REST API for all business operations.
+- **vnv-proxy** (port 8080) - Central proxy server that manages Elastic Session Systems (ESS), orchestrates communication between all services, and acts as the main entry point of the infrastructure.
+- **vnv-pnp** (port 8081) - Server dedicated to communication with Microsoft services (SharePoint, OneDrive, Teams, etc.).
+- **vnv-event-bridge** (port 8082) - Server dedicated to receiving and processing external signals and events (webhooks, notifications, etc.).
+- **minio** (port 9000) - Object storage server (blob storage) compatible with Amazon's S3 API.
+- **neo4j** (port 7474) - Graph-oriented database serving as the global database for all business entities.
+- **redis** (port 6379) - In-memory database used for orchestration, cache management, and inter-service synchronization.
 
 #### Packages
-- **vnv-sdk** - Librairie partagée permettant tous les traitements métier, modèles métier, etc. Elle est utilisée à la fois en front-end et back-end. Elle permet de manipuler des modèles de données qui transitent entre les services et d'uniformiser l'utilisation des processus métier dans tous les services et applications. Elle contient aussi un client fetch permettant d'interagir avec l'infrastructure au travers de layers API dédiés.
+- **vnv-sdk** - Shared library enabling all business processing, business models, etc. It is used in both front-end and back-end. It allows manipulation of data models that transit between services and standardizes the use of business processes across all services and applications. It also contains a fetch client for interacting with the infrastructure through dedicated API layers.
 
 ```mermaid
 graph TB
     subgraph "Frontend"
-        APP[Applications Client]
+        APP[Client Applications]
     end
     
     subgraph "Backend Services"
-        PROXY[vnv-proxy:8080<br/>Orchestrateur & ESS]
-        REST[vnv-rest:3000<br/>Processus Métier]
-        PNP[vnv-pnp:8081<br/>Services Microsoft]
-        BRIDGE[vnv-event-bridge:8082<br/>Événements Externes]
+        PROXY[vnv-proxy:8080<br/>Orchestrator & ESS]
+        REST[vnv-rest:3000<br/>Business Processes]
+        PNP[vnv-pnp:8081<br/>Microsoft Services]
+        BRIDGE[vnv-event-bridge:8082<br/>External Events]
     end
     
     subgraph "Data Layer"
-        NEO4J[(neo4j:7474<br/>Base Graphe)]
+        NEO4J[(neo4j:7474<br/>Graph Database)]
         REDIS[(redis:6379<br/>Cache & Orchestration)]
         MINIO[(minio:9000<br/>Blob Storage)]
     end
@@ -44,8 +48,8 @@ graph TB
     PROXY --> REDIS
     PROXY --> MINIO
     REST --> NEO4J
-    PNP -->|API Microsoft| MS[Microsoft 365]
-    BRIDGE -->|Webhooks| EXT[Services Externes]
+    PNP -->|Microsoft API| MS[Microsoft 365]
+    BRIDGE -->|Webhooks| EXT[External Services]
     
     style PROXY fill:#4a90e2
     style REST fill:#50c878
@@ -57,92 +61,92 @@ graph TB
 
 ### Minio
 
-Minio est un serveur de stockage d'objets open-source compatible avec l'API Amazon S3. Il permet de stocker et gérer des fichiers de toute taille de manière scalable et performante.
+Minio is an open-source object storage server compatible with Amazon's S3 API. It allows storing and managing files of any size in a scalable and performant manner.
 
-**Utilisation dans notre système :**
-- **Développement local** : Minio est déployé localement via Docker pour simuler un environnement S3
-- **Production cloud** : AWS S3 remplace Minio pour bénéficier de la scalabilité et de la fiabilité d'AWS
+**Usage in our system:**
+- **Local Development**: Minio is deployed locally via Docker to simulate an S3 environment
+- **Cloud Production**: AWS S3 replaces Minio to benefit from AWS scalability and reliability
 
-**Cas d'usage :**
-- Stockage des documents de projets (PDF, Word, Excel, etc.)
-- Stockage des fichiers temporaires générés par les processus métier
-- Stockage des exports et rapports
-- Gestion des versions de fichiers
-- Hébergement des assets statiques
+**Use Cases:**
+- Storage of project documents (PDF, Word, Excel, etc.)
+- Storage of temporary files generated by business processes
+- Storage of exports and reports
+- File version management
+- Hosting static assets
 
 ### Neo4j
 
-Neo4j est une base de données orientée graphe qui stocke les données sous forme de nœuds et de relations. Elle est particulièrement adaptée pour modéliser des structures complexes et interconnectées.
+Neo4j is a graph-oriented database that stores data as nodes and relationships. It is particularly suited for modeling complex and interconnected structures.
 
-**Utilisation dans notre système :**
-Neo4j est notre base de rétention de données inter-cluster. Elle stocke toutes les entités métier et leurs relations de manière persistante.
+**Usage in our system:**
+Neo4j is our inter-cluster data retention database. It stores all business entities and their relationships persistently.
 
-**Cas d'usage :**
-- Modélisation des projets et de leur hiérarchie
-- Gestion des relations entre entités (documents, utilisateurs, tâches, etc.)
-- Traçabilité et historique des modifications
-- Requêtes complexes sur les relations entre entités
-- Gestion des droits et permissions
-- Navigation dans l'arborescence des projets
+**Use Cases:**
+- Modeling projects and their hierarchy
+- Managing relationships between entities (documents, users, tasks, etc.)
+- Traceability and modification history
+- Complex queries on relationships between entities
+- Rights and permissions management
+- Navigation in project tree structure
 
-**Avantages :**
-- Performance élevée pour les requêtes de traversée de graphe
-- Flexibilité du schéma de données
-- Langage de requête Cypher intuitif et puissant
+**Advantages:**
+- High performance for graph traversal queries
+- Flexible data schema
+- Intuitive and powerful Cypher query language
 
 ### Redis
 
-Redis est une base de données clé-valeur en mémoire ultra-rapide, utilisée principalement pour le cache et l'orchestration.
+Redis is an ultra-fast in-memory key-value database, used primarily for caching and orchestration.
 
-**Utilisation dans notre système :**
-Redis est notre base de rétention d'orchestration mise en place par le proxy. Il permet au proxy de créer des flux d'interaction complexes avec les autres services.
+**Usage in our system:**
+Redis is our orchestration retention database implemented by the proxy. It allows the proxy to create complex interaction flows with other services.
 
-**Cas d'usage :**
-- **Orchestration des services** : Coordination des appels entre vnv-proxy et les autres services
-- **Cache de sessions** : Stockage temporaire des sessions utilisateur
-- **Gestion d'état** : Stockage des états des ressources provenant de SharePoint pour calculer les différences
-- **File d'attente** : Gestion des tâches asynchrones et des jobs en arrière-plan
-- **Pub/Sub** : Communication en temps réel entre services
-- **Rate limiting** : Limitation du nombre de requêtes par utilisateur/service
-- **Locks distribués** : Synchronisation des accès concurrents aux ressources
+**Use Cases:**
+- **Service Orchestration**: Coordination of calls between vnv-proxy and other services
+- **Session Cache**: Temporary storage of user sessions
+- **State Management**: Storage of resource states from SharePoint to calculate differences
+- **Queue**: Management of asynchronous tasks and background jobs
+- **Pub/Sub**: Real-time communication between services
+- **Rate Limiting**: Limiting the number of requests per user/service
+- **Distributed Locks**: Synchronization of concurrent access to resources
 
-**Avantages :**
-- Performances exceptionnelles (opérations en microsecondes)
-- Support natif des structures de données complexes (listes, sets, hashes)
-- Persistance optionnelle des données
-- Scalabilité horizontale via clustering
+**Advantages:**
+- Exceptional performance (operations in microseconds)
+- Native support for complex data structures (lists, sets, hashes)
+- Optional data persistence
+- Horizontal scalability via clustering
 
 ## Elastic Session System (ESS)
 
-Le concept d'Elastic Session System vise à centraliser les données de session (une session = travail sur un projet mis dans une session). Une session de travail comporte des documents ainsi que des données métier. Un ESS est une base de données SQL contenant toutes ces informations, permettant ainsi de capturer une image d'un projet pour faire des modifications avant de faire un commit par la suite.
+The Elastic Session System concept aims to centralize session data (a session = work on a project placed in a session). A work session includes documents as well as business data. An ESS is an SQL database containing all this information, thus allowing to capture a snapshot of a project to make modifications before committing later.
 
 ### Context
 
-La sauvegarde de l'information se fait en plusieurs étapes, similaire au workflow Git :
+Information is saved in several steps, similar to the Git workflow:
 
-1. **Pull** : Je récupère mon projet depuis la source de vérité (Neo4j)
-2. **Modify** : Je modifie les données et documents dans ma session isolée
-3. **Commit** : Je valide mes modifications localement
-4. **Push** : Je propage mes modifications vers la source de vérité
+1. **Pull**: I retrieve my project from the source of truth (Neo4j)
+2. **Modify**: I modify data and documents in my isolated session
+3. **Commit**: I validate my modifications locally
+4. **Push**: I propagate my modifications to the source of truth
 
-Pour cela, il faut un système qui découple ce qui est prévu pour retenir l'information de manière à le mettre dans un autre système qui pourra faire une rétention des modifications pour les propager correctement. C'est le but de l'Elastic Session System.
+For this, we need a system that decouples what is intended to retain information in order to put it in another system that can retain modifications to propagate them correctly. This is the purpose of the Elastic Session System.
 
-**Caractéristiques clés :**
-- **Isolation** : Chaque session est isolée dans sa propre base de données SQLite
-- **Versionning** : Gestion de l'historique des modifications au sein d'une session
-- **Concurrence** : Plusieurs utilisateurs peuvent travailler sur différentes sessions du même projet
-- **Performance** : Les opérations sont rapides car elles sont locales à la session
-- **Merge** : Système de résolution de conflits lors du push vers Neo4j
+**Key Characteristics:**
+- **Isolation**: Each session is isolated in its own SQLite database
+- **Versioning**: Management of modification history within a session
+- **Concurrency**: Multiple users can work on different sessions of the same project
+- **Performance**: Operations are fast because they are local to the session
+- **Merge**: Conflict resolution system when pushing to Neo4j
 
-Pour comprendre le placement de l'Elastic Session System, il faut comprendre comment il sera mis en place en dev et en prod. En développement, on pourrait croire que c'est un système de rétention d'information intra-cluster. Mais en production, les ESS sont stockés dans un Elastic File System (EFS), permettant d'avoir une interaction inter-cluster.
+To understand the placement of the Elastic Session System, you need to understand how it will be set up in dev and prod. In development, one might think it's an intra-cluster information retention system. But in production, ESS are stored in an Elastic File System (EFS), allowing inter-cluster interaction.
 
 ### Local Development
 
-En développement local, chaque ESS est stocké localement sur le système de fichiers du serveur vnv-proxy.
+In local development, each ESS is stored locally on the file system of the vnv-proxy server.
 
 ```mermaid
 graph TB
-    subgraph "Machine Développeur"
+    subgraph "Developer Machine"
         subgraph "Docker Compose"
             PROXY[vnv-proxy:8080]
             REST[vnv-rest:3000]
@@ -151,16 +155,16 @@ graph TB
             MINIO[(minio:9000)]
         end
         
-        subgraph "Système de Fichiers Local"
+        subgraph "Local File System"
             ESS1[(ESS - Project A<br/>SQLite)]
             ESS2[(ESS - Project B<br/>SQLite)]
             ESS3[(ESS - Project C<br/>SQLite)]
         end
     end
     
-    PROXY -->|Créer/Gérer| ESS1
-    PROXY -->|Créer/Gérer| ESS2
-    PROXY -->|Créer/Gérer| ESS3
+    PROXY -->|Create/Manage| ESS1
+    PROXY -->|Create/Manage| ESS2
+    PROXY -->|Create/Manage| ESS3
     PROXY -->|Pull/Push| REST
     PROXY --> REDIS
     PROXY --> MINIO
@@ -174,7 +178,7 @@ graph TB
 
 ### Cloud Production
 
-En production cloud, les ESS sont stockés dans AWS EFS (Elastic File System), permettant un accès partagé entre tous les pods du cluster.
+In cloud production, ESS are stored in AWS EFS (Elastic File System), allowing shared access between all pods in the cluster.
 
 ```mermaid
 graph TB
@@ -235,20 +239,20 @@ graph TB
     style ALB fill:#e74c3c
 ```
 
-**Avantages de l'approche cloud :**
-- **Scalabilité** : N'importe quel pod peut accéder à n'importe quel ESS
-- **Haute disponibilité** : Si un pod tombe, un autre peut reprendre la session
-- **Performance** : EFS offre un accès rapide et concurrent
-- **Persistence** : Les ESS survivent aux redémarrages de pods
+**Advantages of the cloud approach:**
+- **Scalability**: Any pod can access any ESS
+- **High Availability**: If a pod fails, another can take over the session
+- **Performance**: EFS offers fast and concurrent access
+- **Persistence**: ESS survive pod restarts
 
 ### Global Cloud Infrastructure
 
-Ici on peut voir que l'infrastructure décrite plus haut est en fait un cluster orchestré et déployé par AWS. Le système est scalable et c'est pourquoi on parle de système intra/inter cluster.
+Here we can see that the infrastructure described above is actually a cluster orchestrated and deployed by AWS. The system is scalable, which is why we talk about intra/inter cluster system.
 
 ```mermaid
 graph TB
     subgraph "Internet"
-        USERS[Utilisateurs]
+        USERS[Users]
     end
     
     subgraph "AWS Region"
@@ -341,25 +345,25 @@ graph TB
     style MS365 fill:#0078d4
 ```
 
-**Architecture Cloud - Caractéristiques :**
+**Cloud Architecture - Characteristics:**
 
-- **Multi-AZ (Availability Zones)** : Répartition sur plusieurs zones de disponibilité pour la haute disponibilité
-- **Auto-scaling** : Ajustement automatique du nombre de pods selon la charge
-- **Load Balancing** : Distribution intelligente du trafic entre les instances
-- **Managed Services** : Utilisation de services managés AWS (EFS, S3, ElastiCache)
-- **Monitoring & Observabilité** : CloudWatch pour les métriques et logs, X-Ray pour le tracing distribué
-- **Security** : VPC isolé, Security Groups, IAM roles, encryption at rest et in transit
-- **Disaster Recovery** : Backups automatiques, snapshots, réplication inter-régions possible
+- **Multi-AZ (Availability Zones)**: Distribution across multiple availability zones for high availability
+- **Auto-scaling**: Automatic adjustment of the number of pods according to load
+- **Load Balancing**: Intelligent traffic distribution between instances
+- **Managed Services**: Use of AWS managed services (EFS, S3, ElastiCache)
+- **Monitoring & Observability**: CloudWatch for metrics and logs, X-Ray for distributed tracing
+- **Security**: Isolated VPC, Security Groups, IAM roles, encryption at rest and in transit
+- **Disaster Recovery**: Automatic backups, snapshots, possible inter-region replication
 
-**Flux de données :**
+**Data Flow:**
 
-1. L'utilisateur se connecte via HTTPS au Load Balancer
-2. Le Load Balancer route vers un pod vnv-proxy disponible
-3. vnv-proxy orchestre les appels vers les autres services
-4. Les ESS sont partagés via EFS entre tous les pods
-5. Neo4j centralise les données persistantes
-6. Redis gère l'orchestration et le cache
-7. S3 stocke les fichiers et documents
-8. CloudWatch et X-Ray collectent les métriques et traces
+1. The user connects via HTTPS to the Load Balancer
+2. The Load Balancer routes to an available vnv-proxy pod
+3. vnv-proxy orchestrates calls to other services
+4. ESS are shared via EFS between all pods
+5. Neo4j centralizes persistent data
+6. Redis manages orchestration and cache
+7. S3 stores files and documents
+8. CloudWatch and X-Ray collect metrics and traces
 
-Cette architecture permet une scalabilité horizontale infinie tout en maintenant la cohérence des données et des sessions utilisateur.
+This architecture allows infinite horizontal scalability while maintaining data consistency and user sessions.

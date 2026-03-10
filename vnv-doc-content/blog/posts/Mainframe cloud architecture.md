@@ -1,5 +1,5 @@
 ---
-title: Mainframe cloud architecture
+title: Mainframe Cloud Architecture
 draft: false
 contributors:
   - Houthoofd Guillaume
@@ -8,77 +8,77 @@ contributors:
 ```mermaid
 flowchart TB
 
-    %% --- Groupes principaux ---
+    %% --- Main Groups ---
 
     subgraph Infrasoft ["Infrasoft"]
 
-      i_Devs["Développeurs"]
+      i_Devs["Developers"]
 
       subgraph DockerContainer ["Container"]
 
-          subgraph InfrasoftServices ["Infrasoft Services"]
+          subgraph InfrasoftServices ["Infrasoft Services"]
 
-              Proxy["Proxy (Docker)"]
+              Proxy["Proxy (Docker)"]
 
-              Neo["Neo (Docker)"]
+              Neo["Neo (Docker)"]
 
-              Pnp["Pnp (Docker)"]
+              Pnp["Pnp (Docker)"]
 
-              Bridge["Bridge (Docker)"]
+              Bridge["Bridge (Docker)"]
 
-          end
+          end
 
 
 
-          MinIO["MinIO (Docker)"]
+          MinIO["MinIO (Docker)"]
 
-          Redis["Redis (Docker)"]
+          Redis["Redis (Docker)"]
 
-          GitActions["Git Actions (Docker)"]
+          GitActions["Git Actions (Docker)"]
 
-          Watchtower["Watchtower (Docker)"]
+          Watchtower["Watchtower (Docker)"]
 
-      end
+      end
 
     end
 
-    %% --- Éléments externes ---
+    %% --- External Elements ---
 
-    subgraph External
+    subgraph External
 
         o_users["Users"]
 
-        o_Devs["Développeurs"]
+        o_Devs["Developers"]
 
-        Cloud["Internet / Cloud"]
+        Cloud["Internet / Cloud"]
 
-    end
-
-
-
-    Watchtower -->|"Update services based on dev tag"| InfrasoftServices
+    end
 
 
 
-    %% --- Flux GitActions / Redis / MinIO ---
-
-    i_Devs["Développeurs"] -->|"Execute Action inside"| GitActions
-    GitActions -->|"Create or Update app with terraform"| MinIO
+    Watchtower -->|"Update services based on dev tag"| InfrasoftServices
 
 
 
-    %% --- Exécution externe ---
+    %% --- GitActions / Redis / MinIO Flows ---
 
-   o_Devs["Développeurs"] --> Cloud -->|"Execute Action outside"| GitActions
+    i_Devs["Developers"] -->|"Execute Action inside"| GitActions
+    GitActions -->|"Create or Update app with terraform"| MinIO
+
+
+
+    %% --- External Execution ---
+
+   o_Devs["Developers"] --> Cloud -->|"Execute Action outside"| GitActions
    o_users["Users"] --> Cloud --> DockerContainer
 
-    %% --- Styles ---
+    %% --- Styles ---
 
-    classDef docker fill:#e0f7fa,stroke:#00796b,stroke-width:1px,color:#004d40;
+    classDef docker fill:#e0f7fa,stroke:#00796b,stroke-width:1px,color:#004d40;
 
-    class Proxy,Neo,Pnp,Bridge,MinIO,Redis,GitActions,Watchtower docker;
+    class Proxy,Neo,Pnp,Bridge,MinIO,Redis,GitActions,Watchtower docker;
 
-    classDef external fill:#fff3e0,stroke:#ef6c00,stroke-width:1px,color:#bf360c;
+    classDef external fill:#fff3e0,stroke:#ef6c00,stroke-width:1px,color:#bf360c;
 
-    class Devs,Cloud,Acc external;
+    class Devs,Cloud,Acc external;
 ```

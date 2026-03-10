@@ -1,36 +1,36 @@
 ---
-title: Validation procedures
+title: Validation Procedures
 contributors:
   - Houthoofd Guillaume
 date: 2026-03-10
 ---
 
-Dans un projet de grande envergure, les transits de données doivent être validés.
-Ainsi, dans le projet VNV, une multitude de processus de validation prennent place tant la donnée initiale doit être mise dans la bonne forme pour que le système puisse correctement interpréter et processer la data.
+In a large-scale project, data transfers must be validated.
+Thus, in the VNV project, a multitude of validation processes take place as the initial data must be formatted correctly so that the system can properly interpret and process the data.
 
-## Types de données
+## Data Types
 
-Notre système supporte quatre formats de données principaux, chacun ayant un rôle spécifique dans le cycle de vie des projets.
+Our system supports four main data formats, each with a specific role in the project lifecycle.
 
-> **📖 Pour une description détaillée des formats Excel et ZIP (ESS), consultez le [Guide des formats ESS et VPI](../guide-ess-and-vpi-import-format).**
+> **📖 For a detailed description of Excel and ZIP (ESS) formats, see the [ESS and VPI Format Guide](./excel-zip-format.md).**
 
-### Vue d'ensemble des formats
+### Format Overview
 
-| Format | Description | Rôle |
+| Format | Description | Role |
 |--------|-------------|------|
-| **Excel (.xlsx)** | Format de base avec worksheets structurés | Import initial, export, archivage |
-| **ZIP (ESS)** | Archive complète avec fichiers et arborescence | Session de travail, transfert, backup |
-| **JSON Dataset** | Format pivot avec métadonnées inline (`@meta.*`) | Validation, transformation, debugging |
-| **JSON VPI** | Format hiérarchique pour base de données | Stockage Neo4j, opérations métier |
+| **Excel (.xlsx)** | Base format with structured worksheets | Initial import, export, archiving |
+| **ZIP (ESS)** | Complete archive with files and directory tree | Work session, transfer, backup |
+| **JSON Dataset** | Pivot format with inline metadata (`@meta.*`) | Validation, transformation, debugging |
+| **JSON VPI** | Hierarchical format for database | Neo4j storage, business operations |
 
-### Hiérarchie des formats
+### Format Hierarchy
 
 ```mermaid
 graph LR
-    EXCEL[Excel .xlsx<br/>Format utilisateur]
-    DATASET[JSON Dataset<br/>Format pivot]
-    VPI[JSON VPI<br/>Format DB]
-    ZIP[ZIP ESS<br/>Archive complète]
+    EXCEL[Excel .xlsx<br/>User Format]
+    DATASET[JSON Dataset<br/>Pivot Format]
+    VPI[JSON VPI<br/>DB Format]
+    ZIP[ZIP ESS<br/>Complete Archive]
     
     EXCEL -.->|"worksheets"| DATASET
     DATASET -.->|"transform"| VPI
@@ -40,41 +40,41 @@ graph LR
     style VPI fill:#50c878,color:#fff
 ```
 
-**Caractéristiques clés :**
+**Key Characteristics:**
 
-- **Excel** : Worksheets `#Project`, `#Itm#*`, `#Str#*`, `#Lst#*`, `#Rel` (voir [guide détaillé](../guide-ess-and-vpi-import-format#vpi---excel-format))
-- **Dataset** : Même structure qu'Excel mais en JSON avec `@meta.*` flatten
-- **VPI** : Structure `{ self, data: { nodes, meta, structures, lists, relations } }`
-- **ZIP ESS** : Contient le projet (`.xlsx` ou `.json`) + arborescence de fichiers (voir [structure ZIP](../guide-ess-and-vpi-import-format/#ess---zip-format))
+- **Excel**: Worksheets `#Project`, `#Itm#*`, `#Str#*`, `#Lst#*`, `#Rel` (see [detailed guide](./excel-zip-format.md#vpi---excel-format))
+- **Dataset**: Same structure as Excel but in JSON with flattened `@meta.*`
+- **VPI**: Structure `{ self, data: { nodes, meta, structures, lists, relations } }`
+- **ZIP ESS**: Contains the project (`.xlsx` or `.json`) + file directory tree (see [ZIP structure](./excel-zip-format.md#ess---zip-format))
 
 ## Transformations
 
-La data entrante peut être un Excel, ZIP ou JSON. Tous ces formats sont transformables entre eux via le **Dataset** qui agit comme format pivot central.
+Input data can be Excel, ZIP, or JSON. All these formats are transformable into each other via the **Dataset** which acts as a central pivot format.
 
 ```mermaid
 graph TB
-    subgraph "Formats d'entrée"
+    subgraph "Input Formats"
         EXCEL[Excel .xlsx]
         ZIP[ZIP ESS]
         JSON_VPI[JSON VPI]
     end
     
-    subgraph "Format Pivot"
+    subgraph "Pivot Format"
         DATASET[JSON Dataset]
     end
     
-    subgraph "Formats de sortie"
+    subgraph "Output Formats"
         EXCEL_OUT[Excel .xlsx]
         ZIP_OUT[ZIP ESS]
         VPI_OUT[JSON VPI]
     end
     
     EXCEL -->|XlsBufferToDataset| DATASET
-    ZIP -->|ZipBufferToVpi<br/>puis VpiToDataset| DATASET
+    ZIP -->|ZipBufferToVpi<br/>then VpiToDataset| DATASET
     JSON_VPI -->|VpiToDataset| DATASET
     
     DATASET -->|DatasetToXls| EXCEL_OUT
-    DATASET -->|DatasetToVpi<br/>puis VpiToZip| ZIP_OUT
+    DATASET -->|DatasetToVpi<br/>then VpiToZip| ZIP_OUT
     DATASET -->|DatasetToVpi| VPI_OUT
     
     style DATASET fill:#4a90e2,color:#fff
@@ -83,9 +83,9 @@ graph TB
     style JSON_VPI fill:#feca57
 ```
 
-### Parsers disponibles
+### Available Parsers
 
-Le système fournit un ensemble complet de parsers bidirectionnels via la classe `ProjectEngineParsers` :
+The system provides a complete set of bidirectional parsers via the `ProjectEngineParsers` class:
 
 #### **Excel ↔ Dataset**
 ```typescript
@@ -105,7 +105,7 @@ ProjectEngineParsers.DatasetToVpi(dataset: JSONDataset): Promise<ProxyProjectIns
 ProjectEngineParsers.VpiToDataset(vpi: ProxyProjectInstance): Promise<JSONDataset>
 ```
 
-#### **Excel ↔ VPI (Raccourcis)**
+#### **Excel ↔ VPI (Shortcuts)**
 ```typescript
 // Excel → VPI (via Dataset)
 ProjectEngineParsers.XlsBufferToVpi(buffer: Buffer): Promise<ProxyProjectInstance>
@@ -123,9 +123,9 @@ ProjectEngineParsers.ZipBufferToVpi(buffer: Buffer): Promise<ProxyProjectInstanc
 ProjectEngineParsers.VpiToZip(vpi: ProxyProjectInstance): Promise<Buffer>
 ```
 
-### Pipeline de transformation
+### Transformation Pipeline
 
-Voici les étapes détaillées pour chaque transformation :
+Here are the detailed steps for each transformation:
 
 #### 1. Excel → Dataset → VPI
 
@@ -138,35 +138,35 @@ sequenceDiagram
     participant VPI
 
     Excel->>Parser: Buffer
-    Parser->>Parser: Extraction des worksheets
-    Parser->>Parser: Composition headers + values
-    Parser-->>Validator: Dataset brut
+    Parser->>Parser: Extract worksheets
+    Parser->>Parser: Compose headers + values
+    Parser-->>Validator: Raw Dataset
     
     Validator->>Validator: ValidateWorkbookFormat
     Validator->>Validator: ValidateWorksheetData
-    Validator->>Validator: Vérification tokens
-    Validator->>Validator: Vérification relations
+    Validator->>Validator: Check tokens
+    Validator->>Validator: Check relations
     
-    Validator-->>Engine: Dataset validé
+    Validator-->>Engine: Validated Dataset
     
-    Engine->>Engine: Extraction nodes/structures/lists
-    Engine->>Engine: Génération tokens manquants
+    Engine->>Engine: Extract nodes/structures/lists
+    Engine->>Engine: Generate missing tokens
     Engine->>Engine: Unflatten @meta.*
-    Engine->>Engine: Création relations
-    Engine->>Engine: Mapping token transformations
+    Engine->>Engine: Create relations
+    Engine->>Engine: Map token transformations
     
     Engine-->>VPI: ProxyProjectInstance
 ```
 
-**Étapes clés :**
+**Key Steps:**
 
-1. **Extraction** : Lecture des worksheets Excel et conversion en objets JSON
-2. **Composition** : Alignement des headers avec les valeurs
-3. **Validation format** : Vérification des noms de worksheets
-4. **Validation données** : Vérification de la structure des données
-5. **Unflatten** : Conversion `@meta.prop` → `meta: { prop: value }`
-6. **Génération tokens** : Création de tokens valides si absents ou invalides
-7. **Création VPI** : Construction de l'instance avec nœuds, métadonnées et relations
+1. **Extraction**: Read Excel worksheets and convert to JSON objects
+2. **Composition**: Align headers with values
+3. **Format Validation**: Verify worksheet names
+4. **Data Validation**: Verify data structure
+5. **Unflatten**: Convert `@meta.prop` → `meta: { prop: value }`
+6. **Token Generation**: Create valid tokens if missing or invalid
+7. **VPI Creation**: Build instance with nodes, metadata, and relations
 
 #### 2. VPI → Dataset → Excel
 
@@ -178,28 +178,28 @@ sequenceDiagram
     participant Excel
 
     VPI->>Engine: ProxyProjectInstance
-    Engine->>Engine: Extraction self (projet)
-    Engine->>Engine: Extraction nodes par type
-    Engine->>Engine: Extraction structures/lists
+    Engine->>Engine: Extract self (project)
+    Engine->>Engine: Extract nodes by type
+    Engine->>Engine: Extract structures/lists
     Engine->>Engine: Flatten meta -> @meta.*
-    Engine->>Engine: Formatage relations
+    Engine->>Engine: Format relations
     
     Engine-->>Parser: Dataset
     
-    Parser->>Parser: Création workbook
-    Parser->>Parser: Création worksheets
-    Parser->>Parser: Écriture données
+    Parser->>Parser: Create workbook
+    Parser->>Parser: Create worksheets
+    Parser->>Parser: Write data
     
     Parser-->>Excel: Buffer
 ```
 
-**Étapes clés :**
+**Key Steps:**
 
-1. **Extraction** : Récupération des nœuds, structures, listes depuis le VPI
-2. **Flatten** : Conversion `meta: { prop }` → `@meta.prop`
-3. **Groupement** : Organisation par type dans des worksheets
-4. **Formatage relations** : Ajout des types from/to
-5. **Génération Excel** : Création du fichier avec en-têtes et données
+1. **Extraction**: Retrieve nodes, structures, lists from VPI
+2. **Flatten**: Convert `meta: { prop }` → `@meta.prop`
+3. **Grouping**: Organize by type into worksheets
+4. **Relation Formatting**: Add from/to types
+5. **Excel Generation**: Create file with headers and data
 
 #### 3. ZIP → VPI
 
@@ -211,36 +211,36 @@ sequenceDiagram
     participant VPI
 
     ZIP->>Validator: Buffer + originalname
-    Validator->>Validator: Extraction archive
-    Validator->>Validator: Vérification projet (.xlsx/.json)
-    Validator->>Validator: Validation contenu projet
-    Validator->>Validator: Calcul checksums (sha256)
-    Validator->>Validator: Vérification structure dossiers
-    Validator->>Validator: Match files avec metadata
+    Validator->>Validator: Extract archive
+    Validator->>Validator: Verify project (.xlsx/.json)
+    Validator->>Validator: Validate project content
+    Validator->>Validator: Calculate checksums (sha256)
+    Validator->>Validator: Verify folder structure
+    Validator->>Validator: Match files with metadata
     
-    alt Validation réussie
-        Validator-->>Parser: Archive validée
-        Parser->>Parser: Extraction projet
-        Parser->>Parser: Parsing Excel ou JSON
-        Parser->>Parser: Création nodes files
-        Parser->>Parser: Ajout metadata (url, digest)
-        Parser->>Parser: Reconstruction arborescence
-        Parser->>Parser: Création relations
-        Parser-->>VPI: ProxyProjectInstance complet
-    else Validation échouée
-        Validator-->>ZIP: Erreurs de validation
+    alt Validation successful
+        Validator-->>Parser: Validated archive
+        Parser->>Parser: Extract project
+        Parser->>Parser: Parse Excel or JSON
+        Parser->>Parser: Create file nodes
+        Parser->>Parser: Add metadata (url, digest)
+        Parser->>Parser: Reconstruct directory tree
+        Parser->>Parser: Create relations
+        Parser-->>VPI: Complete ProxyProjectInstance
+    else Validation failed
+        Validator-->>ZIP: Validation errors
     end
 ```
 
-**Étapes clés :**
+**Key Steps:**
 
-1. **Extraction** : Décompression du ZIP
-2. **Validation structure** : Vérification présence du fichier projet
-3. **Validation checksums** : Calcul SHA256 et comparaison avec métadonnées
-4. **Parsing projet** : Conversion Excel/JSON → VPI
-5. **Enrichissement files** : Ajout des métadonnées de fichiers (digest, url)
-6. **Reconstruction arborescence** : Création des structures et enfants
-7. **Création relations** : Linking files avec structures
+1. **Extraction**: Decompress ZIP
+2. **Structure Validation**: Verify project file presence
+3. **Checksum Validation**: Calculate SHA256 and compare with metadata
+4. **Project Parsing**: Convert Excel/JSON → VPI
+5. **File Enrichment**: Add file metadata (digest, url)
+6. **Tree Reconstruction**: Create structures and children
+7. **Relation Creation**: Link files with structures
 
 #### 4. VPI → ZIP
 
@@ -251,65 +251,65 @@ sequenceDiagram
     participant ZIP
 
     VPI->>Parser: ProxyProjectInstance
-    Parser->>Parser: Conversion VPI → Excel
-    Parser->>Parser: Récupération nodes type=file
+    Parser->>Parser: Convert VPI → Excel
+    Parser->>Parser: Get nodes type=file
     Parser->>Parser: Query relations file→structure
-    Parser->>Parser: Construction arborescence
+    Parser->>Parser: Build directory tree
     
-    loop Pour chaque structure
-        Parser->>Parser: Création dossiers nested
-        Parser->>Parser: Ajout fichiers dans paths
+    loop For each structure
+        Parser->>Parser: Create nested folders
+        Parser->>Parser: Add files to paths
     end
     
-    Parser->>Parser: Gestion orphan files
-    Parser->>Parser: Archivage avec Archiver
+    Parser->>Parser: Handle orphan files
+    Parser->>Parser: Archive with Archiver
     
     Parser-->>ZIP: Buffer
 ```
 
-**Étapes clés :**
+**Key Steps:**
 
-1. **Export Excel** : Conversion VPI → Dataset → Excel
-2. **Query files** : Récupération de tous les nœuds de type `file`
-3. **Résolution paths** : Détermination du path de chaque fichier via relations
-4. **Construction arborescence** : Création récursive des dossiers
-5. **Archivage** : Compression avec archiver (jszip)
+1. **Excel Export**: Convert VPI → Dataset → Excel
+2. **Query Files**: Retrieve all nodes of type `file`
+3. **Path Resolution**: Determine path for each file via relations
+4. **Tree Construction**: Recursively create folders
+5. **Archiving**: Compress with archiver (jszip)
 
 ## Validations
 
-Le système implémente plusieurs couches de validation pour garantir l'intégrité des données à chaque étape.
+The system implements multiple validation layers to ensure data integrity at each step.
 
-### Architecture de validation
+### Validation Architecture
 
 ```mermaid
 graph TB
-    subgraph "Point d'entrée"
-        INPUT[Fichier entrant]
+    subgraph "Entry Point"
+        INPUT[Incoming File]
     end
     
-    subgraph "Validation Format"
-        V_FORMAT{Type de fichier?}
+    subgraph "Format Validation"
+        V_FORMAT{File Type?}
         V_EXCEL[isValidExcel]
         V_JSON_DATASET[isValidJSONDataset]
         V_JSON_VPI[isValidJSONVPI]
         V_ZIP[isValidZIPESS]
     end
     
-    subgraph "Validation Structure"
+    subgraph "Structure Validation"
         V_WORKBOOK[ValidateWorkbookFormat]
         V_WORKSHEET[ValidateWorksheetData]
         V_VPI_SCHEMA[ProjectDefinitionSchema]
         V_ZIP_CONTENT[Archive Content Check]
     end
     
-    subgraph "Validation Métier"
+    subgraph "Business Validation"
         V_TOKENS[Token Reconciliation]
         V_RELATIONS[Unlinked Nodes Check]
         V_METADATA[Missing Metadata Check]
         V_CHECKSUMS[File Checksums Match]
     end
     
-    subgraph "Résultat"
+    subgraph "Result"
         SUCCESS[Validation Success]
         ERROR[Validation Errors]
     end
@@ -345,190 +345,190 @@ graph TB
     style V_FORMAT fill:#4a90e2,color:#fff
 ```
 
-### 1. Validation Excel
+### 1. Excel Validation
 
-**Fonction :**
+**Function:**
 ```typescript
 isValidExcel(excel: Buffer, collect: boolean): Promise<ValidationResult | boolean>
 ```
 
-**Processus :**
+**Process:**
 
-1. **Conversion** : Excel Buffer → Dataset via `XlsBufferToDataset`
-2. **Validation Dataset** : Appel de `isValidJSONDataset`
+1. **Conversion**: Excel Buffer → Dataset via `XlsBufferToDataset`
+2. **Dataset Validation**: Call `isValidJSONDataset`
 
-**Retourne :**
-- `collect = false` : `boolean` (valide ou non)
-- `collect = true` : `ValidationResult` détaillé avec erreurs
+**Returns:**
+- `collect = false`: `boolean` (valid or not)
+- `collect = true`: Detailed `ValidationResult` with errors
 
-### 2. Validation JSON Dataset
+### 2. JSON Dataset Validation
 
-**Fonction :**
+**Function:**
 ```typescript
 isValidJSONDataset(jsonData: Record<string, any>, collect: boolean): ValidationResult | boolean
 ```
 
-**Validations effectuées :**
+**Validations Performed:**
 
-#### a. Format du Workbook (`ValidateWorkbookFormat`)
+#### a. Workbook Format (`ValidateWorkbookFormat`)
 ```typescript
 refiners.isProjectTabName(data, context)
-// ✓ Présence obligatoire du worksheet "#Project"
+// ✓ Mandatory presence of worksheet "#Project"
 
 refiners.isValidTabsNames(data, context)
-// ✓ Noms de worksheets conformes aux patterns
-// ✓ #Itm#[Type]s pour les items
-// ✓ #Str#[Nom] pour les structures
-// ✓ #Lst#[Nom] pour les listes
-// ✓ #Rel pour les relations
+// ✓ Worksheet names conform to patterns
+// ✓ #Itm#[Type]s for items
+// ✓ #Str#[Name] for structures
+// ✓ #Lst#[Name] for lists
+// ✓ #Rel for relations
 ```
 
-#### b. Données du Worksheet (`ValidateWorksheetData`)
+#### b. Worksheet Data (`ValidateWorksheetData`)
 ```typescript
 refiners.isValidNodeList(nodes, context)
-// ✓ Validation schéma Zod pour chaque node
-// ✓ Propriétés obligatoires : token, type, name
+// ✓ Zod schema validation for each node
+// ✓ Required properties: token, type, name
 
 refiners.isValidStructureStack(structures, context)
-// ✓ Validation schéma structures
-// ✓ Propriétés : token, type, name
+// ✓ Structure schema validation
+// ✓ Properties: token, type, name
 
 refiners.isValidListStack(lists, context)
-// ✓ Validation schéma lists
+// ✓ List schema validation
 
 refiners.isValidRelationList(relations, context)
-// ✓ Validation schéma relations
-// ✓ Propriétés : from_token, to_token, r_type, from_type, to_type
+// ✓ Relation schema validation
+// ✓ Properties: from_token, to_token, r_type, from_type, to_type
 
 refiners.isValidChildsList(childs, context)
-// ✓ Validation enfants de structures/lists
+// ✓ Structure/list children validation
 ```
 
-#### c. Cohérence Métier
+#### c. Business Consistency
 ```typescript
 refiners.checkForTokenReconcilationValidity(data, context)
-// ✓ Si token valide fourni → external_token obligatoire
-// ✓ Si external_token fourni → token doit être valide
-// ✓ Détecte les incohérences de synchronisation
+// ✓ If valid token provided → external_token required
+// ✓ If external_token provided → token must be valid
+// ✓ Detects synchronization inconsistencies
 
 refiners.checkForUnlinkedNodes(data, context)
-// ✓ Tous les tokens référencés dans relations existent
-// ✓ from_token doit matcher un node existant
-// ✓ to_token doit matcher un node existant
+// ✓ All tokens referenced in relations exist
+// ✓ from_token must match an existing node
+// ✓ to_token must match an existing node
 
 refiners.checkForRelationsKinds(data, context)
-// ✓ Types de relations valides (CONTAINS, HAS_LINK, HAS_CHILD, etc.)
+// ✓ Valid relation types (CONTAINS, HAS_LINK, HAS_CHILD, etc.)
 
 refiners.checkForMissingMetadata(data, context)
-// ✓ Métadonnées obligatoires présentes selon le type
+// ✓ Required metadata present according to type
 ```
 
-**Structure de ValidationResult :**
+**ValidationResult Structure:**
 ```typescript
 {
   success: boolean,
   msg?: string,
-  errors?: ZodError[] // Détails des erreurs par path
+  errors?: ZodError[] // Error details by path
 }
 ```
 
-### 3. Validation JSON VPI
+### 3. JSON VPI Validation
 
-**Fonction :**
+**Function:**
 ```typescript
 isValidJSONVPI(jsonData: Record<string, any>, collect: boolean): Promise<ValidationResult | boolean>
 ```
 
-**Validations effectuées :**
+**Validations Performed:**
 
-#### a. Schéma VPI
+#### a. VPI Schema
 ```typescript
 refiners.isValidVPI(jsonData, context)
-// ✓ Structure conforme au ProjectDefinitionSchema
-// ✓ Présence de self
-// ✓ Présence de data { nodes, meta, relations, structures, lists }
+// ✓ Structure conforms to ProjectDefinitionSchema
+// ✓ Presence of self
+// ✓ Presence of data { nodes, meta, relations, structures, lists }
 ```
 
-#### b. Cohérence des tokens
+#### b. Token Consistency
 ```typescript
 refiners.checkForTokenReconcilationValidity(jsonData, context)
-// ✓ Mapping token ↔ external_token dans metadata
-// ✓ Tokens valides pour nodes synchronisés
+// ✓ Token ↔ external_token mapping in metadata
+// ✓ Valid tokens for synchronized nodes
 ```
 
-#### c. Réconciliation et validation finale
+#### c. Reconciliation and Final Validation
 ```typescript
-// Conversion VPI → Dataset → VPI pour test de cohérence
+// Convert VPI → Dataset → VPI for consistency test
 let reconciliationResult = await reconciliateDumpTokens(jsonData)
 return reconciliationResult.isValid()
 ```
 
-**La fonction `reconciliateDumpTokens` :**
-- Reconstruit un VPI complet depuis le dump
-- Applique les métadonnées
-- Reconstruit les structures et listes avec enfants
-- Reformate les relations
-- Retourne un `ProxyProjectInstance` validé
+**The `reconciliateDumpTokens` function:**
+- Rebuilds a complete VPI from the dump
+- Applies metadata
+- Rebuilds structures and lists with children
+- Reformats relations
+- Returns a validated `ProxyProjectInstance`
 
-### 4. Validation ZIP ESS
+### 4. ZIP ESS Validation
 
-**Fonction :**
+**Function:**
 ```typescript
 isValidZIPESS(file: { buffer: Buffer, originalname: string }): Promise<ValidationResult>
 ```
 
-**Validations effectuées :**
+**Validations Performed:**
 
-#### a. Structure de l'archive
+#### a. Archive Structure
 ```typescript
 archiveSchema.refine((files) => {
-  // ✓ Présence de {token}/{token}.xlsx OU {token}/{token}.json
+  // ✓ Presence of {token}/{token}.xlsx OR {token}/{token}.json
 })
 ```
 
-#### b. Validation du fichier projet
+#### b. Project File Validation
 ```typescript
 if (ext == '.xlsx') {
   projectDefValidation = await isValidExcel(fileContentBuffer, true)
 } else if (ext == '.json') {
   projectDefValidation = await isValidJSONVPI(JSON.parse(jsonString), true)
 }
-// ✓ Le fichier projet doit être valide
+// ✓ Project file must be valid
 ```
 
-#### c. Calcul des checksums
+#### c. Checksum Calculation
 ```typescript
 for (const filekey of Object.keys(files)) {
   files[filekey]['digest'] = `sha256-${toHex(sha256(compressedContent))}`
 }
-// ✓ Calcul SHA256 pour chaque fichier
+// ✓ Calculate SHA256 for each file
 ```
 
-#### d. Vérification de l'arborescence
+#### d. Directory Tree Verification
 ```typescript
-// Construction des paths attendus depuis les structures de type 'file'
+// Build expected paths from 'file' type structures
 let deductedDirPathsLists = await (async () => {
   let vpi = await ProjectEngine.DatasetToVpi(projectDefValidation.data)
   
-  // Récupération des structures de type 'file'
+  // Get 'file' type structures
   const document_structures = structures.filter(str => 
     str.meta.type == "file"
   )
   
-  // Construction récursive des paths
+  // Recursively build paths
   let composeDirPaths = (strNodes, basePath) => {
-    // Retourne tous les paths possibles
+    // Returns all possible paths
   }
   
   return dirs
 })()
 ```
 
-#### e. Validation des paths
+#### e. Path Validation
 ```typescript
 directoriesAndStructuresValidator
   .superRefine((data, ctx) => {
-    // ✓ Tous les paths attendus existent dans l'archive
+    // ✓ All expected paths exist in archive
     pathPatterns.forEach((pattern) => {
       const hasMatch = fsPaths.some(fsPath => pattern.test(fsPath))
       if (!hasMatch) {
@@ -537,7 +537,7 @@ directoriesAndStructuresValidator
     })
   })
   .superRefine((data, ctx) => {
-    // ✓ Pas de fichiers/dossiers en trop
+    // ✓ No extra files/folders
     fsPaths.forEach((fsPath) => {
       const isMatched = pathPatterns.some(pattern => pattern.test(fsPath))
       if (!isMatched) {
@@ -547,7 +547,7 @@ directoriesAndStructuresValidator
   })
 ```
 
-#### f. Matching files avec metadata
+#### f. File Matching with Metadata
 ```typescript
 const x_files = vpi_files.filter((file_node) => {
   const correspondance = Object.values(files).find(
@@ -559,10 +559,10 @@ const x_files = vpi_files.filter((file_node) => {
 if (x_files.length < Object.values(files).length) {
   console.warn('Not all files in archive are referenced in project definition')
 }
-// ✓ Tous les fichiers ont un contentDigest matchant
+// ✓ All files have matching contentDigest
 ```
 
-**Résultat de validation ZIP :**
+**ZIP Validation Result:**
 ```typescript
 {
   success: boolean,
@@ -575,12 +575,16 @@ if (x_files.length < Object.values(files).length) {
 }
 ```
 
-## Validation steps
+## Validation in application
 
-### Fonctionnalités
+Validation can be performed at various stages in the application, such as during file upload or project import. Below is a sample implementation of how validation can be integrated into a React application.
+
+### Features
 
 ```mermaid
 graph LR
+    USER[User]
+    APP[React Application]
     VALIDATOR{Type?}
     
     subgraph "Validations"
@@ -590,7 +594,10 @@ graph LR
         V_ZIP[BER.isValidZIPESS]
     end
     
-    RESULT[Résultats JSON]
+    RESULT[JSON Results]
+    
+    USER -->|Drop/Select File| APP
+    APP --> VALIDATOR
     
     VALIDATOR -->|.xlsx/.xls| V_EXCEL
     VALIDATOR -->|.json| V_DATASET
@@ -602,22 +609,52 @@ graph LR
     V_VPI --> RESULT
     V_ZIP --> RESULT
     
+    style APP fill:#4a90e2,color:#fff
     style RESULT fill:#50c878,color:#fff
 ```
 
-## Import et utilisation dans les contrôleurs
+### Validation Code
 
-### Contrôleur d'import ESS
+```typescript
+const validateFile = async (file: File) => {
+  const fileExtension = file.name.split('.').pop()?.toLowerCase()
 
-Ce contrôleur orchestre l'import de projets depuis différents formats.
+  if (fileExtension === 'json') {
+    // Try JSON Dataset
+    const dataset_result = await BER.isValidJSONDataset(jsonData, true)
+    
+    // Try JSON VPI
+    const vpi_result = await BER.isValidJSONVPI(jsonData, true)
+    
+    // Return first success or both errors
+    
+  } else if (['xlsx', 'xls'].includes(fileExtension)) {
+    // Excel validation
+    const result = await BER.isValidExcel(uint8Array, true)
+    
+  } else if (fileExtension === 'zip') {
+    // ZIP ESS validation
+    const result = await BER.isValidZIPESS({
+      buffer: Buffer.from(arrayBuffer),
+      originalname: file.name
+    })
+  }
+}
+```
 
-#### Méthodes principales
+## Import and Controller Usage
+
+### ESS Import Controller
+
+This controller orchestrates project imports from different formats.
+
+#### Main Methods
 
 ##### 1. `createProjectFromDataset`
 
-Crée un projet depuis un Dataset JSON ou Excel.
+Creates a project from a JSON Dataset or Excel.
 
-**Workflow :**
+**Workflow:**
 ```mermaid
 sequenceDiagram
     participant Client
@@ -628,50 +665,50 @@ sequenceDiagram
     participant Minio
 
     Client->>Controller: POST /import/dataset
-    Controller->>Controller: Détection MIME type
+    Controller->>Controller: Detect MIME type
     
-    alt Format Excel
+    alt Excel Format
         Controller->>Engine: XlsBufferToDataset
         Engine-->>Controller: Dataset
-    else Format JSON
+    else JSON Format
         Controller->>Controller: Parse JSON
     end
     
     Controller->>Validator: isValidJSONDataset
     
-    alt Validation échouée
+    alt Validation failed
         Validator-->>Client: 400 Bad Request
-    else Validation réussie
-        Validator-->>Controller: Dataset validé
+    else Validation successful
+        Validator-->>Controller: Validated Dataset
         
         Controller->>Engine: DatasetToVpi
         Engine-->>Controller: VPI
         
-        Controller->>Controller: Création node file
-        Controller->>Controller: Ajout metadata
-        Controller->>Neo4j: Sauvegarde projet
-        Controller->>Minio: Upload fichier
-        Controller->>Controller: Création ZIP ESS
+        Controller->>Controller: Create file node
+        Controller->>Controller: Add metadata
+        Controller->>Neo4j: Save project
+        Controller->>Minio: Upload file
+        Controller->>Controller: Create ZIP ESS
         
         Controller-->>Client: 200 Success + projectDump
     end
 ```
 
-**Opérations effectuées :**
-- Validation du format et des données
-- Conversion en VPI
-- Création d'un nœud `file` pour le fichier source
-- Ajout des métadonnées (digest, URL, timestamps)
-- Création d'une relation `CONTAINS` projet→file
-- Sauvegarde dans Neo4j
-- Upload du fichier dans Minio
-- Génération d'un ZIP ESS
+**Operations Performed:**
+- Format and data validation
+- Conversion to VPI
+- Creation of a `file` node for the source file
+- Addition of metadata (digest, URL, timestamps)
+- Creation of a `CONTAINS` relation project→file
+- Save in Neo4j
+- Upload file to Minio
+- Generation of a ZIP ESS
 
 ##### 2. `createProjectFromZipArchive`
 
-Crée un projet depuis une archive ZIP ESS.
+Creates a project from a ZIP ESS archive.
 
-**Workflow :**
+**Workflow:**
 ```mermaid
 sequenceDiagram
     participant Client
@@ -683,44 +720,44 @@ sequenceDiagram
 
     Client->>Controller: POST /import/zip
     
-    Controller->>Validator: Validation archive
-    Validator->>Validator: Vérification structure
-    Validator->>Validator: Validation projet
+    Controller->>Validator: Validate archive
+    Validator->>Validator: Check structure
+    Validator->>Validator: Validate project
     Validator->>Validator: Checksums
-    Validator->>Validator: Paths matching
+    Validator->>Validator: Path matching
     
-    alt Validation échouée
-        Validator-->>Client: 400 Bad Request + détails erreurs
-    else Validation réussie
-        Validator-->>Controller: Archive validée
+    alt Validation failed
+        Validator-->>Client: 400 Bad Request + error details
+    else Validation successful
+        Validator-->>Controller: Validated archive
         
         Controller->>Parser: ZipBufferToVpi
-        Parser->>Parser: Extraction projet
-        Parser->>Parser: Parsing Excel/JSON
-        Parser->>Parser: Enrichissement files
-        Parser->>Parser: Reconstruction arbo
-        Parser-->>Controller: VPI complet
+        Parser->>Parser: Extract project
+        Parser->>Parser: Parse Excel/JSON
+        Parser->>Parser: Enrich files
+        Parser->>Parser: Reconstruct tree
+        Parser-->>Controller: Complete VPI
         
-        Controller->>Neo4j: Sauvegarde projet
-        Controller->>Minio: Upload fichiers
+        Controller->>Neo4j: Save project
+        Controller->>Minio: Upload files
         
         Controller-->>Client: 200 Success + projectDump
     end
 ```
 
-**Opérations effectuées :**
-- Validation complète de l'archive (structure, checksums, paths)
-- Extraction et parsing du fichier projet
-- Reconstruction du VPI avec tous les fichiers
-- Matching des fichiers avec leurs métadonnées
-- Sauvegarde dans Neo4j
-- Upload des fichiers dans Minio avec préservation de l'arborescence
+**Operations Performed:**
+- Complete archive validation (structure, checksums, paths)
+- Extraction and parsing of project file
+- Reconstruction of VPI with all files
+- Matching files with their metadata
+- Save in Neo4j
+- Upload files to Minio preserving directory tree
 
-##### 3. Fonction `mergeProjects`
+##### 3. `mergeProjects` Function
 
-Fusionne un projet source dans un projet cible (update).
+Merges a source project into a target project (update).
 
-**Workflow :**
+**Workflow:**
 ```mermaid
 sequenceDiagram
     participant Source as Source VPI
@@ -731,14 +768,14 @@ sequenceDiagram
     Source->>Merge: ProxyProjectInstance source
     Target->>Merge: ProxyProjectInstance target
     
-    loop Pour chaque opération
-        Merge->>Merge: Analyse type (create/update/delete)
+    loop For each operation
+        Merge->>Merge: Analyze type (create/update/delete)
         
         alt CREATE
             Merge->>Target: addNode / addRelation / addStructure / addList
         else UPDATE
-            Merge->>Merge: Comparaison timestamps
-            alt Source plus récent
+            Merge->>Merge: Compare timestamps
+            alt Source more recent
                 Merge->>Target: Update node/relation/structure/list
             end
         else DELETE
@@ -746,22 +783,22 @@ sequenceDiagram
         end
     end
     
-    Merge->>Merge: Reconstruction children
-    Merge->>Target: Mise à jour structures/lists
+    Merge->>Merge: Reconstruct children
+    Merge->>Target: Update structures/lists
     
-    Merge-->>Neo4j: Target VPI mis à jour
+    Merge-->>Neo4j: Updated Target VPI
 ```
 
-**Logique de merge :**
+**Merge Logic:**
 
 ```typescript
-// Pour chaque nœud
+// For each node
 if (operationType === 'create') {
   target_projectInstance.addNode(data)
 } else if (operationType === 'update') {
   let source_node = source_projectInstance.getNodeByToken(data.token)
   
-  // Comparaison timestamps
+  // Compare timestamps
   if (sourceCDT > targetCDT || sourceUDT > targetUDT) {
     target_projectInstance.updateNode(data)
   }
@@ -770,75 +807,74 @@ if (operationType === 'create') {
 }
 ```
 
-**Gestion des enfants de structures/lists :**
-- Récupération des opérations sur les enfants
-- Reconstruction complète des children
-- Mise à jour des métadonnées structures/lists
-- Préservation de l'ordre et de la hiérarchie
+**Structure/List Children Management:**
+- Retrieve operations on children
+- Complete reconstruction of children
+- Update structure/list metadata
+- Preserve order and hierarchy
 
-## Résumé des flux de données
+## Data Flow Summary
 
-### Import initial
+### Initial Import
 
 ```mermaid
 graph LR
-    USER[Utilisateur]
+    USER[User]
     EXCEL[Excel File]
     VALIDATOR[Validation]
     PARSER[Parser]
     VPI[VPI Instance]
-    NEO4J[(Neo4j)]
-    MINIO[(Minio)]
     ZIP[ZIP ESS]
     
     USER -->|Upload| EXCEL
     EXCEL --> VALIDATOR
     VALIDATOR -->|Valid| PARSER
     PARSER --> VPI
-    VPI --> NEO4J
-    VPI --> MINIO
     VPI --> ZIP
     
     VALIDATOR -.->|Invalid| USER
     
     style VALIDATOR fill:#feca57
     style VPI fill:#4a90e2,color:#fff
-    style NEO4J fill:#3498db
-    style MINIO fill:#27ae60
 ```
 
-### Update depuis ZIP
+### Update from ZIP
 
 ```mermaid
 graph LR
-    USER[Utilisateur]
+    USER[User]
     ZIP[ZIP ESS]
-    VALIDATOR[Validation ZIP]
+    VALIDATOR[ZIP Validation]
     PARSER[ZipBufferToVpi]
     SOURCE[Source VPI]
     TARGET[Target VPI]
     MERGE[mergeProjects]
     NEO4J[(Neo4j)]
+    MINIO[(Minio)]
     
     USER -->|Upload| ZIP
     ZIP --> VALIDATOR
     VALIDATOR -->|Valid| PARSER
     PARSER --> SOURCE
     NEO4J -.->|Load existing| TARGET
+    MINIO -.->|Load existing| TARGET
     SOURCE --> MERGE
     TARGET --> MERGE
     MERGE --> NEO4J
+    MERGE --> MINIO
     
     style MERGE fill:#9b59b6,color:#fff
     style SOURCE fill:#ff6b6b
     style TARGET fill:#50c878
+    style NEO4J fill:#3498db
+    style MINIO fill:#27ae60
 ```
 
-## Bonnes pratiques
+## Best Practices
 
-### Pour les développeurs
+### For Developers
 
-1. **Toujours valider avant transformation**
+1. **Always validate before transformation**
    ```typescript
    const validation = await BER.isValidExcel(buffer, true)
    if (!validation.success) {
@@ -847,44 +883,44 @@ graph LR
    const vpi = await ProjectEngineParsers.XlsBufferToVpi(buffer)
    ```
 
-2. **Utiliser le mode `collect` pour le debugging**
+2. **Use `collect` mode for debugging**
    ```typescript
-   // En production : retour boolean rapide
+   // Production: fast boolean return
    const isValid = await BER.isValidExcel(buffer, false)
    
-   // En dev : détails complets
+   // Development: full details
    const result = await BER.isValidExcel(buffer, true)
    console.log(result.errors)
    ```
 
-3. **Préférer le Dataset comme pivot**
+3. **Prefer Dataset as pivot**
    ```typescript
-   // ✓ Bon : Excel → Dataset → VPI
+   // ✓ Good: Excel → Dataset → VPI
    const dataset = await ProjectEngineParsers.XlsBufferToDataset(buffer)
    const vpi = await ProjectEngineParsers.DatasetToVpi(dataset)
    
-   // ✗ Éviter : Excel → VPI direct sans contrôle
+   // ✗ Avoid: Excel → VPI direct without control
    ```
 
-4. **Vérifier les checksums pour les ZIP**
+4. **Verify checksums for ZIP**
    ```typescript
    const validation = await BER.isValidZIPESS({
      buffer,
      originalname: file.name
    })
-   // Contient la validation des checksums et paths
+   // Contains checksum and path validation
    ```
 
-### Pour les utilisateurs
+### For Users
 
-1. **Format Excel** : Respecter la nomenclature des worksheets
-   - `#Project` : obligatoire
-   - `#Itm#[Type]s` : pour les items
-   - `#Str#[Nom]` : pour les enfants de structures
-   - `#Lst#[Nom]` : pour les enfants de listes
-   - `#Rel` : pour les relations
+1. **Excel Format**: Respect worksheet nomenclature
+   - `#Project`: mandatory
+   - `#Itm#[Type]s`: for items
+   - `#Str#[Name]`: for structure children
+   - `#Lst#[Name]`: for list children
+   - `#Rel`: for relations
 
-2. **Format ZIP** : Structure attendue
+2. **ZIP Format**: Expected structure
    ```
    {token}.zip
    └── {token}/
@@ -893,22 +929,22 @@ graph LR
            └── [structures]/
    ```
 
-3. **Tokens** : Laisser vides pour génération automatique
-   - Le système génère des tokens valides
-   - Utiliser `external_token` pour la traçabilité
+3. **Tokens**: Leave empty for automatic generation
+   - System generates valid tokens
+   - Use `external_token` for traceability
 
-4. **Relations** : Toujours référencer des tokens existants
-   - `from_token` et `to_token` doivent exister dans les nœuds
+4. **Relations**: Always reference existing tokens
+   - `from_token` and `to_token` must exist in nodes
 
 ## Conclusion
 
-Le système de validation et transformation VNV offre :
+The VNV validation and transformation system offers:
 
-**Flexibilité** : Multiples formats supportés (Excel, JSON, ZIP)  
-**Robustesse** : Validations multi-niveaux (format, structure, métier)  
-**Traçabilité** : External tokens et timestamps  
-**Intégrité** : Checksums et vérifications de cohérence  
-**Debugging** : Application de validation dédiée  
-**Performance** : Transformations optimisées avec mapping de tokens  
+**Flexibility**: Multiple supported formats (Excel, JSON, ZIP)  
+**Robustness**: Multi-level validations (format, structure, business)  
+**Traceability**: External tokens and timestamps  
+**Integrity**: Checksums and consistency checks  
+**Debugging**: Dedicated validation application  
+**Performance**: Optimized transformations with token mapping  
 
-Le format **Dataset** agit comme pivot central, permettant des conversions bidirectionnelles entre tous les formats tout en garantissant la cohérence et la validité des données à chaque étape.
+The **Dataset** format acts as a central pivot, enabling bidirectional conversions between all formats while ensuring data consistency and validity at each step.

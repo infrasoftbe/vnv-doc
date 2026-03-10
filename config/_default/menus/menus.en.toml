@@ -93,19 +93,24 @@
 #   weight = 10
 
 [[sidebar_docs]]
-  name = "Guides"
-  pageRef = "/docs/guides"
-  weight = 10
+  name = "Introduction"
+  pageRef = "/docs/introduction"
+  weight = 100
 
 [[sidebar_docs]]
-  name = "Infrastructure"
-  pageRef = "/docs/infrastructure"
-  weight = 10
+name = "Infrastructure"
+pageRef = "/docs/infrastructure"
+weight = 200
+
+[[sidebar_docs]]
+  name = "Guides"
+  pageRef = "/docs/guides"
+  weight = 300
 
 [[sidebar_docs]]
   name = "Packages"
   pageRef = "/docs/packages"
-  weight = 10
+  weight = 400
 
 # [[sidebar_docs]]
 #   name = "Reference"
