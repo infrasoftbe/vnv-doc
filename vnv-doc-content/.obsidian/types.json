@@ -9,6 +9,7 @@
     "metadata-field": "checkbox",
     "node-field": "checkbox",
     "fields": "multitext",
-    "metadata": "multitext"
+    "metadata": "multitext",
+    "date": "date"
   }
 }
