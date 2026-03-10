@@ -1,5 +1,17 @@
 ---
+title: "Infrastructure"
+description: "VNV system infrastructure and architecture"
+summary: "Learn about the VNV distributed system architecture, microservices, and cloud deployment."
+date: 2023-09-07T16:00:00+02:00
+lastmod: 2024-01-15T10:00:00+02:00
+draft: false
 weight: 200
+toc: true
+seo:
+  title: "VNV Infrastructure"
+  description: "Complete guide to VNV system infrastructure and architecture"
+  canonical: ""
+  noindex: false
 ---
 
 # Infrastructure

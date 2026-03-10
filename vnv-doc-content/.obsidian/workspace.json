@@ -4,21 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "c06bdb8417699bf2",
+        "id": "e97df708bfd87afb",
         "type": "tabs",
         "children": [
           {
-            "id": "8364aaf6cd3d6b77",
+            "id": "47eec459d49c7c29",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "docs/introduction.md",
+                "file": "docs/_index.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "introduction"
+              "title": "_index"
             }
           }
         ]
@@ -169,13 +169,18 @@
       "command-palette:Ouvrir la palette de commandes": false
     }
   },
-  "active": "8364aaf6cd3d6b77",
+  "active": "47eec459d49c7c29",
   "lastOpenFiles": [
     "docs/infrastructure.md",
-    "docs/introduction.md",
-    "docs/guides/_index.md",
     "blog/posts/Validation procedures.md",
+    "docs/introduction.md",
+    "docs/guides/How to work with a vnv Project.md",
+    "docs/guides/_index.md",
+    "blog/posts/excel-zip-format.md",
+    "blog/posts/new.md",
     "blog/posts/Mainframe cloud architecture.md",
+    "blog/posts/Release.md",
+    "blog/posts/reporting-engine-api.md",
     "blog/posts/sample.md",
     "docs/reference/example.md",
     "docs/resources.md",
@@ -199,14 +204,9 @@
     "fields",
     "Ressources/fields",
     "Ressources/Metadata-fields",
-    "posts/vnv-sdk.1.0.2-0.md",
-    "docs/packages/vpi/others/Metadatas.md",
     "How to",
     "Packages",
     "Ressources",
-    "docs/packages/vnv-api-kit/ess/metadatas.md",
-    "docs/guides/dump.md",
-    "posts/vnv-sdk.1.0.0.md",
     "Sans titre 1.canvas",
     "Sans titre.canvas",
     "blog/Sans titre.canvas"

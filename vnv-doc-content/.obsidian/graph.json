@@ -1,6 +1,6 @@
 {
   "collapse-filter": false,
-  "search": "tag:#model  ",
+  "search": "",
   "showTags": false,
   "showAttachments": false,
   "hideUnresolved": false,
@@ -17,6 +17,6 @@
   "repelStrength": 10,
   "linkStrength": 1,
   "linkDistance": 250,
-  "scale": 4.786753448718915,
+  "scale": 0.6201076101366855,
   "close": false
 }
