@@ -1,0 +1,14 @@
+{
+  "types": {
+    "aliases": "aliases",
+    "cssclasses": "multitext",
+    "tags": "tags",
+    "member": "multitext",
+    "labels": "multitext",
+    "node-metadata": "checkbox",
+    "metadata-field": "checkbox",
+    "node-field": "checkbox",
+    "fields": "multitext",
+    "metadata": "multitext"
+  }
+}
