@@ -161,7 +161,7 @@ graph TB
     PROXY -->|Créer/Gérer| ESS1
     PROXY -->|Créer/Gérer| ESS2
     PROXY -->|Créer/Gérer| ESS3
-    PROXY -->|Pull/Push| NEO4J
+    PROXY -->|Pull/Push| REST
     PROXY --> REDIS
     PROXY --> MINIO
     REST --> NEO4J
