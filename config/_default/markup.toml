@@ -3,6 +3,11 @@ defaultMarkdownHandler = "goldmark"
 [goldmark]
   [goldmark.extensions]
     linkify = false
+    [goldmark.extensions.passthrough]
+      enable = true
+      [goldmark.extensions.passthrough.delimiters]
+        block = [['\[', '\]'], ['$$', '$$']]
+        inline = [['\(', '\)'], ['$', '$']]
   [goldmark.parser]
     autoHeadingID = true
     autoHeadingIDType = "github"
@@ -31,3 +36,9 @@ defaultMarkdownHandler = "goldmark"
   endLevel = 3
   ordered = false
   startLevel = 2
+
+# Enable Mermaid diagrams
+[goldmark.renderHooks]
+  [goldmark.renderHooks.codeBlock]
+    [goldmark.renderHooks.codeBlock.mermaid]
+      enable = true

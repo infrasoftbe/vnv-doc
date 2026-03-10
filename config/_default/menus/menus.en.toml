@@ -98,6 +98,11 @@
   weight = 10
 
 [[sidebar_docs]]
+  name = "Infrastructure"
+  pageRef = "/docs/infrastructure"
+  weight = 10
+
+[[sidebar_docs]]
   name = "Packages"
   pageRef = "/docs/packages"
   weight = 10
