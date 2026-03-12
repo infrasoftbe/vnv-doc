@@ -98,6 +98,11 @@
   weight = 200
 
 [[sidebar_docs]]
+  name = "Information models"
+  pageRef = "/docs/information_model_final/"
+  weight = 210
+
+[[sidebar_docs]]
   name = "Guides"
   pageRef = "/docs/guides/"
   weight = 300
