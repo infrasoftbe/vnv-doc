@@ -1286,26 +1286,6 @@ graph TB
     style U3 fill:#f5ffe1
 ```
 
-### Token du PROJECT_0
-
-Le `project_0` utilise un format spécial :
-
-```/dev/null/project-0-token.txt#L1-15
-┌──────────────────────────────────────────────────────┐
-│  Token PROJECT_0                                     │
-├──────────────────────────────────────────────────────┤
-│  Project:         PR0000-000                         │
-│  Liste:           LST0000-000-001                    │
-│  Structure:       STR0000-000-001                    │
-│  Utilisateur:     USR0000-000-001 (optionnel)        │
-└──────────────────────────────────────────────────────┘
-
-Convention :
-  YEAR = 0000 (année symbolique)
-  PROJECT = 000 (projet symbolique)
-  ITEM = 001, 002, 003... (séquence normale)
-```
-
 ### Types de Vues Consolidées
 
 | Type de liste | Type d'entités liées | Usage |
