@@ -344,6 +344,10 @@ Entités de vérification et validation.
 graph TB
     TPRJ[TEST_PROJECT<br/>TPRJ2024-005-001<br/>Validation Release 2.0]
     
+    TBLD1[TEST_BUILD<br/>TBLD2024-005-001<br/>Build v2.0.0]
+    
+    TBLD2[TEST_BUILD<br/>TBLD2024-005-002<br/>Build v2.0.1]
+    
     TPLN[TEST_PLAN<br/>TPLN2024-005-001<br/>Plan Validation Fonctionnelle]
     
     TSUI1[TEST_SUITE<br/>TSUI2024-005-001<br/>Suite Authentification]
@@ -356,15 +360,13 @@ graph TB
     
     TCAS3[TEST_CASE<br/>TCAS2024-005-003<br/>Upload Document]
     
-    TBLD1[TEST_BUILD<br/>TBLD2024-005-001<br/>Build v2.0.0]
-    
-    TBLD2[TEST_BUILD<br/>TBLD2024-005-002<br/>Build v2.0.1]
-    
     TCEX1[TEST_CASE_EXECUTION<br/>TCEX2024-005-001<br/>Status: Gefaald ❌]
     
     TCEX2[TEST_CASE_EXECUTION<br/>TCEX2024-005-002<br/>Status: Gepasseerd ✅]
     
-    TPRJ -.->|IS_TEST_PROJECT_FOR_PLAN| TPLN
+    TPRJ -.->|IS_TEST_PROJECT_FOR_BUILD| TBLD1
+    TPRJ -.->|IS_TEST_PROJECT_FOR_BUILD| TBLD2
+    TBLD1 -.->|IS_TEST_BUILD_FOR_PLAN| TPLN
     TPLN -.->|IS_TEST_PLAN_FOR_SUITE| TSUI1
     TPLN -.->|IS_TEST_PLAN_FOR_SUITE| TSUI2
     
@@ -372,11 +374,8 @@ graph TB
     TSUI1 -.->|IS_TEST_SUITE_FOR_CASE| TCAS2
     TSUI2 -.->|IS_TEST_SUITE_FOR_CASE| TCAS3
     
-    TCAS1 -.->|IS_TEST_CASE_FOR_BUILD| TBLD1
-    TCAS1 -.->|IS_TEST_CASE_FOR_BUILD| TBLD2
-    
-    TBLD1 -.->|IS_TEST_BUILD_FOR_EXECUTION| TCEX1
-    TBLD2 -.->|IS_TEST_BUILD_FOR_EXECUTION| TCEX2
+    TCAS1 -.->|IS_TEST_CASE_FOR_EXECUTION| TCEX1
+    TCAS1 -.->|IS_TEST_CASE_FOR_EXECUTION| TCEX2
     
     style TCEX1 fill:#ffcccc
     style TCEX2 fill:#ccffcc
