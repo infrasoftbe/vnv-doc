@@ -826,13 +826,16 @@ The first version of the system focuses on:
 4. Bidirectional SharePoint integration with clear separation of responsibilities
 5. Execute CCC assessment via verification items, including evidence and rationale
 6. Realize end-to-end traceability (document -> requirement -> verification item -> execution -> evidence)
-7. Iteration and version management as a formal, auditable cycle (no loose notes)
-8. Elaborate roles and domain views (Navigator / Browser / Inspector + N+1/N/N-1 steering views)
-9. Dashboards for readiness, blockers, gaps, document completeness, and phase status
+7. Elaborate roles and domain views (Navigator / Browser / Inspector + N+1/N/N-1 steering views)
+8. Dashboards for readiness, blockers, gaps, document completeness, and phase status
+
+File replace vs iteration within a phase is deferred (not in the proposed epics yet).
 
 ---
 
 # 17. Proposed Epics
+
+Requirements for each epic are listed under [Epics and requirements](epics/_index.md).
 
 ## Epic 1 – Phases, Phase Context and Transitions
 - Configure phases and project-specific active phases
@@ -840,9 +843,12 @@ The first version of the system focuses on:
 - Manage phase transitions with readiness and blocker checks
 
 ## Epic 2 – Dossier Management and Document Profiles
-- Manage standard document profiles per phase/project type
-- Support project overrides (add, make optional, exclude)
-- Detect and follow up missing, outdated, and rejected documents
+- Reuse the as-is **Structure** with `meta.type: file` as the expected dossier tree (no new File subtype)
+- Empty `structure_child` (no `HAS_LINK`) = missing; `HAS_LINK` to a File = present (P5 completeness; `structure.isComplete()` as starting point)
+- Overlay on slots: obligation (mandatory / optional / excluded), applicable phase, document type
+- Standard profile as a template file Structure (per project type); copy at onboarding; project overrides (add, make optional, exclude)
+- Version / validity of the active profile so presence is always checked against the profile that applied for that project and phase
+- Presence does not create a verification item and does not write File `verified_in`; detect and follow up missing, outdated, and rejected documents
 
 ## Epic 3 – Bidirectional SharePoint Integration with Boundaries
 - Bidirectional synchronization for document exchange and metadata updates
@@ -864,17 +870,12 @@ The first version of the system focuses on:
 - Detect gaps in coverage, evidence, and re-verification
 - Support impact analysis on changes to document or requirement versions
 
-## Epic 7 – Iteration and Version Management
-- Model iterations as a formal, auditable cycle (no loose notes)
-- Support version management for requirements, documents, and test definitions
-- Enforce recheck and re-verification flow on changes
-
-## Epic 8 – Roles and Domain Views (N+1 / N / N-1)
+## Epic 7 – Roles and Domain Views (N+1 / N / N-1)
 - Further elaborate Navigator, Browser, and Inspector per role responsibility
 - Provide N+1 portfolio and governance views
 - Provide N and N-1 project/subsystem views for operational steering
 
-## Epic 9 – Dashboards and Steering Reporting
+## Epic 8 – Dashboards and Steering Reporting
 - Dashboards for readiness, blockers, document completeness, and open findings
 - KPIs for requirement coverage, CCC status, and phase progression
 - Reporting for internal steering and tenant-aware external communication

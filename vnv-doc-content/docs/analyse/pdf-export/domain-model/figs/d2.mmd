@@ -1,0 +1,103 @@
+classDiagram
+    direction TB
+
+    class Node:::asIs {
+        <<abstract>>
+    }
+
+    class Project:::asIs
+    class Object:::asIs
+    class System:::asIs
+    class Contact:::asIs
+    class Role:::asIs
+    class Group:::asIs
+    class User:::asIs
+    class Report:::asIs
+
+    class Order:::asIs
+    class Deliverable:::asIs
+    class Work:::asIs
+    class Worklog:::asIs
+    class Material:::asIs
+    class Invoice:::asIs
+    class Attachment:::asIs
+
+    class Requirement:::asIs
+    class Register:::asIs
+
+    class TestProject:::asIs
+    class TestBuild:::asIs
+    class TestPlan:::asIs
+    class TestSuite:::asIs
+    class TestCase:::asIs
+    class TestCaseExecution:::asIs
+    class TestRun:::asIs
+
+    class File:::asIs
+    class Annotation:::asIs
+
+    class VerificationItem:::epic4
+
+    class PhaseDefinition:::epic1
+    class ProjectPhase:::epic1
+    class PhaseContext:::epic1
+    class Protocol:::epic1
+    class PhaseTransition:::epic1
+    class ReadinessCheck:::epic1
+    class PhaseBlocker:::epic1
+
+    class Stack:::asIs {
+        <<abstract>>
+    }
+    class Structure:::asIs
+    class List:::asIs
+    class Child:::asIs {
+        <<abstract>>
+    }
+    class StructureChild:::asIs
+    class ListChild:::asIs
+
+    Node <|-- Project
+    Node <|-- Object
+    Node <|-- System
+    Node <|-- Contact
+    Node <|-- Role
+    Node <|-- Group
+    Node <|-- User
+    Node <|-- Report
+    Node <|-- Order
+    Node <|-- Deliverable
+    Node <|-- Work
+    Node <|-- Worklog
+    Node <|-- Material
+    Node <|-- Invoice
+    Node <|-- Attachment
+    Node <|-- Requirement
+    Node <|-- Register
+    Node <|-- TestProject
+    Node <|-- TestBuild
+    Node <|-- TestPlan
+    Node <|-- TestSuite
+    Node <|-- TestCase
+    Node <|-- TestCaseExecution
+    Node <|-- TestRun
+    Node <|-- File
+    Node <|-- Annotation
+    Node <|-- VerificationItem
+    Node <|-- PhaseDefinition
+    Node <|-- ProjectPhase
+    Node <|-- PhaseContext
+    Node <|-- Protocol
+    Node <|-- PhaseTransition
+    Node <|-- ReadinessCheck
+    Node <|-- PhaseBlocker
+    Node <|-- Stack
+    Node <|-- Child
+    Stack <|-- Structure
+    Stack <|-- List
+    Child <|-- StructureChild
+    Child <|-- ListChild
+
+    classDef asIs fill:#e3f2fd,stroke:#1565c0,color:#0d47a1
+    classDef epic1 fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#bf360c
+    classDef epic4 fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px,color:#1b5e20

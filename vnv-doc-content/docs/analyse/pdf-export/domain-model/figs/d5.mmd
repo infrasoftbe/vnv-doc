@@ -1,0 +1,32 @@
+classDiagram
+    direction TB
+
+    class Structure:::asIs {
+        +meta.type: file
+    }
+    class StructureChild:::asIs {
+        +child: string
+    }
+    class File:::asIs
+    class DossierProfile:::epic2 {
+        +version: string
+        +validFrom: number
+        +validTo: number
+    }
+    class ProfileSlot:::epic2 {
+        +obligation: string
+        +phase: string
+        +documentType: string
+    }
+    class ReadinessCheck:::epic1
+
+    DossierProfile "1" --> "1" Structure : reuses
+    DossierProfile "1" --> "*" ProfileSlot : defines
+    ProfileSlot "*" --> "1" StructureChild : overlays
+    Structure "1" --> "*" StructureChild : HAS_CHILD
+    StructureChild "*" --> "0..1" File : HAS_LINK present
+    ReadinessCheck ..> DossierProfile : presence vs profile
+
+    classDef asIs fill:#e3f2fd,stroke:#1565c0,color:#0d47a1
+    classDef epic1 fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#bf360c
+    classDef epic2 fill:#e0f7fa,stroke:#00838f,stroke-width:2px,color:#006064

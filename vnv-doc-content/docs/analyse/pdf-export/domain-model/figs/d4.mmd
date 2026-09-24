@@ -1,0 +1,87 @@
+classDiagram
+    direction TB
+
+    class Project:::asIs {
+        +token: string
+    }
+    class Object:::asIs
+    class File:::asIs
+    class Requirement:::asIs
+    class VerificationItem:::epic4
+    class Node:::asIs {
+        <<abstract>>
+    }
+
+    class PhaseDefinition:::epic1 {
+        +code: string
+        +name: string
+        +stage: string
+        +sequence: number
+        +isGate: boolean
+    }
+    class ProjectPhase:::epic1 {
+        +isEnabled: boolean
+        +isActive: boolean
+    }
+    class PhaseContext:::epic1 {
+        +assessmentPhase: string
+        +verifiedIn: string
+        +nextRequired: string
+    }
+    class Protocol:::epic1 {
+        +code: string
+        +name: string
+    }
+    class PhaseTransition:::epic1 {
+        +decision: string
+        +decidedAt: number
+        +decidedBy: string
+    }
+    class ReadinessCheck:::epic1 {
+        +score: number
+        +dossierComplete: boolean
+        +requirementsCovered: boolean
+        +deliverablesApproved: boolean
+        +evaluatedAt: number
+    }
+    class PhaseBlocker:::epic1 {
+        +reason: string
+        +severity: string
+        +resolved: boolean
+    }
+
+    Node <|-- Project
+    Node <|-- Object
+    Node <|-- File
+    Node <|-- Requirement
+    Node <|-- VerificationItem
+    Node <|-- PhaseDefinition
+    Node <|-- ProjectPhase
+    Node <|-- PhaseContext
+    Node <|-- Protocol
+    Node <|-- PhaseTransition
+    Node <|-- ReadinessCheck
+    Node <|-- PhaseBlocker
+
+    PhaseDefinition "0..1" --> "0..*" PhaseDefinition : parent sub-phase
+    Project "1" --> "*" ProjectPhase : HAS_PROJECT_PHASE
+    ProjectPhase "*" --> "1" PhaseDefinition : based on
+    Project "1" --> "1" ProjectPhase : active state of phase FSM
+
+    Node "1" --> "1" PhaseContext : assessed in
+    PhaseContext "*" --> "1" ProjectPhase : current
+    PhaseContext "*" --> "*" ProjectPhase : verified in
+    PhaseContext "*" --> "0..1" ProjectPhase : next required
+    PhaseContext "*" --> "1" Protocol : overlay P1..P5
+    Object ..> PhaseContext : optional follower of project FSM
+
+    ProjectPhase "1" --> "*" PhaseTransition : from
+    PhaseTransition "*" --> "1" ProjectPhase : to
+    PhaseTransition "1" --> "1" ReadinessCheck : evaluated by
+    ProjectPhase "1" --> "0..1" ReadinessCheck : current readiness
+    ReadinessCheck "1" --> "*" PhaseBlocker : raises
+    PhaseBlocker "*" --> "0..1" Node : caused by
+
+    classDef asIs fill:#e3f2fd,stroke:#1565c0,color:#0d47a1
+    classDef epic1 fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#bf360c
+    classDef epic4 fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px,color:#1b5e20

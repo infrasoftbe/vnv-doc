@@ -1,0 +1,57 @@
+classDiagram
+    direction LR
+
+    class Project:::asIs
+    class Object:::asIs
+    class System:::asIs
+    class Order:::asIs
+    class Deliverable:::asIs
+    class Work:::asIs
+    class Worklog:::asIs
+    class Material:::asIs
+    class Invoice:::asIs
+    class Requirement:::asIs
+    class TestProject:::asIs
+    class TestBuild:::asIs
+    class TestPlan:::asIs
+    class TestSuite:::asIs
+    class TestCase:::asIs
+    class TestCaseExecution:::asIs
+    class TestRun:::asIs
+    class File:::asIs
+    class Register:::asIs
+    class VerificationItem:::epic4
+
+    Project "1" --> "*" Object : HAS_OBJECT
+    Project "1" --> "*" System : HAS_SYSTEM
+    Object --> Requirement : IS_FOR
+    System --> Requirement : IS_FOR
+
+    Order --> Deliverable : IS_ORDER_FOR_DELIVERABLE
+    Order --> Invoice : IS_ORDER_FOR_INVOICE
+    Deliverable --> Work : IS_DELIVERABLE_FOR_WORK
+    Work --> Worklog : IS_WORK_FOR_WORKLOG
+    Work --> Material : IS_WORK_FOR_MATERIAL
+    Work --> Requirement : IS_WORK_FOR_REQUIREMENT
+
+    Requirement --> TestCase : IS_REQUIREMENT_FOR_TEST_CASE
+    Requirement --> File : IS_REQUIREMENT_FOR_FILE
+    TestProject --> TestBuild : IS_TEST_PROJECT_FOR_BUILD
+    TestBuild --> TestPlan : IS_TEST_BUILD_FOR_PLAN
+    TestPlan --> TestSuite : IS_TEST_PLAN_FOR_SUITE
+    TestSuite --> TestCase : IS_TEST_SUITE_FOR_CASE
+    TestCase --> TestCaseExecution : IS_TEST_CASE_FOR_EXECUTION
+    TestCaseExecution --> File : input or evidence file
+    TestRun --> TestCaseExecution : via test lists
+
+    VerificationItem --> Requirement : assessment subject
+    VerificationItem --> File : assessment subject
+    VerificationItem --> File : supporting input
+    VerificationItem --> TestCaseExecution : executed as
+    TestRun --> VerificationItem : includes
+    TestCase ..> VerificationItem : as-is stand-in for test kind
+
+    Register --> Node : concerns item
+
+    classDef asIs fill:#e3f2fd,stroke:#1565c0,color:#0d47a1
+    classDef epic4 fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px,color:#1b5e20

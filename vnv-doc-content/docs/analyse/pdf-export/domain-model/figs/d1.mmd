@@ -1,0 +1,63 @@
+classDiagram
+    direction TB
+
+    class Node:::asIs {
+        <<abstract>>
+        +type: string
+        +id: string
+        +name: string
+        +token: string
+        +create_dt: number
+        +update_dt: number
+    }
+
+    class MetadataContainer:::asIs {
+        +id: string
+        +token: string
+        +meta: object
+        +create_dt: number
+        +update_dt: number
+    }
+
+    class Relation:::asIs {
+        +f_id: string
+        +f_token: string
+        +r_type: string
+        +t_id: string
+        +t_token: string
+        +create_dt: number
+        +update_dt: number
+    }
+
+    class Stack:::asIs {
+        <<abstract>>
+        +mode: string
+    }
+
+    class Child:::asIs {
+        <<abstract>>
+        +child: string
+    }
+
+    class Project:::asIs
+    class Structure:::asIs
+    class List:::asIs
+    class StructureChild:::asIs
+    class ListChild:::asIs
+
+    Node <|-- Project
+    Node <|-- Stack
+    Node <|-- Child
+    Stack <|-- Structure
+    Stack <|-- List
+    Child <|-- StructureChild
+    Child <|-- ListChild
+
+    Node "1" --> "1" MetadataContainer : described by
+    Node "1" --> "*" Relation : outgoing
+    Relation "*" --> "1" Node : target
+    Project "1" --> "*" Node : HAS_TYPE
+    Stack "1" --> "*" Child : HAS_CHILD
+    Child "*" --> "0..1" Node : HAS_LINK
+
+    classDef asIs fill:#e3f2fd,stroke:#1565c0,color:#0d47a1
