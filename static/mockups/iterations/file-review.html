@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>US-IT04 — File review</title>
+  <link rel="stylesheet" href="studio.css" />
+</head>
+<body>
+  <nav class="storybar">
+    <span class="kicker">Iterations</span>
+    <a class="chip" href="items-working.html">US-IT01 Update</a>
+    <a class="chip" href="items-frozen.html">US-IT02 New version</a>
+    <a class="chip" href="structure-completeness.html">US-IT03 Completeness</a>
+    <a class="chip active" href="file-review.html">US-IT04 Review</a>
+    <a class="chip" href="test-run.html">US-IT05 Test run</a>
+    <a class="chip" href="test-run-cards.html">US-IT06 Retest</a>
+    <span class="blurb">Items drawer · review of this file version · not a test run</span>
+  </nav>
+  <div class="screen">
+    <header class="modhead">
+      <div>
+        <div class="modname">Studio</div>
+        <div class="modproj">PR2026-001</div>
+      </div>
+      <nav class="tabs">
+        <button class="tab" type="button">Structure</button>
+        <button class="tab" type="button">List</button>
+        <button class="tab active" type="button">Items</button>
+        <button class="tab" type="button">Linker</button>
+        <button class="tab" type="button">Test Run</button>
+      </nav>
+    </header>
+    <div class="stage">
+      <section class="hero">
+        <h1 class="crumbs"><span class="dim">Items</span><span class="sep">/</span><span>architecture.pdf</span></h1>
+      </section>
+      <div class="panel">
+        <div class="main">
+          <table>
+            <thead>
+              <tr><th>Name</th><th>Token</th><th>Version</th><th>Outcome</th></tr>
+            </thead>
+            <tbody>
+              <tr class="hot">
+                <td>architecture.pdf</td>
+                <td class="token">FIL2026-001-014</td>
+                <td>v1</td>
+                <td><span class="badge amber">In review</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <aside class="drawer">
+          <div class="dhead">
+            <h2>architecture.pdf</h2>
+            <button class="close" type="button" aria-label="Close">×</button>
+          </div>
+          <div class="dtabs">
+            <button class="dtab active" type="button">Général</button>
+            <button class="dtab" type="button">Meta</button>
+          </div>
+          <div class="dbody">
+            <div class="rowbtns">
+              <button class="btn secondary" type="button">Update this version</button>
+              <button class="btn secondary" type="button">New version</button>
+            </div>
+            <h3 style="margin:0 0 8px;font-size:14px;">Review of version 1</h3>
+            <div class="field">
+              <label>Decision</label>
+              <input value="In review" readonly />
+            </div>
+            <div class="field">
+              <label>Requirements</label>
+              <input value="REQ2026-001-001, REQ2026-001-014" readonly />
+            </div>
+            <div class="field">
+              <label>Remarks</label>
+              <textarea>The opening time is missing.</textarea>
+            </div>
+            <div class="field">
+              <label>Close review</label>
+              <div class="radios">
+                <label><input type="radio" name="decision" /> Approved</label>
+                <label><input type="radio" name="decision" /> Rejected</label>
+                <label><input type="radio" name="decision" /> Re-review</label>
+              </div>
+            </div>
+            <p class="blurb">Approved or Rejected freezes this version. Re-review leaves Update this version available. The Test Run tab does not list this review.</p>
+          </div>
+          <div class="dfoot">
+            <button class="btn secondary" type="button">Save remarks</button>
+            <button class="btn primary" type="button">Close review</button>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

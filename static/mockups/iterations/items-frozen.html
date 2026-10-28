@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>US-IT02 — New version</title>
+  <link rel="stylesheet" href="studio.css" />
+</head>
+<body>
+  <nav class="storybar">
+    <span class="kicker">Iterations</span>
+    <a class="chip" href="items-working.html">US-IT01 Update</a>
+    <a class="chip active" href="items-frozen.html">US-IT02 New version</a>
+    <a class="chip" href="structure-completeness.html">US-IT03 Completeness</a>
+    <a class="chip" href="file-review.html">US-IT04 Review</a>
+    <a class="chip" href="test-run.html">US-IT05 Test run</a>
+    <a class="chip" href="test-run-cards.html">US-IT06 Retest</a>
+    <span class="blurb">Items tab · frozen version · reason required</span>
+  </nav>
+  <div class="screen">
+    <header class="modhead">
+      <div>
+        <div class="modname">Studio</div>
+        <div class="modproj">PR2026-001</div>
+      </div>
+      <nav class="tabs">
+        <button class="tab" type="button">Structure</button>
+        <button class="tab" type="button">List</button>
+        <button class="tab active" type="button">Items</button>
+        <button class="tab" type="button">Linker</button>
+        <button class="tab" type="button">Test Run</button>
+      </nav>
+    </header>
+    <div class="stage">
+      <section class="hero">
+        <h1 class="crumbs"><span class="dim">Items</span><span class="sep">/</span><span>Files</span></h1>
+        <div class="actions">
+          <button class="btn menu" type="button">Item ▾</button>
+        </div>
+      </section>
+      <div class="panel">
+        <div class="main">
+          <table>
+            <thead>
+              <tr><th>Name</th><th>Type</th><th>Token</th><th>Version</th><th>Outcome</th></tr>
+            </thead>
+            <tbody>
+              <tr class="hot">
+                <td>architecture.pdf</td>
+                <td>file</td>
+                <td class="token">FIL2026-001-014</td>
+                <td>v1</td>
+                <td><span class="badge red">Rejected</span></td>
+              </tr>
+              <tr>
+                <td>bestek.pdf</td>
+                <td>file</td>
+                <td class="token">FIL2026-001-002</td>
+                <td>v1</td>
+                <td><span class="badge green">Approved</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <aside class="drawer">
+          <div class="dhead">
+            <h2>architecture.pdf</h2>
+            <button class="close" type="button" aria-label="Close">×</button>
+          </div>
+          <div class="dtabs">
+            <button class="dtab active" type="button">Général</button>
+            <button class="dtab" type="button">Meta</button>
+          </div>
+          <div class="dbody">
+            <div class="callout bad">Version 1 is frozen. The review rejected this file. Update is not available.</div>
+            <div class="field">
+              <label>Reason</label>
+              <div class="radios">
+                <label><input type="radio" name="reason" /> Not accepted</label>
+                <label><input type="radio" name="reason" /> Content changed</label>
+                <label><input type="radio" name="reason" /> Other</label>
+              </div>
+            </div>
+            <p class="blurb">Create version stays disabled until a reason is chosen. The new file starts empty. The slot link moves to it. This file stays the predecessor.</p>
+          </div>
+          <div class="dfoot">
+            <button class="btn primary" type="button" disabled>Create version</button>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

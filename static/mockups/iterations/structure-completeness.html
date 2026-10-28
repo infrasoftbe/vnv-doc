@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>US-IT03 — Dossier completeness</title>
+  <link rel="stylesheet" href="studio.css" />
+</head>
+<body>
+  <nav class="storybar">
+    <span class="kicker">Iterations</span>
+    <a class="chip" href="items-working.html">US-IT01 Update</a>
+    <a class="chip" href="items-frozen.html">US-IT02 New version</a>
+    <a class="chip active" href="structure-completeness.html">US-IT03 Completeness</a>
+    <a class="chip" href="file-review.html">US-IT04 Review</a>
+    <a class="chip" href="test-run.html">US-IT05 Test run</a>
+    <a class="chip" href="test-run-cards.html">US-IT06 Retest</a>
+    <span class="blurb">Structure tab · checklist · not a test and not an approval</span>
+  </nav>
+  <div class="screen">
+    <header class="modhead">
+      <div>
+        <div class="modname">Studio</div>
+        <div class="modproj">PR2026-001</div>
+      </div>
+      <nav class="tabs">
+        <button class="tab active" type="button">Structure</button>
+        <button class="tab" type="button">List</button>
+        <button class="tab" type="button">Items</button>
+        <button class="tab" type="button">Linker</button>
+        <button class="tab" type="button">Test Run</button>
+      </nav>
+    </header>
+    <div class="stage">
+      <section class="hero">
+        <h1 class="crumbs"><span class="dim">Structure</span><span class="sep">/</span><span>Dossier</span></h1>
+        <div class="metrics">
+          <span class="metric"><i>Missing</i><b>1</b></span>
+          <span class="metric"><i>Present</i><b>1</b></span>
+        </div>
+        <div class="actions">
+          <button class="btn primary" type="button">Check dossier</button>
+        </div>
+      </section>
+      <p class="note">Present means a file is linked. It does not mean the file is approved.</p>
+      <div class="panel">
+        <div class="main">
+          <div class="tree">
+            <button class="tv" type="button"><span class="name">Dossier</span><span class="badge red">1 missing</span></button>
+            <button class="tv pad active" type="button">
+              <span class="name">Bestek</span>
+              <span class="badge green">Present</span>
+              <span class="token">architecture.pdf · v2</span>
+            </button>
+            <button class="tv pad" type="button">
+              <span class="name">Dienstbevel</span>
+              <span class="badge red">Missing</span>
+            </button>
+          </div>
+        </div>
+        <aside class="drawer">
+          <div class="dhead">
+            <h2>Bestek</h2>
+            <button class="close" type="button" aria-label="Close">×</button>
+          </div>
+          <div class="dbody">
+            <div class="field">
+              <label>Linked file</label>
+              <input value="architecture.pdf" readonly />
+            </div>
+            <div class="field">
+              <label>Version</label>
+              <input value="Version 2 · Submitted" readonly />
+            </div>
+            <div class="callout info">Replaces version 1 (Rejected). One HAS_LINK, to the head file.</div>
+          </div>
+          <div class="dfoot">
+            <button class="btn secondary" type="button">Open file in Items</button>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

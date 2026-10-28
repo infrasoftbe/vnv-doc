@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>US-IT05 — Open test run</title>
+  <link rel="stylesheet" href="studio.css" />
+</head>
+<body>
+  <nav class="storybar">
+    <span class="kicker">Iterations</span>
+    <a class="chip" href="items-working.html">US-IT01 Update</a>
+    <a class="chip" href="items-frozen.html">US-IT02 New version</a>
+    <a class="chip" href="structure-completeness.html">US-IT03 Completeness</a>
+    <a class="chip" href="file-review.html">US-IT04 Review</a>
+    <a class="chip active" href="test-run.html">US-IT05 Test run</a>
+    <a class="chip" href="test-run-cards.html">US-IT06 Retest</a>
+    <span class="blurb">Test Run tab · open run · status and evidence replace this execution</span>
+  </nav>
+  <div class="screen">
+    <header class="modhead">
+      <div>
+        <div class="modname">Studio</div>
+        <div class="modproj">PR2026-001</div>
+      </div>
+      <nav class="tabs">
+        <button class="tab" type="button">Structure</button>
+        <button class="tab" type="button">List</button>
+        <button class="tab" type="button">Items</button>
+        <button class="tab" type="button">Linker</button>
+        <button class="tab active" type="button">Test Run</button>
+      </nav>
+    </header>
+    <div class="stage">
+      <section class="hero">
+        <h1 class="crumbs">
+          <span class="dim">Test Run</span><span class="sep">/</span>
+          <span>Run bridge #2</span><span class="sep">/</span>
+          <span>Executions</span>
+        </h1>
+        <div class="metrics">
+          <span class="metric"><i>Executions</i><b>2</b></span>
+        </div>
+        <div class="actions">
+          <span class="badge blue">Niet uitgevoerd</span>
+          <button class="btn menu" type="button">Test Run ▾</button>
+          <button class="btn secondary" type="button">Close run</button>
+        </div>
+      </section>
+      <div class="panel">
+        <div class="main">
+          <table>
+            <thead>
+              <tr><th>#</th><th>Test case</th><th>Execution</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>TC-023</td>
+                <td class="token">TCEX2026-001-001</td>
+                <td><span class="badge green">Gepasseerd ▾</span></td>
+              </tr>
+              <tr class="hot">
+                <td>2</td>
+                <td>TC-024</td>
+                <td class="token">TCEX2026-001-002</td>
+                <td><span class="badge red">Gefaald ▾</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <aside class="drawer">
+          <div class="dhead">
+            <h2>TC-024</h2>
+            <button class="close" type="button" aria-label="Close">×</button>
+          </div>
+          <div class="dtabs">
+            <button class="dtab" type="button">General</button>
+            <button class="dtab active" type="button">File</button>
+          </div>
+          <div class="dbody">
+            <div class="callout info">Upload replaces the evidence of this execution. It does not fill a dossier slot and it is not a file review.</div>
+            <ul class="log">
+              <li><time>TCEX2026-001-002</time>log-tc024.txt</li>
+            </ul>
+          </div>
+          <div class="dfoot">
+            <button class="btn primary" type="button">Upload file</button>
+            <button class="btn secondary" type="button">Add selected file</button>
+            <button class="btn secondary" type="button">Edit</button>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

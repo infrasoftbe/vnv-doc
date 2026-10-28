@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>US-IT06 — Retest in a new run</title>
+  <link rel="stylesheet" href="studio.css" />
+</head>
+<body>
+  <nav class="storybar">
+    <span class="kicker">Iterations</span>
+    <a class="chip" href="items-working.html">US-IT01 Update</a>
+    <a class="chip" href="items-frozen.html">US-IT02 New version</a>
+    <a class="chip" href="structure-completeness.html">US-IT03 Completeness</a>
+    <a class="chip" href="file-review.html">US-IT04 Review</a>
+    <a class="chip" href="test-run.html">US-IT05 Test run</a>
+    <a class="chip active" href="test-run-cards.html">US-IT06 Retest</a>
+    <span class="blurb">Test Run tab · Add Test Run · new executions, same test case</span>
+  </nav>
+  <div class="screen">
+    <header class="modhead">
+      <div>
+        <div class="modname">Studio</div>
+        <div class="modproj">PR2026-001</div>
+      </div>
+      <nav class="tabs">
+        <button class="tab" type="button">Structure</button>
+        <button class="tab" type="button">List</button>
+        <button class="tab" type="button">Items</button>
+        <button class="tab" type="button">Linker</button>
+        <button class="tab active" type="button">Test Run</button>
+      </nav>
+    </header>
+    <div class="stage">
+      <section class="hero">
+        <h1 class="crumbs"><span class="dim">Test Run</span><span class="sep">/</span><span>Select a run</span></h1>
+        <div class="metrics">
+          <span class="metric"><i>Test runs</i><b>2</b></span>
+        </div>
+        <div class="actions">
+          <button class="btn menu" type="button">Test Run ▾</button>
+        </div>
+      </section>
+      <div class="panel" style="display:block;overflow:auto;">
+        <div style="padding:16px 16px 0;color:#475467;font-size:14px;">Choose a card to open its test cases and executions. Add Test Run creates a new run and a new execution for Gefaald and Niet uitgevoerd. Passed executions stay on the closed run.</div>
+        <div class="cards">
+          <article class="card">
+            <div class="cardtop">
+              <h3>Run bridge #2</h3>
+              <span class="badge grey">Niet uitgevoerd</span>
+            </div>
+            <div class="token">TRN2026-001-001#2</div>
+            <div class="meta"><span>Cases</span><b>TC-024</b></div>
+          </article>
+          <article class="card">
+            <div class="cardtop">
+              <h3>Run bridge #1</h3>
+              <span class="badge blue">Uitgevoerd</span>
+            </div>
+            <div class="token">TRN2026-001-001#1</div>
+            <div class="meta"><span>Closed</span><b>TC-023 passed · TC-024 failed</b></div>
+          </article>
+        </div>
+        <div style="margin:0 16px 16px;max-width:240px;background:#fff;border:1px solid #d2d6dc;border-radius:6px;box-shadow:0 8px 20px rgba(15,23,42,.12);">
+          <div style="padding:8px 12px;font-weight:600;">Add Test Run</div>
+          <div style="padding:8px 12px;border-top:1px solid rgba(15,23,42,.1);">Close run</div>
+          <div style="padding:8px 12px;border-top:1px solid rgba(15,23,42,.1);">Delete Test Run</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
