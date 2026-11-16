@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Open the next iteration</title>
+  <link rel="stylesheet" href="frontend-frame.css" />
+</head>
+<body>
+  <div id="app"></div>
+  <div class="overlay" id="backdrop">
+    <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="carry-title">
+      <div class="pfhead"><h3 id="carry-title">Open the next iteration</h3><button class="btn tiny secondary" type="button" id="close">Close</button></div>
+      <p class="lead">These items were added from the editor. Confirm carries this set.</p>
+      <div class="sheet" id="carry-body"></div>
+      <div class="foot">
+        <button class="btn primary" type="button" id="confirm">Confirm</button>
+        <a class="btn secondary" href="editor-iteration.html">Cancel</a>
+      </div>
+    </div>
+  </div>
+  <script src="frontend-frame.js"></script>
+  <script>
+    FrontendFrame.render({ iteration: "2", addHref: "carry-forward.html", screen: "review" });
+
+    var pageSize = 2;
+    var pages = {};
+    FrontendFrame.groups.forEach(function (group) { pages[group.key] = 1; });
+    var active = "requirement";
+
+    function notes(tokens) {
+      var lines = [];
+      FrontendFrame.catalog.forEach(function (item) {
+        if (!item.covers || tokens.indexOf(item.token) === -1) return;
+        lines.push(item.covers + " stays in the set because " + item.token + " covers it.");
+      });
+      var dossier = FrontendFrame.byToken("STR2026-014-001");
+      var evidence = FrontendFrame.byToken("LST2026-014-001");
+      if (tokens.indexOf(dossier.token) !== -1 && tokens.indexOf("FIL2026-014-002") === -1) {
+        lines.push("Dossier slot 1.2 will be empty on the working structure. Token STR2026-014-001 stays.");
+      }
+      if (tokens.indexOf(evidence.token) !== -1 && tokens.indexOf("FIL2026-014-002") === -1) {
+        lines.push("The evidence entry for bestek.pdf will be absent on the working list. Token LST2026-014-001 stays.");
+      }
+      return lines;
+    }
+
+    function paint() {
+      var tokens = FrontendFrame.readInput();
+      var tabs = FrontendFrame.groups.map(function (group) {
+        var count = FrontendFrame.catalog.filter(function (item) {
+          return item.type === group.key && tokens.indexOf(item.token) !== -1;
+        }).length;
+        var current = group.key === active ? " active" : "";
+        return '<button class="tab' + current + '" type="button" data-tab="' + group.key + '">' + group.title + " (" + count + ")</button>";
+      }).join("");
+      var rows = FrontendFrame.catalog.filter(function (item) {
+        return item.type === active && tokens.indexOf(item.token) !== -1;
+      });
+      var pageCount = Math.max(1, Math.ceil(rows.length / pageSize));
+      if (pages[active] > pageCount) pages[active] = pageCount;
+      var page = pages[active];
+      var slice = rows.slice((page - 1) * pageSize, page * pageSize);
+      var body = slice.map(function (item) {
+        var locked = item.type === "requirement" && FrontendFrame.coveredBy(item.token, tokens).length > 0;
+        var detail = item.covers ? "Covers " + item.covers : (item.detail || "");
+        if (locked) detail = "Stays while " + FrontendFrame.coveredBy(item.token, tokens)[0].token + " is in the set.";
+        return "<tr>" +
+          "<td>" + item.name + "</td>" +
+          '<td class="token">' + item.token + "</td>" +
+          "<td>" + detail + "</td>" +
+          '<td><button class="btn tiny secondary" type="button" data-remove="' + item.token + '"' + (locked ? " disabled" : "") + ">Remove</button></td></tr>";
+      }).join("");
+      var empty = rows.length
+        ? ""
+        : '<div class="empty"><b>Nothing of this type is in the next iteration.</b>Add items from the editor with Add to next iteration.</div>';
+      var table = rows.length
+        ? "<table><thead><tr><th>name</th><th>token</th><th>detail</th><th></th></tr></thead><tbody>" + body + "</tbody></table>"
+        : empty;
+      var start = rows.length ? (page - 1) * pageSize + 1 : 0;
+      var end = Math.min(page * pageSize, rows.length);
+      var html =
+        '<div class="tabs inbox">' + tabs + "</div>" +
+        '<div class="pager"><span><b>' + start + " - " + end + "</b> of <b>" + rows.length + "</b></span>" +
+          '<span class="actions"><button class="btn tiny secondary" type="button" data-page="prev" aria-label="Previous"' + (page === 1 ? " disabled" : "") + ">Previous</button>" +
+          "<span>" + page + " of " + pageCount + "</span>" +
+          '<button class="btn tiny secondary" type="button" data-page="next" aria-label="Next"' + (page === pageCount ? " disabled" : "") + ">Next</button></span></div>" +
+        table;
+      notes(tokens).forEach(function (line) {
+        html += '<div class="callout warn" style="margin:8px 0">' + line + "</div>";
+      });
+      html += '<div class="callout info" style="margin:8px 0">' +
+        (tokens.length
+          ? tokens.length + " in the next iteration. Confirm closes this iteration and opens the next one together."
+          : "The next iteration is empty. Confirm opens it with no carried items.") +
+        "</div>";
+      var host = document.getElementById("carry-body");
+      host.innerHTML = html;
+      host.onclick = function (event) {
+        var tab = event.target.closest("[data-tab]");
+        if (tab) {
+          active = tab.getAttribute("data-tab");
+          paint();
+          return;
+        }
+        var pageButton = event.target.closest("[data-page]");
+        if (pageButton && !pageButton.disabled) {
+          pages[active] += pageButton.getAttribute("data-page") === "next" ? 1 : -1;
+          paint();
+          return;
+        }
+        var remove = event.target.closest("[data-remove]");
+        if (remove && !remove.disabled) {
+          FrontendFrame.removeFromInput(remove.getAttribute("data-remove"));
+          paint();
+        }
+      };
+    }
+
+    document.getElementById("close").onclick = function () {
+      window.location.href = "editor-iteration.html";
+    };
+    document.getElementById("confirm").onclick = function () {
+      var tokens = FrontendFrame.readInput();
+      document.getElementById("backdrop").style.display = "none";
+      document.getElementById("banner").innerHTML = '<div class="callout ok">' +
+        (tokens.length
+          ? "Iteration 2 is closed and iteration 3 is open. Carried: " + tokens.join(", ") + "."
+          : "Iteration 2 is closed. Iteration 3 is open and contains no carried items.") +
+        "</div>";
+    };
+    paint();
+  </script>
+</body>
+</html>
