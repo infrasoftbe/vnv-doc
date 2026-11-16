@@ -234,7 +234,7 @@ From the next iteration on, the site shows the open version of each token.
 
 **Domain:** `updateRequirement`, `updateTestCase`, `updateFile`, `updateStructure`, `updateList`
 
-**Mockup:** [The open iteration](../../../static/mockups/iterations/editor-iteration.html)
+**Mockup:** [The open iteration](../../../static/mockups/iterations/editor-iteration.png)
 
 **Acceptance criteria**
 
@@ -257,7 +257,7 @@ From the next iteration on, the site shows the open version of each token.
 
 **Domain:** `addToNextIteration`, `openNextIteration`
 
-**Mockup:** [Add to next iteration](../../../static/mockups/iterations/editor-iteration.html) · [Review what is carried forward](../../../static/mockups/iterations/carry-forward.html)
+**Mockup:** [Add to next iteration](../../../static/mockups/iterations/editor-iteration.png) · [Review what is carried forward](../../../static/mockups/iterations/carry-forward.png)
 
 **Acceptance criteria**
 
@@ -283,7 +283,7 @@ From the next iteration on, the site shows the open version of each token.
 
 **Domain:** `openNextIteration`, `updateRequirement`, `updateTestCase`, `updateFile`, `updateStructure`, `updateList`
 
-**Mockup:** [The closed iteration and the open iteration](../../../static/mockups/iterations/editor-iteration.html)
+**Mockup:** [The closed iteration and the open iteration](../../../static/mockups/iterations/editor-iteration.png)
 
 **Acceptance criteria**
 
@@ -306,7 +306,7 @@ From the next iteration on, the site shows the open version of each token.
 
 **Domain:** `openNextIteration`
 
-**Mockup:** [A test case keeps its requirement in the set](../../../static/mockups/iterations/carry-forward.html)
+**Mockup:** [A test case keeps its requirement in the set](../../../static/mockups/iterations/carry-forward.png)
 
 **Acceptance criteria**
 
@@ -347,7 +347,7 @@ From the next iteration on, the site shows the open version of each token.
 
 **Domain:** `openNextIteration`
 
-**Mockup:** [A structure warns when a linked file stays behind](../../../static/mockups/iterations/carry-forward.html)
+**Mockup:** [A structure warns when a linked file stays behind](../../../static/mockups/iterations/carry-forward.png)
 
 **Acceptance criteria**
 
@@ -369,7 +369,7 @@ From the next iteration on, the site shows the open version of each token.
 
 **Domain:** `openNextIteration`
 
-**Mockup:** [A list warns when an entry stays behind](../../../static/mockups/iterations/carry-forward.html) · [The run sheet stays off the list](../../../static/mockups/iterations/editor-iteration.html)
+**Mockup:** [A list warns when an entry stays behind](../../../static/mockups/iterations/carry-forward.png) · [The run sheet stays off the list](../../../static/mockups/iterations/editor-iteration.png)
 
 **Acceptance criteria**
 
@@ -392,7 +392,7 @@ From the next iteration on, the site shows the open version of each token.
 
 **Domain:** `iterationContents`
 
-**Mockup:** [Select an iteration](../../../static/mockups/iterations/editor-iteration.html)
+**Mockup:** [Select an iteration](../../../static/mockups/iterations/editor-iteration.png)
 
 **Acceptance criteria**
 
