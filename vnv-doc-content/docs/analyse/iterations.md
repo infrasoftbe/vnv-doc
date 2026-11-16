@@ -205,6 +205,8 @@ From the next iteration on, the site shows the open version of each token.
 
 ### US-IT01 – A new project starts in iteration 1 {#us-it01}
 
+**Issue:** [#113](https://github.com/infrasoftbe/vnv-platform/issues/113)
+
 **As a** system engineer  
 **I want** a new project to open already in iteration 1  
 **so that** every requirement, test case, file, structure, and list I add belongs to an iteration from the start.
@@ -223,6 +225,8 @@ From the next iteration on, the site shows the open version of each token.
 ---
 
 ### US-IT02 – An edit inside the iteration is an update {#us-it02}
+
+**Issue:** [#116](https://github.com/infrasoftbe/vnv-platform/issues/116)
 
 **As a** system engineer  
 **I want** a change to a requirement, test case, file, structure, or list to overwrite that item  
@@ -244,6 +248,8 @@ From the next iteration on, the site shows the open version of each token.
 ---
 
 ### US-IT03 – Choose what the next iteration takes {#us-it03}
+
+**Issue:** [#119](https://github.com/infrasoftbe/vnv-platform/issues/119)
 
 **As a** system engineer  
 **I want** to choose which requirements, test cases, files, structures, and lists go into the next iteration  
@@ -269,6 +275,8 @@ From the next iteration on, the site shows the open version of each token.
 
 ### US-IT04 – Taken items freeze, and later work is a new version {#us-it04}
 
+**Issue:** [#122](https://github.com/infrasoftbe/vnv-platform/issues/122)
+
 **As a** system engineer  
 **I want** the items I took over to keep the state they had, and later changes to become a new version  
 **so that** the closed iteration remains the record of that round.
@@ -290,6 +298,8 @@ From the next iteration on, the site shows the open version of each token.
 
 ### US-IT05 – A carried test case brings its requirement {#us-it05}
 
+**Issue:** [#125](https://github.com/infrasoftbe/vnv-platform/issues/125)
+
 **As a** system engineer  
 **I want** a test case I took over to bring the requirement it covers  
 **so that** the next round still shows what that test case verifies, and the closed round still shows the link it had.
@@ -310,6 +320,8 @@ From the next iteration on, the site shows the open version of each token.
 
 ### US-IT06 – A carried file keeps the same bytes {#us-it06}
 
+**Issue:** [#128](https://github.com/infrasoftbe/vnv-platform/issues/128)
+
 **As a** system engineer  
 **I want** a file I took over to keep the bytes it had, until I replace them in the new iteration  
 **so that** the closed iteration still shows that file as it was.
@@ -326,6 +338,8 @@ From the next iteration on, the site shows the open version of each token.
 ---
 
 ### US-IT07 – A carried structure keeps its child nodes {#us-it07}
+
+**Issue:** [#130](https://github.com/infrasoftbe/vnv-platform/issues/130)
 
 **As a** system engineer  
 **I want** a structure I took over to keep its child nodes, and the working structure to link the files I took with it  
@@ -346,6 +360,8 @@ From the next iteration on, the site shows the open version of each token.
 ---
 
 ### US-IT08 – A carried list keeps its entries {#us-it08}
+
+**Issue:** [#133](https://github.com/infrasoftbe/vnv-platform/issues/133)
 
 **As a** system engineer  
 **I want** a list I took over to keep its entries, and the working list to hold the entries whose targets I took with it  
@@ -368,6 +384,8 @@ From the next iteration on, the site shows the open version of each token.
 
 ### US-IT09 – Open a closed iteration {#us-it09}
 
+**Issue:** [#136](https://github.com/infrasoftbe/vnv-platform/issues/136)
+
 **As a** programme manager  
 **I want** to open a closed iteration and see its requirements, test cases, files, structures, and lists as they were frozen  
 **so that** I can show what that round contained.
@@ -388,6 +406,8 @@ From the next iteration on, the site shows the open version of each token.
 
 ### US-IT10 – Existing projects receive iteration 1 {#us-it10}
 
+**Issue:** [#139](https://github.com/infrasoftbe/vnv-platform/issues/139)
+
 **As an** administrator  
 **I want** every existing project to receive an open first iteration that contains its current requirements, test cases, files, structures, and lists  
 **so that** those projects follow the same rules without rewriting their items.
@@ -405,6 +425,8 @@ From the next iteration on, the site shows the open version of each token.
 ---
 
 ### US-IT11 – SharePoint follows the open iteration {#us-it11}
+
+**Issue:** [#141](https://github.com/infrasoftbe/vnv-platform/issues/141)
 
 **As a** system engineer  
 **I want** the project SharePoint site to show the open iteration  
@@ -425,6 +447,8 @@ From the next iteration on, the site shows the open version of each token.
 
 ### US-IT12 – A change from SharePoint updates the open item {#us-it12}
 
+**Issue:** [#143](https://github.com/infrasoftbe/vnv-platform/issues/143)
+
 **As a** system engineer  
 **I want** a change that arrives from SharePoint to update the item in the open iteration  
 **so that** the closed iteration remains the record of that round.
@@ -439,6 +463,8 @@ From the next iteration on, the site shows the open version of each token.
 ---
 
 ### US-IT13 – Replacing a file updates the SharePoint document {#us-it14}
+
+**Issue:** [#145](https://github.com/infrasoftbe/vnv-platform/issues/145)
 
 **As a** system engineer  
 **I want** a file I replace in the open iteration to update the SharePoint document, while the closed iteration keeps the previous file  
